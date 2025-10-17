@@ -204,6 +204,95 @@ footer span a:hover {
     text-decoration: underline;
 }
 
+/* game page styles */
+main#game {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* Game board container styles */
+#board-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    /* blur effect */
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    padding: 1rem;
+    border: 4px solid black;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 80vw;
+}
+
+/* Game stats container styles */
+#stats {
+    margin-top: 1rem;
+    color: var(--color-primary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    font-size: 0.9rem;
+}
+
+#stats h2 {
+    margin-bottom: 1rem;
+    color: var(--color-secondary);
+}
+
+#current-level {
+    margin-top: 0.5rem;
+    color: var(--color-secondary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    font-size: 1.1rem;
+}
+
+#score, #lives {
+    margin-top: 0.5rem;
+}
+
+/* Game background container styles */
+#game-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* blur effect */
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    width: 80vw;
+    border: 4px solid black;
+    border-top: none;
+}
+
+/* game canvas styles */
+canvas {
+    background-color: black;
+    display: block;
+}
+
+/* joystick styles */
+#controls img {
+    margin: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+    width: 120px;
+    position: absolute;
+    bottom: 5rem;
+    transform: translateX(-50%);
+    left: 50%;
+}
+
+
 /* responsive styles */
 @media (max-width: 900px) {
     header h1 {

@@ -1,11 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pac-Man in Space?!</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
-    
+    <!-- Game Header -->
+    <header>
+        <h1>Pac-Man in Space?!</h1>
+    </header>
+    <!-- Main content area for the game -->
+    <main id="game">
+        <!-- Game statistics information -->
+        <section id="board-container">
+            <div id="stats">
+                <h2>Game Statistics</h2>
+                <!-- Top score -->
+                <p>High Score: 0</p>
+                <p>Levels Completed: 0</p>
+                <p>Aliens Eaten: 0</p>
+            </div>
+            <!-- Live session information -->
+            <span id="current-level">
+                <p id="level">Current Level: 1</p>
+                <p id="lives">lives: X X X </p>
+                <p id="score">Score: 0</p>
+            </span>
+        </section>
+        <!-- Game canvas where the game is rendered -->
+        <section id="game-container">
+            <canvas></canvas>
+        </section>
+        <!-- Game controls for player input -->
+        <section id="controls">
+            <!-- joystick container influenced by Joystick.js -->
+            <img src="assets/images/joystick/Central.png" alt="">
+        </section>
+    </main>
+    <!-- Footer for the game lobby to provide additional information and links to each of the developers -->
+    <footer>
+        <span>
+            <!-- linkedIn Profiles open in new tab -->
+            <p>Developed by <a href="https://www.linkedin.com/in/blaise-smyka/" target="_blank"
+                    aria-label="Blaise's linked in profile link" rel="noopener">Blaise</a></p>
+        </span>
+    </footer>
 </body>
+
 </html>
