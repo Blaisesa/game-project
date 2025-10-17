@@ -10,3 +10,8 @@ This is a summary
 # Game 2
 
 Crash mini game - built by Hans
+
+
+# Game 3
+
+Space Invaders game - Made by Rhys
