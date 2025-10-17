@@ -80,14 +80,14 @@ header p {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: 40vh;
+    height: auto;
     transition: 300ms;
 }
 
 /* image card styles */
 #game-lobby .img-card {
-    width: 30vh;
-    height: 100%;
+    width: 300px;
+    height: 200px;
     object-fit: cover;
     background-color: var(--color-background);
     margin-bottom: 1rem;
@@ -103,7 +103,7 @@ header p {
     text-decoration: none;
     color: var(--color-primary);
     background-image: url(../images/lobby/button.webp);
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     width: 100%;
