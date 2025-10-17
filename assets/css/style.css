@@ -32,9 +32,34 @@ body {
 
 /* navigation styles */
 nav {
-    background-color: gray;
-    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
 }
+
+nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--color-primary);
+    font-size: 1.2rem;
+    transition: 300ms;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+nav ul li a:hover {
+    color: var(--color-hover);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
 
 /* header styles */
 header {
@@ -146,4 +171,14 @@ footer span a {
 }
 footer span a:hover {
     text-decoration: underline;
+}
+
+/* responsive styles */
+@media (max-width: 768px) {
+    nav {
+        display: none;
+    }
+    header h1 {
+        font-size: 2rem;
+    }
 }
