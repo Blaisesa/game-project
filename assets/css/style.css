@@ -1,0 +1,184 @@
+/* imports */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* reset styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* global styles */
+:root {
+    --font-family: 'Press Start 2P', cursive;
+    --color-primary: pink;
+    --color-secondary: purple;
+    --color-hover: white;
+    --color-background: black;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-background);
+    background-image: url(../images/background.webp);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* navigation styles */
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--color-primary);
+    font-size: 1.2rem;
+    transition: 300ms;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+nav ul li a:hover {
+    color: var(--color-hover);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+
+/* header styles */
+header {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 2rem 0 2rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}  
+header p {
+    font-size: 1.2rem;
+    color: var(--color-secondary);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* main content styles */
+/* game lobby styles */
+#game-lobby {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2.5rem;
+}
+
+/* game card styles */
+.game-card {
+    background-color: rgba(0, 0, 0, 0.6);
+    margin: 1rem;
+    padding: 1rem;
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+    transition: 300ms;
+}
+
+/* image card styles */
+#game-lobby .img-card {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    background-color: var(--color-background);
+    margin-bottom: 1rem;
+}
+
+.game-card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.game-card a {
+    text-decoration: none;
+    color: var(--color-primary);
+    background-image: url(../images/lobby/button.webp);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: 300ms;
+}
+.game-card:hover {
+    text-shadow: 0 0 5px rgba(68, 0, 255, 0.8);
+    transform: scale(1.05);
+}
+.game-card a:hover {
+    color: var(--color-hover);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+}
+
+/* footer styles */
+footer {
+    color: var(--color-primary);
+    text-align: center;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    font-size: 1.25rem;
+    padding: 1rem;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+footer span a {
+    color: var(--color-secondary);
+    text-decoration: none;
+    font-weight: bold;
+    text-shadow: 3px 3px 1px rgba(0, 0, 0, 0.8);
+}
+footer span a:hover {
+    text-decoration: underline;
+}
+
+/* responsive styles */
+@media (max-width: 768px) {
+    nav {
+        display: none;
+    }
+    header h1 {
+        font-size: 2rem;
+    }
+}
