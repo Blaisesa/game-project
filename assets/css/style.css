@@ -245,12 +245,13 @@ main#game {
 
 #current-level {
     margin-top: 0.5rem;
-    color: var(--color-secondary);
+    color: var(--color-primary);
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
     font-size: 1.1rem;
 }
 
-#score, #lives {
+#score,
+#lives {
     margin-top: 0.5rem;
 }
 
@@ -291,7 +292,6 @@ canvas {
     transform: translateX(-50%);
     left: 50%;
 }
-
 
 /* responsive styles */
 @media (max-width: 900px) {
@@ -374,5 +374,50 @@ canvas {
         left: 50%;
         transform: translateX(-50%);
         margin: 0 0 -20px 0;
+    }
+
+    /* Footer styles */
+    footer {
+        margin-bottom: 1rem;
+    }
+
+    /* Game page styles */
+    #stats {
+        margin-top: 0;
+        color: var(--color-primary);
+        font-size: 0.5rem;
+    }
+
+    #stats h2, p {
+        margin-bottom: 0rem;
+        margin-top: 0.2rem;
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    }
+
+    #current-level {
+        margin-top: 1rem;
+        font-size: 0.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #board-container {
+        width: 90vw;
+    }
+
+    #score,
+    #lives {
+        margin-top: 0.2rem;
+        text-align: right;
+    }
+
+    #controls img {
+        margin: 0rem;
+        margin-bottom: 1.5rem;
+        bottom: 3.5rem;
+    }
+
+    #game-container {
+        width: 90vw;
     }
 }
