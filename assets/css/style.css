@@ -1,5 +1,5 @@
 /* imports */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
 /* reset styles */
 * {
@@ -10,7 +10,7 @@
 
 /* global styles */
 :root {
-    --font-family: 'Press Start 2P', cursive;
+    --font-family: "Press Start 2P", cursive;
     --color-primary: pink;
     --color-secondary: purple;
     --color-hover: white;
@@ -38,6 +38,15 @@ nav {
     padding: 1rem;
 }
 
+nav img {
+    width: 100px;
+    height: 70px;
+    margin-right: 1rem;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
 nav ul {
     list-style: none;
     display: flex;
@@ -60,6 +69,24 @@ nav ul li a:hover {
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
 
+/* hamburger menu styles */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    height: 3px;
+    width: 25px;
+    background-color: var(--color-primary);
+    margin: 4px 0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+/* hamburger toggle styles */
+#menu-toggle {
+    display: none;
+}
 
 /* header styles */
 header {
@@ -76,7 +103,7 @@ header h1 {
     font-size: 2.5rem;
     color: var(--color-primary);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}  
+}
 header p {
     font-size: 1.2rem;
     color: var(--color-secondary);
@@ -118,6 +145,7 @@ header p {
     margin-bottom: 1rem;
 }
 
+/* game card text styles */
 .game-card h2 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
@@ -139,6 +167,8 @@ header p {
     font-size: 1.1rem;
     transition: 300ms;
 }
+
+/* game card hover styles */
 .game-card:hover {
     text-shadow: 0 0 5px rgba(68, 0, 255, 0.8);
     transform: scale(1.05);
@@ -169,16 +199,91 @@ footer span a {
     font-weight: bold;
     text-shadow: 3px 3px 1px rgba(0, 0, 0, 0.8);
 }
+
 footer span a:hover {
     text-decoration: underline;
 }
 
 /* responsive styles */
-@media (max-width: 768px) {
-    nav {
-        display: none;
-    }
+@media (max-width: 900px) {
     header h1 {
         font-size: 2rem;
+    }
+
+    /* hamburger menu styles */
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+
+    .hamburger span {
+        height: 3px;
+        width: 25px;
+        background-color: var(--color-primary);
+        margin: 4px 0;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+        z-index: 1001;
+        transition: all 0.3s ease;
+    }
+
+    #menu-toggle {
+        display: none;
+    }
+
+    #nav-links {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        padding: 0;
+        gap: 15px;
+        background: rgba(17, 17, 17, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        /* purple shadow */
+        box-shadow: 0 4px 8px rgba(128, 0, 128, 0.6);
+    }
+
+    #menu-toggle:checked ~ #nav-links {
+        /* this will show the menu */
+        display: flex;
+        max-height: 500px;
+        padding: 1rem;
+        width: 100%;
+    }
+
+    /* transform menu to make an X out of a hamburger style */
+    /*rotate and move top line*/
+    #menu-toggle:checked + .hamburger span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 10px);
+    }
+
+    /*use this transform of the middle span (child (2)) to hide it*/
+    #menu-toggle:checked + .hamburger span:nth-child(2) {
+        opacity: 0;
+    }
+
+    /*rotate and move bottom line*/
+    #menu-toggle:checked + .hamburger span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -10px);
+    }
+
+    /* Change logo position */
+    #logo {
+        position: sticky;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0 0 -20px 0;
     }
 }
