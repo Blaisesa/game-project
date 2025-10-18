@@ -1,0 +1,794 @@
+// Global variables & constants for the game
+let board; // This specifies the game board canvas element
+const rowCount = 20; // Number of rows in the game board
+const colCount = 29; // Number of columns in the game board
+const tileSize = 32; // Size of each tile in pixels
+const boardWidth = colCount * tileSize; // Width of the game board in pixels
+const boardHeight = rowCount * tileSize; // Height of the game board in pixels
+let context; // Canvas rendering context
+
+// Static image variables
+// Aliens
+let blueAlienImage;
+let greenAlienImage;
+let pinkAlienImage;
+let purpleAlienImage;
+// Resources
+let nuclearWasteImage;
+let powerUpImage;
+let fullHeartImage;
+let LostHeartImage;
+let wallImage;
+let ventImage;
+
+// Animated image variables
+let pacmanFrames;
+let portalFrames;
+const animationSpeed = 2; // Speed of animation
+
+// Game maps
+const level0 = [
+    // 0: empty, X: wall, x: vent, n: nuclear waste, +: power-up, 1: blue alien, 2: green alien, 3: pink alien, 4: purple alien, P: pacman start, p: portal, " ": food
+    "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
+    "X                          nX",
+    "X XXXX XX X XXX XXXXX X XXXxX",
+    "X       x X X       X X    +X",
+    "X X X X X X   X X X X   XxX X",
+    "X X X X X X X X X X X XXXnX X",
+    "X XnX X X X X       X     X X",
+    "X XxX X X X X XX XX X XXX X X",
+    "Xn    X X         X       X X",
+    "XXXXX X X XXX 102 X X X X X X",
+    "      X X     0p0   X X X    ",
+    "XXXXX X XXXXX 304 X X X X X X",
+    "X           X     X   X   X X",
+    "X XXXX XXXX X XXXXX X   X X X",
+    "X                     X X X X",
+    "X X X XxX X XX X X X XX   X X",
+    "X X X   X X  X P   x n  X X X",
+    "X X X X   X    X X X XX X X X",
+    "X   Xn  X X+XX X   X  X X   X",
+    "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
+];
+// Additional levels (level1, level2, etc.) can be defined similarly
+
+// Create sets for ingame objects
+// Walls and Vents
+const walls = new Set();
+const vents = new Set();
+// Resources
+const nuclearWastes = new Set();
+const powerUps = new Set();
+const foods = new Set();
+
+// Food pelets dont need a set as they will be checked directly on the board
+
+// Aliens
+const aliens = new Set();
+
+// portal and pacman will be single objects as there is only one of each per level
+let pacman;
+let portal;
+//  Game direction constants
+const direction = ["U", "D", "L", "R"];
+
+// Game state variables
+let currentLevel = 0;
+let score = 0;
+let lives = 3;
+let level = 0;
+let gameOver = false;
+let gameWin = false;
+let levelComplete = false;
+let powerUpActive = false;
+let paused = false;
+let mute = false;
+
+// Initialize the game canvas and context
+window.onload = function () {
+    board = this.document.querySelector("#board");
+    board.width = boardWidth;
+    board.height = boardHeight;
+    // Get 2D context for the board allowing us to draw on it
+    context = board.getContext("2d");
+
+    // Load images
+    loadImages();
+    // Load the initial map
+    loadMap();
+    // Start background music
+    backgroundMusic();
+    // Console log to confirm loading
+    // console.log(`walls.size: ${walls.size}`);
+    // console.log(`vents.size: ${vents.size}`);
+    // console.log(`nuclearWastes.size: ${nuclearWastes.size}`);
+    // console.log(`powerUps.size: ${powerUps.size}`);
+    // console.log(`aliens.size: ${aliens.size}`);
+    // console.log(`foods.size: ${foods.size}`);
+
+    // Initialize Alien Movement
+    for (let alien of aliens) {
+        const newDirection = direction[Math.floor(Math.random() * 4)];
+        if (!alien.updateDirection) {
+            alien.direction = newDirection;
+            alien.velocityX = 0;
+            alien.velocityY = 0;
+            alien.updateDirection = Movement.prototype.updateDirection; // Assign movement methods
+            alien.updateVelocity = Movement.prototype.updateVelocity; // Assign movement methods
+        }
+        alien.updateDirection(newDirection);
+    }
+    // Start the game loop function
+    update();
+
+    // Event listener for keyboard input
+    this.document.addEventListener("keyup", movePacman);
+};
+
+// Function to load images
+function loadImages() {
+    // Wall images
+    wallImage = new Image();
+    wallImage.src = "../../assets/images/blaise/wall.webp";
+
+    ventImage = new Image();
+    ventImage.src = "../../assets/images/blaise/vent.webp";
+    // Resources
+    nuclearWasteImage = new Image();
+    nuclearWasteImage.src = "../../assets/images/blaise/nuclearWaste.png";
+
+    powerUpImage = new Image();
+    powerUpImage.src = "../../assets/images/blaise/powerUp.png";
+
+    // Hearts
+    fullHeartImage = new Image();
+    fullHeartImage.src = "../../assets/images/blaise/fullHeart.webp";
+    LostHeartImage = new Image();
+    LostHeartImage.src = "../../assets/images/blaise/lostHeart.webp";
+
+    // Aliens
+    blueAlienImage = new Image();
+    blueAlienImage.src = "../../assets/images/blaise/aliens/blueAlien0.webp";
+    greenAlienImage = new Image();
+    greenAlienImage.src = "../../assets/images/blaise/aliens/greenAlien0.webp";
+    pinkAlienImage = new Image();
+    pinkAlienImage.src = "../../assets/images/blaise/aliens/pinkAlien0.webp";
+    purpleAlienImage = new Image();
+    purpleAlienImage.src =
+        "../../assets/images/blaise/aliens/purpleAlien0.webp";
+
+    // Animated Pacman frames
+    pacmanFrames = {
+        R: [],
+        L: [],
+        U: [],
+        D: [],
+    };
+
+    // Load Pacman frames
+    const path = "../../assets/images/blaise/pacman/";
+    for (let i = 0; i < 4; i++) {
+        // Right, Left, Up, Down frames
+        pacmanFrames["R"][i] = new Image();
+        pacmanFrames["R"][i].src = `${path}right${i}.png`;
+
+        pacmanFrames["L"][i] = new Image();
+        pacmanFrames["L"][i].src = `${path}left${i}.png`;
+
+        pacmanFrames["U"][i] = new Image();
+        pacmanFrames["U"][i].src = `${path}up${i}.png`;
+
+        pacmanFrames["D"][i] = new Image();
+        pacmanFrames["D"][i].src = `${path}down${i}.png`;
+    }
+}
+
+// Load map and initialize game objects this will also be used to reset levels
+function loadMap() {
+    // Clear previous level data
+    walls.clear();
+    vents.clear();
+    foods.clear();
+    nuclearWastes.clear();
+    powerUps.clear();
+    aliens.clear();
+
+    for (let r = 0; r < rowCount; r++) {
+        for (let c = 0; c < colCount; c++) {
+            const row = level0[r];
+            const levelChar = row[c];
+
+            const x = c * tileSize;
+            const y = r * tileSize;
+
+            if (levelChar === "X") {
+                // Wall
+                const wall = new Block(wallImage, x, y, tileSize, tileSize);
+                walls.add(wall);
+            } else if (levelChar === "x") {
+                // Vent
+                const vent = new Block(ventImage, x, y, tileSize, tileSize);
+                vents.add(vent);
+            } else if (levelChar === "n") {
+                // Nuclear Waste
+                const nuclearWaste = new Block(
+                    nuclearWasteImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                nuclearWastes.add(nuclearWaste);
+            } else if (levelChar === "+") {
+                // Power-Up
+                const powerUp = new Block(
+                    powerUpImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                powerUps.add(powerUp);
+            } else if (levelChar === "1") {
+                // Blue Alien
+                const alien = new Block(
+                    blueAlienImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                aliens.add(alien);
+            } else if (levelChar === "2") {
+                // Green Alien
+                const alien = new Block(
+                    greenAlienImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                aliens.add(alien);
+            } else if (levelChar === "3") {
+                // Pink Alien
+                const alien = new Block(
+                    pinkAlienImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                aliens.add(alien);
+            } else if (levelChar === "4") {
+                // Purple Alien
+                const alien = new Block(
+                    purpleAlienImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                aliens.add(alien);
+            } else if (levelChar === "P") {
+                // Pacman Start
+                pacman = new Block(
+                    pacmanFrames["R"][1],
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                // Movement properties and starting direction
+                pacman.direction = "R";
+                // Reset velocities
+                pacman.velocityX = 0;
+                pacman.velocityY = 0;
+                pacman.speed = tileSize / 4; // Pacman speed
+                pacman.updateDirection = Movement.prototype.updateDirection;
+                pacman.updateVelocity = Movement.prototype.updateVelocity;
+            } else if (levelChar === " ") {
+                // Food pellet (placed in the center of the tile)
+                const food = new Block(null, x + 14, y + 14, 4, 4);
+                foods.add(food);
+            }
+            // Portal to be added later
+        }
+    }
+}
+
+// Load Game Music Effects
+function backgroundMusic() {
+    // Check if mute is enabled
+    if (mute) return;
+    const bgMusic = new Audio("../../assets/sounds/blaise/background.mp3");
+    bgMusic.loop = true; // Loop the background music
+    bgMusic.volume = 0.1; // Set volume (0.0 to 1.0)
+    bgMusic.play(); // Start playing the music
+    // Play music after the first interaction due to browser policies
+    document.addEventListener(
+        "click",
+        function playMusic() {
+            bgMusic.play();
+            document.removeEventListener("click", playMusic);
+        },
+        { once: true }
+    );
+}
+// Food eaten sound effect
+function playFoodSound() {
+    if (mute) return;
+    const foodSound = new Audio("../../assets/sounds/blaise/chomp.mp3");
+    foodSound.volume = 0.1; // Set volume (0.0 to 1.0)
+    foodSound.play();
+}
+// Eat Nuclear Waste sound effect
+function playNuclearWasteSound() {
+    if (mute) return;
+    const nuclearWasteSound = new Audio(
+        "../../assets/sounds/blaise/eatnuclearWaste.mp3"
+    );
+    nuclearWasteSound.volume = 0.3; // Set volume (0.0 to 1.0)
+    nuclearWasteSound.play();
+}
+// Power-Up sound effect
+function playPowerUpSound() {
+    if (mute) return;
+    const powerUpSound = new Audio("../../assets/sounds/blaise/powerUp.mp3");
+    powerUpSound.volume = 0.4; // Set volume (0.0 to 1.0)
+    powerUpSound.play();
+}
+// Death sound effect
+function playDeathSound() {
+    if (mute) return;
+    const deathSound = new Audio("../../assets/sounds/blaise/death.mp3");
+    deathSound.volume = 0.4; // Set volume (0.0 to 1.0)
+    deathSound.play();
+}
+// Eating alien sound effect
+function playEatAlienSound() {
+    if (mute) return;
+    const eatAlienSound = new Audio("../../assets/sounds/blaise/eatAlien.mp3");
+    eatAlienSound.volume = 0.3; // Set volume (0.0 to 1.0)
+    eatAlienSound.play();
+}
+
+// Update function for game objects and redrawing the canvas
+function update() {
+    // Pacman animation logic
+    //Only animate if pacman is moving and game is not over or paused
+    if (
+        !gameOver &&
+        !paused &&
+        (pacman.velocityX !== 0 || pacman.velocityY !== 0)
+    ) {
+        pacman.frameCounter++;
+        // Change frame every 'animationSpeed' updates
+        if (pacman.frameCounter >= animationSpeed) {
+            // Reset counter and update frame index
+            pacman.frameCounter = 0;
+            pacman.frameIndex = (pacman.frameIndex + 1) % 4;
+        }
+    } else if (pacman.velocityX === 0 && pacman.velocityY === 0) {
+        // Reset to mouth half open when not moving
+        pacman.frameIndex = 1;
+    }
+    // Update canvas in a loop
+    // Update based on velocities within the move function
+    move();
+    // Redraw all game objects
+    draw();
+    // We set it using a timeout instead of setInterval to have more control
+    setTimeout(update, 50); // Update every 50 milliseconds (20 FPS)
+}
+
+// draw function to render all game objects on the canvas
+function draw() {
+    context.clearRect(0, 0, boardWidth, boardHeight); // Clear the canvas
+
+    // Draw Pacman with current animation frame
+    if (pacman) {
+        const currentPacmanFrame =
+            pacmanFrames[pacman.direction][pacman.frameIndex];
+
+        context.drawImage(
+            currentPacmanFrame,
+            pacman.x,
+            pacman.y,
+            pacman.width,
+            pacman.height
+        );
+    }
+    // Aliens
+    for (let alien of aliens) {
+        context.drawImage(
+            alien.image,
+            alien.x,
+            alien.y,
+            alien.width,
+            alien.height
+        );
+    }
+    // Walls
+    for (let wall of walls) {
+        context.drawImage(wall.image, wall.x, wall.y, wall.width, wall.height);
+    }
+    // Vents
+    for (let vent of vents) {
+        context.drawImage(vent.image, vent.x, vent.y, vent.width, vent.height);
+        // z-index for vents
+        context.globalCompositeOperation = "source-over"; // Draw in front of aliens
+    }
+    // Nuclear Wastes
+    for (let nuclearWaste of nuclearWastes) {
+        context.drawImage(
+            nuclearWaste.image,
+            nuclearWaste.x,
+            nuclearWaste.y,
+            nuclearWaste.width,
+            nuclearWaste.height
+        );
+        // z-index for nuclear wastes
+        context.globalCompositeOperation = "destination-over"; // Draw behind pacman and aliens
+    }
+    // Power-Ups
+    for (let powerUp of powerUps) {
+        context.drawImage(
+            powerUp.image,
+            powerUp.x,
+            powerUp.y,
+            powerUp.width,
+            powerUp.height
+        );
+        // z-index for power-ups
+        context.globalCompositeOperation = "destination-over"; // Draw behind pacman and aliens
+    }
+    // Foods pellets
+    for (let food of foods) {
+        context.fillStyle = "green";
+        context.beginPath();
+        context.arc(
+            food.x + food.width / 2,
+            food.y + food.height / 2,
+            food.width / 2,
+            0,
+            Math.PI * 2
+        );
+        // z-index for food pellets
+        context.globalCompositeOperation = "destination-over"; // Draw behind pacman and aliens
+        context.fill();
+    }
+    // Drawing for score and lives within the html
+    document.querySelector("#score").innerText = `Score: ${score}`;
+    // Lives display as hearts
+    document.querySelector(
+        "#lives"
+    ).innerHTML = `lives: ${'<img src="assets/images/blaise/fullHeart.webp" alt="">'.repeat(
+        lives
+    )}${'<img src="assets/images/blaise/lostHeart.webp" alt="">'.repeat(
+        3 - lives
+    )}`;
+}
+
+// move function to update game object positions
+function move() {
+    // Update pacman position based on velocity
+    pacman.x += pacman.velocityX;
+    pacman.y += pacman.velocityY;
+
+    // Prevent pacman from leaving the canvas boundaries
+    pacman.x = Math.max(0, Math.min(pacman.x, boardWidth - pacman.width));
+    pacman.y = Math.max(0, Math.min(pacman.y, boardHeight - pacman.height));
+    // Check for collisions with walls
+    for (let wall of walls) {
+        if (collision(pacman, wall)) {
+            // Collision detected, revert position
+            pacman.x -= pacman.velocityX;
+            pacman.y -= pacman.velocityY;
+            break; // Exit loop after handling collision
+        }
+    }
+    // Check for collisions with vents
+    for (let vent of vents) {
+        if (collision(pacman, vent)) {
+            pacman.x -= pacman.velocityX;
+            pacman.y -= pacman.velocityY;
+            break; // Exit loop after handling collision
+        }
+    }
+    // Check for collisions with food pellets
+    for (let food of foods) {
+        if (collision(pacman, food)) {
+            // Collision detected, remove food pellet
+            foods.delete(food);
+            score += 10; // Increase score
+            playFoodSound(); // Play food eaten sound effect
+            break; // Exit loop after handling collision
+        }
+    }
+    // Check for collisions with nuclear wastes
+    for (let nuclearWaste of nuclearWastes) {
+        if (collision(pacman, nuclearWaste)) {
+            // Collision detected, remove nuclear waste
+            nuclearWastes.delete(nuclearWaste);
+            playNuclearWasteSound(); // Play nuclear waste eaten sound effect
+            score += 50; // Increase score
+            break; // Exit loop after handling collision
+        }
+    }
+    // Check for collisions with power-ups
+    for (let powerUp of powerUps) {
+        if (collision(pacman, powerUp)) {
+            // Collision detected, remove power-up
+            powerUps.delete(powerUp);
+            playPowerUpSound(); // Play power-up sound effect
+            // Activate power-up effect logic here
+            powerUpActive = true;
+            powerUpEffect();
+            break; // Exit loop after handling collision
+        }
+    }
+    // Teleport tunnels logic
+    if (pacman.x <= 0) {
+        pacman.x = boardWidth - pacman.width;
+    } else if (pacman.x >= boardWidth - pacman.width) {
+        pacman.x = 0;
+    }
+    if (pacman.y <= 0) {
+        pacman.y = boardHeight - pacman.height;
+    } else if (pacman.y + pacman.height >= boardHeight) {
+        pacman.y = 0;
+    }
+
+    // Alien Movement
+    for (let alien of aliens) {
+        alien.x += alien.velocityX;
+        alien.y += alien.velocityY;
+        // Prevent alien from leaving the canvas boundaries
+        alien.x = Math.max(0, Math.min(alien.x, boardWidth - alien.width));
+        alien.y = Math.max(0, Math.min(alien.y, boardHeight - alien.height));
+        // Check for collisions with walls
+        for (let wall of walls) {
+            if (collision(alien, wall)) {
+                // Collision detected, revert position
+                alien.x -= alien.velocityX;
+                alien.y -= alien.velocityY;
+                // Choose a new random direction
+                const newDirection = direction[Math.floor(Math.random() * 4)];
+                alien.updateDirection(newDirection);
+                break; // Exit loop after handling collision
+            }
+        }
+        // Teleport tunnels logic for aliens
+        if (alien.x <= 0) {
+            alien.x = boardWidth - alien.width;
+        } else if (alien.x >= boardWidth - alien.width) {
+            alien.x = 0;
+        }
+        if (alien.y <= 0) {
+            alien.y = boardHeight - alien.height;
+        } else if (alien.y + alien.height >= boardHeight) {
+            alien.y = 0;
+        }
+        // Randomly change direction at intervals
+        if (alien.x % tileSize === 0 && alien.y % tileSize === 0) {
+            if (Math.random() < 0.4) {
+                const newDirection = direction[Math.floor(Math.random() * 4)];
+                alien.updateDirection(newDirection);
+            }
+        }
+        // Check for collisions with aliens
+        if (!powerUpActive && collision(pacman, alien)) {
+            // Collision detected between pacman and alien
+            playDeathSound(); // Play death sound effect
+            lives -= 1;
+            // For example, reset positions
+            resetPositions();
+        }
+        if (lives <= 0) {
+            gameOver = true;
+            alert("Game Over! Refresh to play again.");
+        }
+        if (powerUpActive) {
+            // Aliens move away from Pacman
+            const dx = alien.x - pacman.x;
+            const dy = alien.y - pacman.y;
+            // Determine direction to move away
+            if (Math.abs(dx) > Math.abs(dy)) {
+                alien.updateDirection(dx > 0 ? "R" : "L");
+            } else {
+                alien.updateDirection(dy > 0 ? "D" : "U");
+            }
+            // Slow down aliens
+            alien.speed = tileSize / 8; // Reduce speed
+            alien.updateVelocity();
+        }
+        if (powerUpActive && collision(pacman, alien)) {
+            // Collision detected between pacman and alien during power-up
+            playEatAlienSound(); // Play eat alien sound effect
+            score += 200; // Increase score for eating alien
+            // Reset alien position
+            alien.reset();
+            const newDirection = direction[Math.floor(Math.random() * 4)];
+            alien.updateDirection(newDirection);
+        }
+        if (!powerUpActive) {
+            // Reset alien speed
+            alien.speed = tileSize / 4; // Normal speed
+            alien.updateVelocity();
+        }
+    }
+}
+
+// Power-up effect for aliens
+function powerUpEffect() {
+    if (powerUpActive) {
+        // Change alien images to frightened versions
+        for (let alien of aliens) {
+            const imgPath = alien.image.src;
+            if (imgPath.includes("blueAlien0")) {
+                alien.image.src =
+                    "../../assets/images/blaise/aliens/blueAlien1.webp";
+            } else if (imgPath.includes("greenAlien0")) {
+                alien.image.src =
+                    "../../assets/images/blaise/aliens/greenAlien1.webp";
+            } else if (imgPath.includes("pinkAlien0")) {
+                alien.image.src =
+                    "../../assets/images/blaise/aliens/pinkAlien1.webp";
+            } else if (imgPath.includes("purpleAlien0")) {
+                alien.image.src =
+                    "../../assets/images/blaise/aliens/purpleAlien1.webp";
+            }
+        }
+
+        // Set a timer to deactivate power-up after 10 seconds
+        setTimeout(() => {
+            powerUpActive = false;
+            revertPowerUpEffect();
+        }, 10000); // 10 seconds duration
+    }
+}
+
+// Revert alien images back to normal after power-up effect ends
+function revertPowerUpEffect() {
+    for (let alien of aliens) {
+        const imgPath = alien.image.src;
+        if (imgPath.includes("blueAlien1")) {
+            alien.image.src =
+                "../../assets/images/blaise/aliens/blueAlien0.webp";
+        } else if (imgPath.includes("greenAlien1")) {
+            alien.image.src =
+                "../../assets/images/blaise/aliens/greenAlien0.webp";
+        } else if (imgPath.includes("pinkAlien1")) {
+            alien.image.src =
+                "../../assets/images/blaise/aliens/pinkAlien0.webp";
+        } else if (imgPath.includes("purpleAlien1")) {
+            alien.image.src =
+                "../../assets/images/blaise/aliens/purpleAlien0.webp";
+        }
+    }
+}
+
+// Moving pacman class to handle
+function movePacman(e) {
+    // Update pacman direction based on arrow key input
+    if (e.code === "ArrowUp" || e.code === "KeyW") {
+        pacman.updateDirection("U");
+    } else if (e.code === "ArrowDown" || e.code === "KeyS") {
+        pacman.updateDirection("D");
+    } else if (e.code === "ArrowLeft" || e.code === "KeyA") {
+        pacman.updateDirection("L");
+    } else if (e.code === "ArrowRight" || e.code === "KeyD") {
+        pacman.updateDirection("R");
+    }
+}
+
+// collision detection function AABB method
+function collision(a, b) {
+    return (
+        a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y
+    );
+}
+
+// Reset function to reset game objects to starting positions
+function resetPositions() {
+    // Reset pacman position
+    pacman.reset();
+    pacman.velocityX = 0;
+    pacman.velocityY = 0;
+    // Reset aliens positions
+    for (let alien of aliens) {
+        alien.reset();
+        const newDirection = direction[Math.floor(Math.random() * 4)];
+        if (!alien.updateDirection) {
+            alien.direction = newDirection;
+            alien.velocityX = 0;
+            alien.velocityY = 0;
+            alien.updateDirection = Movement.prototype.updateDirection;
+            alien.updateVelocity = Movement.prototype.updateVelocity;
+        }
+        alien.updateDirection(newDirection);
+    }
+}
+
+// constructors for game objects will go here (Pacman, Alien, Resource, etc.)
+class Block {
+    constructor(image, x, y, width, height) {
+        // Position
+        this.image = image;
+        this.x = x;
+        this.y = y;
+        // Dimensions
+        this.width = width;
+        this.height = height;
+
+        // Starting position (aliens)
+        this.startX = x;
+        this.startY = y;
+
+        // Animated reset state
+        this.frameIndex = 1; // Start at frame 1 (mouth half open)
+        this.frameCounter = 0;
+    }
+    // Reset position method
+    // This will be used to reset aliens and pacman to their starting positions
+    reset() {
+        this.x = this.startX;
+        this.y = this.startY;
+        // Reset animation state
+        this.frameIndex = 1; // Reset to frame 1 (mouth half open)
+    }
+}
+
+// movement and game logic
+class Movement {
+    constructor() {
+        // Movement properties
+        this.direction = "R"; // Default direction
+        this.velocityX = 0; // Velocity in X direction
+        this.velocityY = 0; // Velocity in Y direction
+    }
+    updateDirection(direction) {
+        const prevDirection = this.direction;
+        this.direction = direction;
+        this.updateVelocity(); // Update velocity based on new direction
+
+        // If direction changed, reset frame index for animation
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+
+        for (let wall of walls) {
+            if (collision(this, wall)) {
+                // Collision detected, revert to previous direction and velocity
+                this.x -= this.velocityX; // Revert X position
+                this.y -= this.velocityY; // Revert Y position
+                this.direction = prevDirection; // Revert to previous direction
+                this.updateVelocity(); // Revert velocity
+                break; // Exit loop after handling collision
+            }
+        }
+    }
+    updateVelocity() {
+        // Update velocity based on direction
+        const speed = this.speed || tileSize / 4;
+        if (this.direction === "U") {
+            // Up
+            this.velocityX = 0;
+            this.velocityY = -speed;
+        } else if (this.direction === "D") {
+            // Down
+            this.velocityX = 0;
+            this.velocityY = speed;
+        } else if (this.direction === "L") {
+            // Left
+            this.velocityX = -speed;
+            this.velocityY = 0;
+        } else if (this.direction === "R") {
+            // Right
+            this.velocityX = speed;
+            this.velocityY = 0;
+        }
+    }
+}
