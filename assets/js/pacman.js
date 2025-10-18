@@ -98,13 +98,12 @@ window.onload = function () {
     loadMap();
 
     // Console log to confirm loading
-    console.log(walls.size);
-    console.log(vents.size);
-    console.log(nuclearWastes.size);
-    console.log(powerUps.size);
-    console.log(aliens.size);
-    console.log(foods.size);
-    
+    console.log(`walls.size: ${walls.size}`);
+    console.log(`vents.size: ${vents.size}`);
+    console.log(`nuclearWastes.size: ${nuclearWastes.size}`);
+    console.log(`powerUps.size: ${powerUps.size}`);
+    console.log(`aliens.size: ${aliens.size}`);
+    console.log(`foods.size: ${foods.size}`);
 };
 
 // Function to load images
@@ -271,6 +270,28 @@ function loadMap() {
         }
     }
 }
+
+// Update function for game objects and redrawing the canvas
+function update() {
+    // Update canvas in a loop
+    // Update based on velocities within the move function
+    move();
+    // Redraw all game objects
+    draw();
+    // We set it using a timeout instead of setInterval to have more control
+    setTimeout(update, 50); // 60 FPS
+}
+
+// draw function to render all game objects on the canvas
+function draw() {
+
+}
+
+// move function to update game object positions
+function move() {
+    
+}
+
 // constructors for game objects will go here (Pacman, Alien, Resource, etc.)
 class Block {
     constructor(image, x, y, width, height) {
