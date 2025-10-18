@@ -129,33 +129,33 @@ window.onload = function () {
 function loadImages() {
     // Wall images
     wallImage = new Image();
-    wallImage.src = "../../assets/images/blaise/wall.webp";
+    wallImage.src = "assets/images/blaise/wall.webp";
 
     ventImage = new Image();
-    ventImage.src = "../../assets/images/blaise/vent.webp";
+    ventImage.src = "assets/images/blaise/vent.webp";
     // Resources
     nuclearWasteImage = new Image();
-    nuclearWasteImage.src = "../../assets/images/blaise/nuclearWaste.png";
+    nuclearWasteImage.src = "assets/images/blaise/nuclearWaste.png";
 
     powerUpImage = new Image();
-    powerUpImage.src = "../../assets/images/blaise/powerUp.png";
+    powerUpImage.src = "assets/images/blaise/powerUp.png";
 
     // Hearts
     fullHeartImage = new Image();
-    fullHeartImage.src = "../../assets/images/blaise/fullHeart.webp";
+    fullHeartImage.src = "assets/images/blaise/fullHeart.webp";
     LostHeartImage = new Image();
-    LostHeartImage.src = "../../assets/images/blaise/lostHeart.webp";
+    LostHeartImage.src = "assets/images/blaise/lostHeart.webp";
 
     // Aliens
     blueAlienImage = new Image();
-    blueAlienImage.src = "../../assets/images/blaise/aliens/blueAlien0.webp";
+    blueAlienImage.src = "assets/images/blaise/aliens/blueAlien0.webp";
     greenAlienImage = new Image();
-    greenAlienImage.src = "../../assets/images/blaise/aliens/greenAlien0.webp";
+    greenAlienImage.src = "assets/images/blaise/aliens/greenAlien0.webp";
     pinkAlienImage = new Image();
-    pinkAlienImage.src = "../../assets/images/blaise/aliens/pinkAlien0.webp";
+    pinkAlienImage.src = "assets/images/blaise/aliens/pinkAlien0.webp";
     purpleAlienImage = new Image();
     purpleAlienImage.src =
-        "../../assets/images/blaise/aliens/purpleAlien0.webp";
+        "assets/images/blaise/aliens/purpleAlien0.webp";
 
     // Animated Pacman frames
     pacmanFrames = {
@@ -166,7 +166,7 @@ function loadImages() {
     };
 
     // Load Pacman frames
-    const path = "../../assets/images/blaise/pacman/";
+    const path = "assets/images/blaise/pacman/";
     for (let i = 0; i < 4; i++) {
         // Right, Left, Up, Down frames
         pacmanFrames["R"][i] = new Image();
@@ -300,9 +300,9 @@ function loadMap() {
 function backgroundMusic() {
     // Check if mute is enabled
     if (mute) return;
-    const bgMusic = new Audio("../../assets/sounds/blaise/background.mp3");
+    const bgMusic = new Audio("assets/sounds/blaise/background.mp3");
     bgMusic.loop = true; // Loop the background music
-    bgMusic.volume = 0.1; // Set volume (0.0 to 1.0)
+    bgMusic.volume = 0.1; // Set volume (0.0 to 1.0) 
     bgMusic.play(); // Start playing the music
     // Play music after the first interaction due to browser policies
     document.addEventListener(
@@ -317,7 +317,7 @@ function backgroundMusic() {
 // Food eaten sound effect
 function playFoodSound() {
     if (mute) return;
-    const foodSound = new Audio("../../assets/sounds/blaise/chomp.mp3");
+    const foodSound = new Audio("assets/sounds/blaise/chomp.mp3");
     foodSound.volume = 0.1; // Set volume (0.0 to 1.0)
     foodSound.play();
 }
@@ -325,7 +325,7 @@ function playFoodSound() {
 function playNuclearWasteSound() {
     if (mute) return;
     const nuclearWasteSound = new Audio(
-        "../../assets/sounds/blaise/eatnuclearWaste.mp3"
+        "assets/sounds/blaise/eatnuclearWaste.mp3"
     );
     nuclearWasteSound.volume = 0.3; // Set volume (0.0 to 1.0)
     nuclearWasteSound.play();
@@ -333,21 +333,21 @@ function playNuclearWasteSound() {
 // Power-Up sound effect
 function playPowerUpSound() {
     if (mute) return;
-    const powerUpSound = new Audio("../../assets/sounds/blaise/powerUp.mp3");
+    const powerUpSound = new Audio("assets/sounds/blaise/powerUp.mp3");
     powerUpSound.volume = 0.4; // Set volume (0.0 to 1.0)
     powerUpSound.play();
 }
 // Death sound effect
 function playDeathSound() {
     if (mute) return;
-    const deathSound = new Audio("../../assets/sounds/blaise/death.mp3");
+    const deathSound = new Audio("assets/sounds/blaise/death.mp3");
     deathSound.volume = 0.4; // Set volume (0.0 to 1.0)
     deathSound.play();
 }
 // Eating alien sound effect
 function playEatAlienSound() {
     if (mute) return;
-    const eatAlienSound = new Audio("../../assets/sounds/blaise/eatAlien.mp3");
+    const eatAlienSound = new Audio("assets/sounds/blaise/eatAlien.mp3");
     eatAlienSound.volume = 0.3; // Set volume (0.0 to 1.0)
     eatAlienSound.play();
 }
@@ -627,16 +627,16 @@ function powerUpEffect() {
             const imgPath = alien.image.src;
             if (imgPath.includes("blueAlien0")) {
                 alien.image.src =
-                    "../../assets/images/blaise/aliens/blueAlien1.webp";
+                    "assets/images/blaise/aliens/blueAlien1.webp";
             } else if (imgPath.includes("greenAlien0")) {
                 alien.image.src =
-                    "../../assets/images/blaise/aliens/greenAlien1.webp";
+                    "assets/images/blaise/aliens/greenAlien1.webp";
             } else if (imgPath.includes("pinkAlien0")) {
                 alien.image.src =
-                    "../../assets/images/blaise/aliens/pinkAlien1.webp";
+                    "assets/images/blaise/aliens/pinkAlien1.webp";
             } else if (imgPath.includes("purpleAlien0")) {
                 alien.image.src =
-                    "../../assets/images/blaise/aliens/purpleAlien1.webp";
+                    "assets/images/blaise/aliens/purpleAlien1.webp";
             }
         }
 
@@ -654,16 +654,16 @@ function revertPowerUpEffect() {
         const imgPath = alien.image.src;
         if (imgPath.includes("blueAlien1")) {
             alien.image.src =
-                "../../assets/images/blaise/aliens/blueAlien0.webp";
+                "assets/images/blaise/aliens/blueAlien0.webp";
         } else if (imgPath.includes("greenAlien1")) {
             alien.image.src =
-                "../../assets/images/blaise/aliens/greenAlien0.webp";
+                "assets/images/blaise/aliens/greenAlien0.webp";
         } else if (imgPath.includes("pinkAlien1")) {
             alien.image.src =
-                "../../assets/images/blaise/aliens/pinkAlien0.webp";
+                "assets/images/blaise/aliens/pinkAlien0.webp";
         } else if (imgPath.includes("purpleAlien1")) {
             alien.image.src =
-                "../../assets/images/blaise/aliens/purpleAlien0.webp";
+                "assets/images/blaise/aliens/purpleAlien0.webp";
         }
     }
 }
