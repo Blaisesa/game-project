@@ -107,6 +107,9 @@ window.onload = function () {
 
     // Start the game loop function
     update();
+
+    // Event listener for keyboard input
+    this.document.addEventListener("keyup", movePacman);
 };
 
 // Function to load images
@@ -300,7 +303,7 @@ function update() {
     // Redraw all game objects
     draw();
     // We set it using a timeout instead of setInterval to have more control
-    setTimeout(update, 50); // 60 FPS
+    setTimeout(update, 50); // Update every 50 milliseconds (20 FPS)
 }
 
 // draw function to render all game objects on the canvas
@@ -405,4 +408,55 @@ class Block {
         this.frameIndex = 1; // Start at frame 1 (mouth half open)
         this.frameCounter = 0;
     }
+}
+
+// Moving pacman class to handle
+function movePacman(e) {
+}
+
+// movement and game logic
+class Movement {
+    constructor(){
+        // Movement properties
+        this.direction = "R"; // Default direction
+        this.velocityX = 0; // Velocity in X direction
+        this.velocityY = 0; // Velocity in Y direction
+    }
+    updateDirection(direction){
+        const prevDirection = this.direction;
+        this.direction = direction;
+        this.updateVelocity(); // Update velocity based on new direction
+
+        // If direction changed, reset frame index for animation
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+
+        for (let wall of walls) {
+            if (collision(this, wall)) {
+                // Collision detected, revert to previous direction and velocity
+                this.x -= this.velocityX; // Revert X position
+                this.y -= this.velocityY; // Revert Y position
+                this.direction = prevDirection; // Revert to previous direction
+                this.updateVelocity(); // Revert velocity
+                break; // Exit loop after handling collision
+            }
+        }
+    }
+    updateVelocity(){
+        // Update velocity based on direction
+        if (this.direction === "U") { // Up
+            this.velocityX = 0;
+            this.velocityY = -tileSize / 4;
+        } else if (this.direction === "D") { // Down
+            this.velocityX = 0;
+            this.velocityY = tileSize / 4;
+        } else if (this.direction === "L") { // Left
+            this.velocityX = -tileSize / 4;
+            this.velocityY = 0;
+        } else if (this.direction === "R") { // Right
+            this.velocityX = tileSize / 4;
+            this.velocityY = 0;
+        }
+    }
+
 }
