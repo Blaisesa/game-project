@@ -587,6 +587,27 @@ function collision(a, b) {
     );
 }
 
+// Reset function to reset game objects to starting positions
+function resetPositions() {
+    // Reset pacman position
+    pacman.reset();
+    pacman.velocityX = 0;
+    pacman.velocityY = 0;
+    // Reset aliens positions
+    for (let alien of aliens) {
+        alien.reset();
+        const newDirection = direction[Math.floor(Math.random() * 4)];
+        if (!alien.updateDirection) {
+            alien.direction = newDirection;
+            alien.velocityX = 0;
+            alien.velocityY = 0;
+            alien.updateDirection = Movement.prototype.updateDirection;
+            alien.updateVelocity = Movement.prototype.updateVelocity;
+        }
+        alien.updateDirection(newDirection);
+    }
+}
+
 // constructors for game objects will go here (Pacman, Alien, Resource, etc.)
 class Block {
     constructor(image, x, y, width, height) {
@@ -605,6 +626,14 @@ class Block {
         // Animated reset state
         this.frameIndex = 1; // Start at frame 1 (mouth half open)
         this.frameCounter = 0;
+    }
+    // Reset position method
+    // This will be used to reset aliens and pacman to their starting positions
+    reset() {
+        this.x = this.startX;
+        this.y = this.startY;
+        // Reset animation state
+        this.frameIndex = 1; // Reset to frame 1 (mouth half open)
     }
 }
 
