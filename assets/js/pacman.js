@@ -1,5 +1,5 @@
 // Global variables & constants for the game
-let board;
+let board; // This specifies the game board canvas element
 const rowCount = 20; // Number of rows in the game board
 const colCount = 29; // Number of columns in the game board
 const tileSize = 32; // Size of each tile in pixels
@@ -83,4 +83,71 @@ let powerUpActive = false;
 let paused = false;
 let mute = false;
 
+// Initialize the game canvas and context
+window.onload = function() {
+    board = this.document.querySelector("#board");
+    board.width = boardWidth;
+    board.height = boardHeight;
+    // Get 2D context for the board allowing us to draw on it
+    context = board.getContext("2d");
 
+    // Load images
+    loadImages();
+}
+
+// Function to load images
+function loadImages() {
+    // Wall images
+    wallImage = new Image();
+    wallImage.src = "../../assets/images/blaise/wall.webp";
+
+    ventImage = new Image();
+    ventImage.src = "../../assets/images/blaise/vent.webp";
+    // Resources
+    nuclearWasteImage = new Image();
+    nuclearWasteImage.src = "../../assets/images/blaise/nuclearWaste.png";
+
+    powerUpImage = new Image();
+    powerUpImage.src = "../../assets/images/blaise/powerUp.png";
+
+    // Hearts
+    fullHeartImage = new Image();
+    fullHeartImage.src = "../../assets/images/blaise/fullHeart.webp";
+    LostHeartImage = new Image();
+    LostHeartImage.src = "../../assets/images/blaise/lostHeart.webp";
+
+    // Aliens
+    blueAlienImage = new Image();
+    blueAlienImage.src = "../../assets/images/blaise/aliens/blueAlien0.webp";
+    greenAlienImage = new Image();
+    greenAlienImage.src = "../../assets/images/blaise/aliens/greenAlien0.webp";
+    pinkAlienImage = new Image();
+    pinkAlienImage.src = "../../assets/images/blaise/aliens/pinkAlien0.webp";
+    purpleAlienImage = new Image();
+    purpleAlienImage.src = "../../assets/images/blaise/aliens/purpleAlien0.webp";
+
+    // Animated Pacman frames
+    pacmanFrames = {
+        "R": [], 
+        "L": [],
+        "U": [],
+        "D": [],
+    };
+
+    // Load Pacman frames
+    const path = "../../assets/images/blaise/pacman/";
+    for (let i = 0; i < 4; i++) {
+        // Right, Left, Up, Down frames
+        pacmanFrames["R"][i] = new Image();
+        pacmanFrames["R"][i].src = `${path}right${i}.png`;
+
+        pacmanFrames["L"][i] = new Image();
+        pacmanFrames["L"][i].src = `${path}left${i}.png`;
+
+        pacmanFrames["U"][i] = new Image();
+        pacmanFrames["U"][i].src = `${path}up${i}.png`;
+
+        pacmanFrames["D"][i] = new Image();
+        pacmanFrames["D"][i].src = `${path}down${i}.png`;
+    }
+}
