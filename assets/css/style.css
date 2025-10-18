@@ -280,7 +280,7 @@ canvas {
 /* joystick styles */
 #controls img {
     margin: 1rem;
-    display: flex;
+    display: none; /* hide for now */
     gap: 1rem;
     flex-direction: column;
     justify-content: center;

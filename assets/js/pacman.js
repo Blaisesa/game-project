@@ -38,9 +38,9 @@ const level0 = [
     "X XnX X X X X       X     X X",
     "X XxX X X X X XX XX X XXX X X",
     "Xn    X X         X       X X",
-    "XXXXX X X XXX 1 2 X X X X X X",
-    "      X X      p    X X X    ",
-    "XXXXX X XXXXX 3 4 X X X X X X",
+    "XXXXX X X XXX 102 X X X X X X",
+    "      X X     0p0   X X X    ",
+    "XXXXX X XXXXX 304 X X X X X X",
     "X           X     X   X   X X",
     "X XXXX XXXX X XXXXX X   X X X",
     "X                     X X X X",
@@ -337,6 +337,20 @@ function playPowerUpSound() {
     powerUpSound.volume = 0.4; // Set volume (0.0 to 1.0)
     powerUpSound.play();
 }
+// Death sound effect
+function playDeathSound() {
+    if (mute) return;
+    const deathSound = new Audio("../../assets/sounds/blaise/death.mp3");
+    deathSound.volume = 0.4; // Set volume (0.0 to 1.0)
+    deathSound.play();
+}
+// Eating alien sound effect
+function playEatAlienSound() {
+    if (mute) return;
+    const eatAlienSound = new Audio("../../assets/sounds/blaise/eatAlien.mp3");
+    eatAlienSound.volume = 0.3; // Set volume (0.0 to 1.0)
+    eatAlienSound.play();
+}
 
 // Update function for game objects and redrawing the canvas
 function update() {
@@ -508,6 +522,8 @@ function move() {
             powerUps.delete(powerUp);
             playPowerUpSound(); // Play power-up sound effect
             // Activate power-up effect logic here
+            powerUpActive = true;
+            powerUpEffect();
             break; // Exit loop after handling collision
         }
     }
@@ -559,6 +575,95 @@ function move() {
                 const newDirection = direction[Math.floor(Math.random() * 4)];
                 alien.updateDirection(newDirection);
             }
+        }
+        // Check for collisions with aliens
+        if (!powerUpActive && collision(pacman, alien)) {
+            // Collision detected between pacman and alien
+            playDeathSound(); // Play death sound effect
+            lives -= 1;
+            // For example, reset positions
+            resetPositions();
+        }
+        if (lives <= 0) {
+            gameOver = true;
+            alert("Game Over! Refresh to play again.");
+        }
+        if (powerUpActive) {
+            // Aliens move away from Pacman
+            const dx = alien.x - pacman.x;
+            const dy = alien.y - pacman.y;
+            // Determine direction to move away
+            if (Math.abs(dx) > Math.abs(dy)) {
+                alien.updateDirection(dx > 0 ? "R" : "L");
+            } else {
+                alien.updateDirection(dy > 0 ? "D" : "U");
+            }
+            // Slow down aliens
+            alien.speed = tileSize / 8; // Reduce speed
+            alien.updateVelocity();
+        }
+        if (powerUpActive && collision(pacman, alien)) {
+            // Collision detected between pacman and alien during power-up
+            playEatAlienSound(); // Play eat alien sound effect
+            score += 200; // Increase score for eating alien
+            // Reset alien position
+            alien.reset();
+            const newDirection = direction[Math.floor(Math.random() * 4)];
+            alien.updateDirection(newDirection);
+        }
+        if (!powerUpActive) {
+            // Reset alien speed
+            alien.speed = tileSize / 4; // Normal speed
+            alien.updateVelocity();
+        }
+    }
+}
+
+// Power-up effect for aliens
+function powerUpEffect() {
+    if (powerUpActive) {
+        // Change alien images to frightened versions
+        for (let alien of aliens) {
+            const imgPath = alien.image.src;
+            if (imgPath.includes("blueAlien0")) {
+                alien.image.src =
+                    "../../assets/images/blaise/aliens/blueAlien1.webp";
+            } else if (imgPath.includes("greenAlien0")) {
+                alien.image.src =
+                    "../../assets/images/blaise/aliens/greenAlien1.webp";
+            } else if (imgPath.includes("pinkAlien0")) {
+                alien.image.src =
+                    "../../assets/images/blaise/aliens/pinkAlien1.webp";
+            } else if (imgPath.includes("purpleAlien0")) {
+                alien.image.src =
+                    "../../assets/images/blaise/aliens/purpleAlien1.webp";
+            }
+        }
+
+        // Set a timer to deactivate power-up after 10 seconds
+        setTimeout(() => {
+            powerUpActive = false;
+            revertPowerUpEffect();
+        }, 10000); // 10 seconds duration
+    }
+}
+
+// Revert alien images back to normal after power-up effect ends
+function revertPowerUpEffect() {
+    for (let alien of aliens) {
+        const imgPath = alien.image.src;
+        if (imgPath.includes("blueAlien1")) {
+            alien.image.src =
+                "../../assets/images/blaise/aliens/blueAlien0.webp";
+        } else if (imgPath.includes("greenAlien1")) {
+            alien.image.src =
+                "../../assets/images/blaise/aliens/greenAlien0.webp";
+        } else if (imgPath.includes("pinkAlien1")) {
+            alien.image.src =
+                "../../assets/images/blaise/aliens/pinkAlien0.webp";
+        } else if (imgPath.includes("purpleAlien1")) {
+            alien.image.src =
+                "../../assets/images/blaise/aliens/purpleAlien0.webp";
         }
     }
 }
@@ -667,21 +772,22 @@ class Movement {
     }
     updateVelocity() {
         // Update velocity based on direction
+        const speed = this.speed || tileSize / 4;
         if (this.direction === "U") {
             // Up
             this.velocityX = 0;
-            this.velocityY = -tileSize / 4;
+            this.velocityY = -speed;
         } else if (this.direction === "D") {
             // Down
             this.velocityX = 0;
-            this.velocityY = tileSize / 4;
+            this.velocityY = speed;
         } else if (this.direction === "L") {
             // Left
-            this.velocityX = -tileSize / 4;
+            this.velocityX = -speed;
             this.velocityY = 0;
         } else if (this.direction === "R") {
             // Right
-            this.velocityX = tileSize / 4;
+            this.velocityX = speed;
             this.velocityY = 0;
         }
     }
