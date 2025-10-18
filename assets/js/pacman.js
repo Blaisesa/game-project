@@ -49,7 +49,7 @@ const level0 = [
     "X X X X   X    X X X XX X X X",
     "X   Xn  X X+XX X   X  X X   X",
     "XXXXXXXXX XXXXXXXXX XXXXXXXXX",
-]
+];
 // Additional levels (level1, level2, etc.) can be defined similarly
 
 // Create sets for ingame objects
@@ -59,6 +59,7 @@ const vents = new Set();
 // Resources
 const nuclearWastes = new Set();
 const powerUps = new Set();
+const foods = new Set();
 
 // Food pelets dont need a set as they will be checked directly on the board
 
@@ -84,7 +85,7 @@ let paused = false;
 let mute = false;
 
 // Initialize the game canvas and context
-window.onload = function() {
+window.onload = function () {
     board = this.document.querySelector("#board");
     board.width = boardWidth;
     board.height = boardHeight;
@@ -93,7 +94,18 @@ window.onload = function() {
 
     // Load images
     loadImages();
-}
+    // Load the initial map
+    loadMap();
+
+    // Console log to confirm loading
+    console.log(walls.size);
+    console.log(vents.size);
+    console.log(nuclearWastes.size);
+    console.log(powerUps.size);
+    console.log(aliens.size);
+    console.log(foods.size);
+    
+};
 
 // Function to load images
 function loadImages() {
@@ -124,14 +136,15 @@ function loadImages() {
     pinkAlienImage = new Image();
     pinkAlienImage.src = "../../assets/images/blaise/aliens/pinkAlien0.webp";
     purpleAlienImage = new Image();
-    purpleAlienImage.src = "../../assets/images/blaise/aliens/purpleAlien0.webp";
+    purpleAlienImage.src =
+        "../../assets/images/blaise/aliens/purpleAlien0.webp";
 
     // Animated Pacman frames
     pacmanFrames = {
-        "R": [], 
-        "L": [],
-        "U": [],
-        "D": [],
+        R: [],
+        L: [],
+        U: [],
+        D: [],
     };
 
     // Load Pacman frames
@@ -149,5 +162,132 @@ function loadImages() {
 
         pacmanFrames["D"][i] = new Image();
         pacmanFrames["D"][i].src = `${path}down${i}.png`;
+    }
+}
+
+// Load map and initialize game objects this will also be used to reset levels
+function loadMap() {
+    // Clear previous level data
+    walls.clear();
+    vents.clear();
+    foods.clear();
+    nuclearWastes.clear();
+    powerUps.clear();
+    aliens.clear();
+
+    for (let r = 0; r < rowCount; r++) {
+        for (let c = 0; c < colCount; c++) {
+            const row = level0[r];
+            const levelChar = row[c];
+
+            const x = c * tileSize;
+            const y = r * tileSize;
+
+            if (levelChar === "X") {
+                // Wall
+                const wall = new Block(wallImage, x, y, tileSize, tileSize);
+                walls.add(wall);
+            } else if (levelChar === "x") {
+                // Vent
+                const vent = new Block(ventImage, x, y, tileSize, tileSize);
+                vents.add(vent);
+            } else if (levelChar === "n") {
+                // Nuclear Waste
+                const nuclearWaste = new Block(
+                    nuclearWasteImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                nuclearWastes.add(nuclearWaste);
+            } else if (levelChar === "+") {
+                // Power-Up
+                const powerUp = new Block(
+                    powerUpImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                powerUps.add(powerUp);
+            } else if (levelChar === "1") {
+                // Blue Alien
+                const alien = new Block(
+                    blueAlienImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                aliens.add(alien);
+            } else if (levelChar === "2") {
+                // Green Alien
+                const alien = new Block(
+                    greenAlienImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                aliens.add(alien);
+            } else if (levelChar === "3") {
+                // Pink Alien
+                const alien = new Block(
+                    pinkAlienImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                aliens.add(alien);
+            } else if (levelChar === "4") {
+                // Purple Alien
+                const alien = new Block(
+                    purpleAlienImage,
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                aliens.add(alien);
+            } else if (levelChar === "P") {
+                // Pacman Start
+                pacman = new Block(
+                    pacmanFrames["R"][1],
+                    x,
+                    y,
+                    tileSize,
+                    tileSize
+                );
+                // Movement properties and starting direction
+                pacman.direction = "R";
+            } else if (levelChar === " ") {
+                // Food pellet (placed in the center of the tile)
+                const food = new Block(null, x + 14, y + 14, 4, 4);
+                foods.add(food);
+            }
+            // Portal to be added later
+        }
+    }
+}
+// constructors for game objects will go here (Pacman, Alien, Resource, etc.)
+class Block {
+    constructor(image, x, y, width, height) {
+        // Position
+        this.image = image;
+        this.x = x;
+        this.y = y;
+        // Dimensions
+        this.width = width;
+        this.height = height;
+
+        // Starting position (aliens)
+        this.startX = x;
+        this.startY = y;
+
+        // Animated reset state
+        this.frameIndex = 1; // Start at frame 1 (mouth half open)
+        this.frameCounter = 0;
     }
 }
