@@ -96,15 +96,28 @@ window.onload = function () {
     loadImages();
     // Load the initial map
     loadMap();
-
+    // Start background music
+    backgroundMusic();
     // Console log to confirm loading
-    console.log(`walls.size: ${walls.size}`);
-    console.log(`vents.size: ${vents.size}`);
-    console.log(`nuclearWastes.size: ${nuclearWastes.size}`);
-    console.log(`powerUps.size: ${powerUps.size}`);
-    console.log(`aliens.size: ${aliens.size}`);
-    console.log(`foods.size: ${foods.size}`);
+    // console.log(`walls.size: ${walls.size}`);
+    // console.log(`vents.size: ${vents.size}`);
+    // console.log(`nuclearWastes.size: ${nuclearWastes.size}`);
+    // console.log(`powerUps.size: ${powerUps.size}`);
+    // console.log(`aliens.size: ${aliens.size}`);
+    // console.log(`foods.size: ${foods.size}`);
 
+    // Initialize Alien Movement
+    for (let alien of aliens) {
+        const newDirection = direction[Math.floor(Math.random() * 4)];
+        if (!alien.updateDirection) {
+            alien.direction = newDirection;
+            alien.velocityX = 0;
+            alien.velocityY = 0;
+            alien.updateDirection = Movement.prototype.updateDirection; // Assign movement methods
+            alien.updateVelocity = Movement.prototype.updateVelocity; // Assign movement methods
+        }
+        alien.updateDirection(newDirection);
+    }
     // Start the game loop function
     update();
 
@@ -283,6 +296,48 @@ function loadMap() {
     }
 }
 
+// Load Game Music Effects
+function backgroundMusic() {
+    // Check if mute is enabled
+    if (mute) return;
+    const bgMusic = new Audio("../../assets/sounds/blaise/background.mp3");
+    bgMusic.loop = true; // Loop the background music
+    bgMusic.volume = 0.1; // Set volume (0.0 to 1.0)
+    bgMusic.play(); // Start playing the music
+    // Play music after the first interaction due to browser policies
+    document.addEventListener(
+        "click",
+        function playMusic() {
+            bgMusic.play();
+            document.removeEventListener("click", playMusic);
+        },
+        { once: true }
+    );
+}
+// Food eaten sound effect
+function playFoodSound() {
+    if (mute) return;
+    const foodSound = new Audio("../../assets/sounds/blaise/chomp.mp3");
+    foodSound.volume = 0.1; // Set volume (0.0 to 1.0)
+    foodSound.play();
+}
+// Eat Nuclear Waste sound effect
+function playNuclearWasteSound() {
+    if (mute) return;
+    const nuclearWasteSound = new Audio(
+        "../../assets/sounds/blaise/eatnuclearWaste.mp3"
+    );
+    nuclearWasteSound.volume = 0.3; // Set volume (0.0 to 1.0)
+    nuclearWasteSound.play();
+}
+// Power-Up sound effect
+function playPowerUpSound() {
+    if (mute) return;
+    const powerUpSound = new Audio("../../assets/sounds/blaise/powerUp.mp3");
+    powerUpSound.volume = 0.4; // Set volume (0.0 to 1.0)
+    powerUpSound.play();
+}
+
 // Update function for game objects and redrawing the canvas
 function update() {
     // Pacman animation logic
@@ -346,6 +401,8 @@ function draw() {
     // Vents
     for (let vent of vents) {
         context.drawImage(vent.image, vent.x, vent.y, vent.width, vent.height);
+        // z-index for vents
+        context.globalCompositeOperation = "source-over"; // Draw in front of aliens
     }
     // Nuclear Wastes
     for (let nuclearWaste of nuclearWastes) {
@@ -356,6 +413,8 @@ function draw() {
             nuclearWaste.width,
             nuclearWaste.height
         );
+        // z-index for nuclear wastes
+        context.globalCompositeOperation = "destination-over"; // Draw behind pacman and aliens
     }
     // Power-Ups
     for (let powerUp of powerUps) {
@@ -366,6 +425,8 @@ function draw() {
             powerUp.width,
             powerUp.height
         );
+        // z-index for power-ups
+        context.globalCompositeOperation = "destination-over"; // Draw behind pacman and aliens
     }
     // Foods pellets
     for (let food of foods) {
@@ -378,6 +439,8 @@ function draw() {
             0,
             Math.PI * 2
         );
+        // z-index for food pellets
+        context.globalCompositeOperation = "destination-over"; // Draw behind pacman and aliens
         context.fill();
     }
     // Drawing for score and lives within the html
@@ -424,6 +487,7 @@ function move() {
             // Collision detected, remove food pellet
             foods.delete(food);
             score += 10; // Increase score
+            playFoodSound(); // Play food eaten sound effect
             break; // Exit loop after handling collision
         }
     }
@@ -432,6 +496,7 @@ function move() {
         if (collision(pacman, nuclearWaste)) {
             // Collision detected, remove nuclear waste
             nuclearWastes.delete(nuclearWaste);
+            playNuclearWasteSound(); // Play nuclear waste eaten sound effect
             score += 50; // Increase score
             break; // Exit loop after handling collision
         }
@@ -441,27 +506,62 @@ function move() {
         if (collision(pacman, powerUp)) {
             // Collision detected, remove power-up
             powerUps.delete(powerUp);
+            playPowerUpSound(); // Play power-up sound effect
             // Activate power-up effect logic here
             break; // Exit loop after handling collision
         }
     }
-    // Check for collisions with aliens
+    // Teleport tunnels logic
+    if (pacman.x <= 0) {
+        pacman.x = boardWidth - pacman.width;
+    } else if (pacman.x >= boardWidth - pacman.width) {
+        pacman.x = 0;
+    }
+    if (pacman.y <= 0) {
+        pacman.y = boardHeight - pacman.height;
+    } else if (pacman.y + pacman.height >= boardHeight) {
+        pacman.y = 0;
+    }
+
+    // Alien Movement
     for (let alien of aliens) {
-        if (collision(pacman, alien)) {
-            // Collision check console log
-            // console.log("Pacman collided with an alien!");
-            // lives -= 1;
+        alien.x += alien.velocityX;
+        alien.y += alien.velocityY;
+        // Prevent alien from leaving the canvas boundaries
+        alien.x = Math.max(0, Math.min(alien.x, boardWidth - alien.width));
+        alien.y = Math.max(0, Math.min(alien.y, boardHeight - alien.height));
+        // Check for collisions with walls
+        for (let wall of walls) {
+            if (collision(alien, wall)) {
+                // Collision detected, revert position
+                alien.x -= alien.velocityX;
+                alien.y -= alien.velocityY;
+                // Choose a new random direction
+                const newDirection = direction[Math.floor(Math.random() * 4)];
+                alien.updateDirection(newDirection);
+                break; // Exit loop after handling collision
+            }
         }
-        // Check for game over
-        if (lives <= 0) {
-            gameOver = true;
-            // Game over console log
-            // console.log("Game Over!");
+        // Teleport tunnels logic for aliens
+        if (alien.x <= 0) {
+            alien.x = boardWidth - alien.width;
+        } else if (alien.x >= boardWidth - alien.width) {
+            alien.x = 0;
+        }
+        if (alien.y <= 0) {
+            alien.y = boardHeight - alien.height;
+        } else if (alien.y + alien.height >= boardHeight) {
+            alien.y = 0;
+        }
+        // Randomly change direction at intervals
+        if (alien.x % tileSize === 0 && alien.y % tileSize === 0) {
+            if (Math.random() < 0.4) {
+                const newDirection = direction[Math.floor(Math.random() * 4)];
+                alien.updateDirection(newDirection);
+            }
         }
     }
 }
-
-
 
 // Moving pacman class to handle
 function movePacman(e) {
