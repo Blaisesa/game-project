@@ -410,11 +410,53 @@ function move() {
             break; // Exit loop after handling collision
         }
     }
+    // Check for collisions with vents
+    for (let vent of vents) {
+        if (collision(pacman, vent)) {
+            pacman.x -= pacman.velocityX;
+            pacman.y -= pacman.velocityY;
+            break; // Exit loop after handling collision
+        }
+    }
+    // Check for collisions with food pellets
+    for (let food of foods) {
+        if (collision(pacman, food)) {
+            // Collision detected, remove food pellet
+            foods.delete(food);
+            score += 10; // Increase score
+            break; // Exit loop after handling collision
+        }
+    }
+    // Check for collisions with nuclear wastes
+    for (let nuclearWaste of nuclearWastes) {
+        if (collision(pacman, nuclearWaste)) {
+            // Collision detected, remove nuclear waste
+            nuclearWastes.delete(nuclearWaste);
+            score += 50; // Increase score
+            break; // Exit loop after handling collision
+        }
+    }
+    // Check for collisions with power-ups
+    for (let powerUp of powerUps) {
+        if (collision(pacman, powerUp)) {
+            // Collision detected, remove power-up
+            powerUps.delete(powerUp);
+            // Activate power-up effect logic here
+            break; // Exit loop after handling collision
+        }
+    }
     // Check for collisions with aliens
     for (let alien of aliens) {
         if (collision(pacman, alien)) {
-            // Collision with alien detected
-            console.log("Pacman collided with an alien!"); // For testing purposes check console
+            // Collision check console log
+            // console.log("Pacman collided with an alien!");
+            // lives -= 1;
+        }
+        // Check for game over
+        if (lives <= 0) {
+            gameOver = true;
+            // Game over console log
+            // console.log("Game Over!");
         }
     }
 }
