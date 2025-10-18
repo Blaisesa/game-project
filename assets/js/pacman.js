@@ -35,7 +35,7 @@ const level0 = [
     "X       x X X       X X    +X",
     "X X X X X X   X X X X   XxX X",
     "X X X X X X X X X X X XXXnX X",
-    "X XnX X X X X       X X   X X",
+    "X XnX X X X X       X     X X",
     "X XxX X X X X XX XX X XXX X X",
     "Xn    X X         X       X X",
     "XXXXX X X XXX 1 2 X X X X X X",
@@ -267,6 +267,12 @@ function loadMap() {
                 );
                 // Movement properties and starting direction
                 pacman.direction = "R";
+                // Reset velocities
+                pacman.velocityX = 0;
+                pacman.velocityY = 0;
+                pacman.speed = tileSize / 4; // Pacman speed
+                pacman.updateDirection = Movement.prototype.updateDirection;
+                pacman.updateVelocity = Movement.prototype.updateVelocity;
             } else if (levelChar === " ") {
                 // Food pellet (placed in the center of the tile)
                 const food = new Block(null, x + 14, y + 14, 4, 4);
@@ -387,7 +393,57 @@ function draw() {
 }
 
 // move function to update game object positions
-function move() {}
+function move() {
+    // Update pacman position based on velocity
+    pacman.x += pacman.velocityX;
+    pacman.y += pacman.velocityY;
+
+    // Prevent pacman from leaving the canvas boundaries
+    pacman.x = Math.max(0, Math.min(pacman.x, boardWidth - pacman.width));
+    pacman.y = Math.max(0, Math.min(pacman.y, boardHeight - pacman.height));
+    // Check for collisions with walls
+    for (let wall of walls) {
+        if (collision(pacman, wall)) {
+            // Collision detected, revert position
+            pacman.x -= pacman.velocityX;
+            pacman.y -= pacman.velocityY;
+            break; // Exit loop after handling collision
+        }
+    }
+    // Check for collisions with aliens
+    for (let alien of aliens) {
+        if (collision(pacman, alien)) {
+            // Collision with alien detected
+            console.log("Pacman collided with an alien!"); // For testing purposes check console
+        }
+    }
+}
+
+
+
+// Moving pacman class to handle
+function movePacman(e) {
+    // Update pacman direction based on arrow key input
+    if (e.code === "ArrowUp" || e.code === "KeyW") {
+        pacman.updateDirection("U");
+    } else if (e.code === "ArrowDown" || e.code === "KeyS") {
+        pacman.updateDirection("D");
+    } else if (e.code === "ArrowLeft" || e.code === "KeyA") {
+        pacman.updateDirection("L");
+    } else if (e.code === "ArrowRight" || e.code === "KeyD") {
+        pacman.updateDirection("R");
+    }
+}
+
+// collision detection function AABB method
+function collision(a, b) {
+    return (
+        a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y
+    );
+}
 
 // constructors for game objects will go here (Pacman, Alien, Resource, etc.)
 class Block {
@@ -410,19 +466,15 @@ class Block {
     }
 }
 
-// Moving pacman class to handle
-function movePacman(e) {
-}
-
 // movement and game logic
 class Movement {
-    constructor(){
+    constructor() {
         // Movement properties
         this.direction = "R"; // Default direction
         this.velocityX = 0; // Velocity in X direction
         this.velocityY = 0; // Velocity in Y direction
     }
-    updateDirection(direction){
+    updateDirection(direction) {
         const prevDirection = this.direction;
         this.direction = direction;
         this.updateVelocity(); // Update velocity based on new direction
@@ -442,21 +494,24 @@ class Movement {
             }
         }
     }
-    updateVelocity(){
+    updateVelocity() {
         // Update velocity based on direction
-        if (this.direction === "U") { // Up
+        if (this.direction === "U") {
+            // Up
             this.velocityX = 0;
             this.velocityY = -tileSize / 4;
-        } else if (this.direction === "D") { // Down
+        } else if (this.direction === "D") {
+            // Down
             this.velocityX = 0;
             this.velocityY = tileSize / 4;
-        } else if (this.direction === "L") { // Left
+        } else if (this.direction === "L") {
+            // Left
             this.velocityX = -tileSize / 4;
             this.velocityY = 0;
-        } else if (this.direction === "R") { // Right
+        } else if (this.direction === "R") {
+            // Right
             this.velocityX = tileSize / 4;
             this.velocityY = 0;
         }
     }
-
 }
