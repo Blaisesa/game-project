@@ -104,6 +104,9 @@ window.onload = function () {
     console.log(`powerUps.size: ${powerUps.size}`);
     console.log(`aliens.size: ${aliens.size}`);
     console.log(`foods.size: ${foods.size}`);
+
+    // Start the game loop function
+    update();
 };
 
 // Function to load images
@@ -273,6 +276,24 @@ function loadMap() {
 
 // Update function for game objects and redrawing the canvas
 function update() {
+    // Pacman animation logic
+    //Only animate if pacman is moving and game is not over or paused
+    if (
+        !gameOver &&
+        !paused &&
+        (pacman.velocityX !== 0 || pacman.velocityY !== 0)
+    ) {
+        pacman.frameCounter++;
+        // Change frame every 'animationSpeed' updates
+        if (pacman.frameCounter >= animationSpeed) {
+            // Reset counter and update frame index
+            pacman.frameCounter = 0;
+            pacman.frameIndex = (pacman.frameIndex + 1) % 4;
+        }
+    } else if (pacman.velocityX === 0 && pacman.velocityY === 0) {
+        // Reset to mouth half open when not moving
+        pacman.frameIndex = 1;
+    }
     // Update canvas in a loop
     // Update based on velocities within the move function
     move();
@@ -284,7 +305,20 @@ function update() {
 
 // draw function to render all game objects on the canvas
 function draw() {
+    context.clearRect(0, 0, boardWidth, boardHeight); // Clear the canvas
 
+    // Draw Pacman with current animation frame
+    if (pacman) {
+        const currentPacmanFrame = pacmanFrames[pacman.direction][pacman.frameIndex];
+
+        context.drawImage(
+            currentPacmanFrame,
+            pacman.x,
+            pacman.y,
+            pacman.width,
+            pacman.height
+        );
+    }
 }
 
 // move function to update game object positions
