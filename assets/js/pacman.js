@@ -29,7 +29,7 @@ const animationSpeed = 2; // Speed of animation
 // Game maps
 const level0 = [
     // 0: empty, X: wall, x: vent, n: nuclear waste, +: power-up, 1: blue alien, 2: green alien, 3: pink alien, 4: purple alien, P: pacman start, p: portal, " ": food
-    "XXXXXXXXX XXXXXXXXX XXXXXXXXX",
+    "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
     "X                          nX",
     "X XXXX XX X XXX XXXXX X XXXxX",
     "X       x X X       X X    +X",
@@ -39,7 +39,7 @@ const level0 = [
     "X XxX X X X X XX XX X XXX X X",
     "Xn    X X         X       X X",
     "XXXXX X X XXX 1 2 X X X X X X",
-    "0     X X      p    X X X   0",
+    "      X X      p    X X X    ",
     "XXXXX X XXXXX 3 4 X X X X X X",
     "X           X     X   X   X X",
     "X XXXX XXXX X XXXXX X   X X X",
@@ -48,7 +48,7 @@ const level0 = [
     "X X X   X X  X P   x n  X X X",
     "X X X X   X    X X X XX X X X",
     "X   Xn  X X+XX X   X  X X   X",
-    "XXXXXXXXX XXXXXXXXX XXXXXXXXX",
+    "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
 ];
 // Additional levels (level1, level2, etc.) can be defined similarly
 
@@ -309,7 +309,8 @@ function draw() {
 
     // Draw Pacman with current animation frame
     if (pacman) {
-        const currentPacmanFrame = pacmanFrames[pacman.direction][pacman.frameIndex];
+        const currentPacmanFrame =
+            pacmanFrames[pacman.direction][pacman.frameIndex];
 
         context.drawImage(
             currentPacmanFrame,
@@ -319,12 +320,71 @@ function draw() {
             pacman.height
         );
     }
+    // Aliens
+    for (let alien of aliens) {
+        context.drawImage(
+            alien.image,
+            alien.x,
+            alien.y,
+            alien.width,
+            alien.height
+        );
+    }
+    // Walls
+    for (let wall of walls) {
+        context.drawImage(wall.image, wall.x, wall.y, wall.width, wall.height);
+    }
+    // Vents
+    for (let vent of vents) {
+        context.drawImage(vent.image, vent.x, vent.y, vent.width, vent.height);
+    }
+    // Nuclear Wastes
+    for (let nuclearWaste of nuclearWastes) {
+        context.drawImage(
+            nuclearWaste.image,
+            nuclearWaste.x,
+            nuclearWaste.y,
+            nuclearWaste.width,
+            nuclearWaste.height
+        );
+    }
+    // Power-Ups
+    for (let powerUp of powerUps) {
+        context.drawImage(
+            powerUp.image,
+            powerUp.x,
+            powerUp.y,
+            powerUp.width,
+            powerUp.height
+        );
+    }
+    // Foods pellets
+    for (let food of foods) {
+        context.fillStyle = "green";
+        context.beginPath();
+        context.arc(
+            food.x + food.width / 2,
+            food.y + food.height / 2,
+            food.width / 2,
+            0,
+            Math.PI * 2
+        );
+        context.fill();
+    }
+    // Drawing for score and lives within the html
+    document.querySelector("#score").innerText = `Score: ${score}`;
+    // Lives display as hearts
+    document.querySelector(
+        "#lives"
+    ).innerHTML = `lives: ${'<img src="assets/images/blaise/fullHeart.webp" alt="">'.repeat(
+        lives
+    )}${'<img src="assets/images/blaise/lostHeart.webp" alt="">'.repeat(
+        3 - lives
+    )}`;
 }
 
 // move function to update game object positions
-function move() {
-    
-}
+function move() {}
 
 // constructors for game objects will go here (Pacman, Alien, Resource, etc.)
 class Block {
