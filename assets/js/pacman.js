@@ -28,58 +28,100 @@ const animationSpeed = 2; // Speed of animation
 
 // Game maps
 // original level 0 map layout
-//     "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
-//     "X                         n X",
-//     "X XXXX XX X XXX XXXXX X XXXxX",
-//     "X       x X X       X X +   X",
-//     "X X X X X X   X X X X   XxX X",
-//     "X X X X X X X X X X X XXXnX X",
-//     "X XnX X X X X       X     X X",
-//     "X XxX X X X X XX XX X XXX X X",
-//     "Xn    X X         X       X X",
-//     "XXXXX X X XXX 102 X X X X X X",
-//     "      X X     0p0   X X X    ",
-//     "XXXXX X XXXXX 304 X X X X X X",
-//     "X           X     X   X   X X",
-//     "X XXXX XXXX X XXXXX X   X X X",
-//     "X                     X X X X",
-//     "X X X XxX X XX X X X XX   X X",
-//     "X X X   X X  X P   X n  X X X",
-//     "X X X X   X    X X x XX X X X",
-//     "X   Xn  X X+XX X   X  X X   X",
-//     "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
 const level0 = [
     // 0: empty, X: wall, x: vent, n: nuclear waste, +: power-up, 1: blue alien, 2: green alien, 3: pink alien, 4: purple alien, P: pacman start, p: portal, " ": food
-    "XXXXXXXXX0XXXXXXXXXX XXXXXXXX",
-    "X0000000000000000000000000n0X",
-    "X0XXXX0XX0X0XXX0XXXXX0X0XXXxX",
-    "X0000000x0X0X0000000X0X0+000X",
-    "X0X0X0X0X0X000X0X0X0X000XxX0X",
-    "X0X0X0X0X0X0X0X0X0X0X0XXXnX0X",
-    "X0XnX0X0X0X0X0000000X00000X0X",
-    "X0XxX0X0X0X0X0XX0XX0X0XXX0X0X",
-    "Xn0000X0X000000000X0000000X0X",
-    "XXXXX0X0X0XXX01020X0X0X0X0X0X",
-    "000000X0X000000p0000X0X0X0000",
-    "XXXXX0X0XXXXX03040X0X0X0X0X0X",
-    "X00000000000X00000X000X000X0X",
-    "X0XXXX0XXXX0X0XXXXX0X000X0X0X",
-    "X000000000000000000000X0X0X0X",
-    "X0X0X0XxX0X0XX0X0X0X0XX000X0X",
-    "X0X0X000X0X00X0P000X0n00X0X0X",
-    "X0X0X0X000X0000X0X0x0XX0X0X0X",
-    "X000Xn00X0X+XX0X000X00X0X000X",
-    "XXXXXXXXX0XXXXXXXXXX XXXXXXXX",
+    "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
+    "X                         n X",
+    "X XXXX XX X XXX XXXXX X XXXxX",
+    "X       x X X       X X +   X",
+    "X X X X X X   X X X X   XxX X",
+    "X X X X X X X X X X X XXXnX X",
+    "X XnX X X X X       X     X X",
+    "X XxX X X X X XX XX X XXX X X",
+    "Xn    X X         X       X X",
+    "XXXXX X X XXX 102 X X X X X X",
+    "      X X     0p0   X X X    ",
+    "XXXXX X XXXXX 304 X X X X X X",
+    "X           X     X   X   X X",
+    "X XXXX XXXX X XXXXX X   X X X",
+    "X                     X X X X",
+    "X X X XxX X XX X X X XX   X X",
+    "X X X   X X  X P   X n  X X X",
+    "X X X X   X    X X x XX X X X",
+    "X   Xn  X X+XX X   X  X X   X",
+    "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
 ];
 // Additional levels (level1, level2, etc.)
 const level1 = [
     // Level 1 map layout
-    
+    "XXXXXXXX XXXXXXXXXX XXXXXXXXX",
+    "X1X      XXX+XXn           2X",
+    "X X X XX X   x  XXXXXxXXXXX X",
+    "X X Xn   x XXX XX           X",
+    "X X XXXX x   X X  X XX X XX X",
+    "X+       XXX X   XX+ X X Xn X",
+    "XxXXXXXXXX   X X  XX   x   XX",
+    "            XX XX nx X X X   ",
+    "XXXXXXxXXXXXX   X XX X X XxXX",
+    "X+            p             X",
+    "X XXXXXX X XX P X X X X X XxX",
+    "X        X  XX XX X X X X X X",
+    "XXXX X XXXX  X    x X XnX X X",
+    "     x  nX   X XXXX X x X x  ",
+    "X XXXXXXXX X X     +X X X+X X",
+    "X    X     X x XXXXxX X x XnX",
+    "XxXX X XXX X X       nX X X X",
+    "X nX X x   X X XXXXXXXX X X X",
+    "X3     X X x X             4X",
+    "XXXXXXXX XXXXXXXXXX XXXXXXXXX"
 ];
 const level2 = [
     // Level 2 map layout
+    "XXXXXXXXX XXXXXXXXXXXXXXXX XX",
+    "X1      x XXXXX2            X",
+    "X XX XX X     x XXXXXXXXXxX X",
+    "X X+  X XXXXX X Xn       +X X",
+    "X   X     X   X X XXXXXxX X X",
+    "X X  nX X   X X x       X X X",
+    "X XX XX XXX X X XXXXXXX    3X",
+    "X           X4X         XXXxX",
+    "X XXxXX XXX X XXXXXxXXXXX   X",
+    "XP          X             p X",
+    "XXXXXXXXXXXxXXXxXXXXXXXXX   X",
+    "X2            X4  x   xnXXXxX",
+    "   X XXXX XXxXX X X X X   X  ",
+    "XXXX X    X   X X X X X X X X",
+    "X      XX X X X x X x X x X X",
+    "XX+XXX x    X X X X+X X X X X",
+    "X      XX XnX X X X X X X X X",
+    "XX XXX XX XxX x X X X X X X X",
+    "Xn           1XnX   X   X  3X",
+    "XXXXXXXXX XXXXXXXXXXXXXXXX XXX"
 ];
 // ... Add more levels HERE ...
+// For example: also make sure to use proper values for walls etc.. you can find them above
+// const level3 = [
+    // "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XPX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XX",
+    // "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+// ];
 
 // Array of levels make sure to add new levels to this array otherwise they won't load
 const levels = [level0, level1, level2]; // Array of levels
@@ -107,6 +149,7 @@ const direction = ["U", "D", "L", "R"];
 // Game state variables
 let currentLevel = 0;
 let score = 0;
+let highScore = 0;
 let lives = 3;
 let level = 0;
 // Game scaling variable needed for responsive canvas
@@ -532,6 +575,11 @@ function update() {
         // Reset to mouth half open when not moving
         pacman.frameIndex = 1;
     }
+    // Check for game over
+    if (gameOver) {
+        // game over function call here, for now just cancel the update loop
+        return;
+    }
     // Update canvas in a loop
     // Update based on velocities within the move function
     move();
@@ -783,13 +831,10 @@ function move() {
         if (!powerUpActive && collision(pacman, alien)) {
             // Collision detected between pacman and alien
             playDeathSound(); // Play death sound effect
-            lives -= 1;
+            // Decrease life function
+            death();
             // For example, reset positions
             resetPositions();
-        }
-        if (lives <= 0) {
-            gameOver = true;
-            alert("Game Over! Refresh to play again.");
         }
         if (powerUpActive) {
             // Aliens move away from Pacman
@@ -877,6 +922,21 @@ function checkLevelComplete() {
             currentLevel = 0; // Reset to first level or handle game completion
             loadMap();
             resetPositions();
+        }
+    }
+}
+
+// Death function to handle life decrement and reset positions
+function death() {
+    lives--;
+    if (lives <= 0) {
+        gameOver = true;
+        // Check high score and update if necessary
+        if (score > highScore) {
+            highScore = score;
+            document.querySelector(
+                "#highScore"
+            ).innerText = `High Score: ${highScore}`;
         }
     }
 }
