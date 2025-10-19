@@ -30,9 +30,9 @@ const animationSpeed = 2; // Speed of animation
 const level0 = [
     // 0: empty, X: wall, x: vent, n: nuclear waste, +: power-up, 1: blue alien, 2: green alien, 3: pink alien, 4: purple alien, P: pacman start, p: portal, " ": food
     "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
-    "X                          nX",
+    "X                         n X",
     "X XXXX XX X XXX XXXXX X XXXxX",
-    "X       x X X       X X    +X",
+    "X       x X X       X X +   X",
     "X X X X X X   X X X X   XxX X",
     "X X X X X X X X X X X XXXnX X",
     "X XnX X X X X       X     X X",
@@ -45,8 +45,8 @@ const level0 = [
     "X XXXX XXXX X XXXXX X   X X X",
     "X                     X X X X",
     "X X X XxX X XX X X X XX   X X",
-    "X X X   X X  X P   x n  X X X",
-    "X X X X   X    X X X XX X X X",
+    "X X X   X X  X P   X n  X X X",
+    "X X X X   X    X X x XX X X X",
     "X   Xn  X X+XX X   X  X X   X",
     "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
 ];
@@ -77,12 +77,33 @@ let currentLevel = 0;
 let score = 0;
 let lives = 3;
 let level = 0;
+// Game scaling variable needed for responsive canvas
+let scale = 1; // Global scale factor
 let gameOver = false;
 let gameWin = false;
 let levelComplete = false;
 let powerUpActive = false;
 let paused = false;
 let mute = false;
+
+// Resize canvas to fit window while maintaining aspect ratio
+function resizeCanvas() {
+    const maxWidth = window.innerWidth;
+    const maxHeight = window.innerHeight;
+
+    const scaleX = maxWidth / boardWidth;
+    const scaleY = maxHeight / boardHeight;
+
+    scale = Math.min(scaleX, scaleY); // Use this scale to draw everything
+
+    board.width = boardWidth * scale;   // Actual canvas width in pixels
+    board.height = boardHeight * scale; // Actual canvas height in pixels
+
+    context.imageSmoothingEnabled = false; // Preserve pixelated look
+
+    draw(); // Redraw everything at new scale
+}
+
 
 // Initialize the game canvas and context
 window.onload = function () {
@@ -123,6 +144,17 @@ window.onload = function () {
 
     // Event listener for keyboard input
     this.document.addEventListener("keyup", movePacman);
+    // Remove default arrow key scrolling behavior
+    window.addEventListener("keydown", function (e) {
+        if (
+            ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)
+        ) {
+            e.preventDefault();
+        }
+    });
+    // Event listener for window resize to make canvas responsive
+    resizeCanvas(); // Initial resize
+    window.addEventListener("resize", resizeCanvas);
 };
 
 // Function to load images
@@ -302,7 +334,7 @@ function backgroundMusic() {
     if (mute) return;
     const bgMusic = new Audio("assets/sounds/blaise/background.mp3");
     bgMusic.loop = true; // Loop the background music
-    bgMusic.volume = 0.1; // Set volume (0.0 to 1.0)
+    bgMusic.volume = 0.25; // Set volume (0.0 to 1.0) 
     bgMusic.play(); // Start playing the music
     // Play music after the first interaction due to browser policies
     document.addEventListener(
@@ -372,7 +404,7 @@ function update() {
         // Reset to mouth half open when not moving
         pacman.frameIndex = 1;
     }
-    // Update canvas in a loop
+    // Update canvas in a loop 
     // Update based on velocities within the move function
     move();
     // Redraw all game objects
@@ -383,91 +415,53 @@ function update() {
 
 // draw function to render all game objects on the canvas
 function draw() {
-    context.clearRect(0, 0, boardWidth, boardHeight); // Clear the canvas
+    context.clearRect(0, 0, board.width, board.height);
 
-    // Draw Pacman with current animation frame
+    context.save();           // Save current context
+    context.scale(scale, scale); // Scale everything by the scale factor
+
+    // Draw Pacman
     if (pacman) {
-        const currentPacmanFrame =
-            pacmanFrames[pacman.direction][pacman.frameIndex];
+        const frame = pacmanFrames[pacman.direction][pacman.frameIndex];
+        context.drawImage(frame, pacman.x, pacman.y, pacman.width, pacman.height);
+    }
 
-        context.drawImage(
-            currentPacmanFrame,
-            pacman.x,
-            pacman.y,
-            pacman.width,
-            pacman.height
-        );
-    }
-    // Aliens
-    for (let alien of aliens) {
-        context.drawImage(
-            alien.image,
-            alien.x,
-            alien.y,
-            alien.width,
-            alien.height
-        );
-    }
-    // Walls
+    // Draw walls
     for (let wall of walls) {
         context.drawImage(wall.image, wall.x, wall.y, wall.width, wall.height);
     }
-    // Vents
+
+    // Draw aliens, vents, power-ups, nuclear waste, food, etc.
+    for (let alien of aliens) {
+        context.drawImage(alien.image, alien.x, alien.y, alien.width, alien.height);
+    }
+
     for (let vent of vents) {
         context.drawImage(vent.image, vent.x, vent.y, vent.width, vent.height);
-        // z-index for vents
-        context.globalCompositeOperation = "source-over"; // Draw in front of aliens
     }
-    // Nuclear Wastes
+
     for (let nuclearWaste of nuclearWastes) {
-        context.drawImage(
-            nuclearWaste.image,
-            nuclearWaste.x,
-            nuclearWaste.y,
-            nuclearWaste.width,
-            nuclearWaste.height
-        );
-        // z-index for nuclear wastes
-        context.globalCompositeOperation = "destination-over"; // Draw behind pacman and aliens
+        context.drawImage(nuclearWaste.image, nuclearWaste.x, nuclearWaste.y, nuclearWaste.width, nuclearWaste.height);
+        context.globalCompositeOperation = "destination-over";
     }
-    // Power-Ups
+
     for (let powerUp of powerUps) {
-        context.drawImage(
-            powerUp.image,
-            powerUp.x,
-            powerUp.y,
-            powerUp.width,
-            powerUp.height
-        );
-        // z-index for power-ups
-        context.globalCompositeOperation = "destination-over"; // Draw behind pacman and aliens
+        context.drawImage(powerUp.image, powerUp.x, powerUp.y, powerUp.width, powerUp.height);
+        context.globalCompositeOperation = "destination-over";
     }
-    // Foods pellets
+
     for (let food of foods) {
         context.fillStyle = "green";
         context.beginPath();
-        context.arc(
-            food.x + food.width / 2,
-            food.y + food.height / 2,
-            food.width / 2,
-            0,
-            Math.PI * 2
-        );
-        // z-index for food pellets
-        context.globalCompositeOperation = "destination-over"; // Draw behind pacman and aliens
+        context.arc(food.x + food.width/2, food.y + food.height/2, food.width/2, 0, Math.PI * 2);
         context.fill();
+        // z index to show under pacman and aliens
+        context.globalCompositeOperation = "destination-over";
     }
-    // Drawing for score and lives within the html
-    document.querySelector("#score").innerText = `Score: ${score}`;
-    // Lives display as hearts
-    document.querySelector(
-        "#lives"
-    ).innerHTML = `lives: ${'<img src="assets/images/blaise/fullHeart.webp" alt="">'.repeat(
-        lives
-    )}${'<img src="assets/images/blaise/lostHeart.webp" alt="">'.repeat(
-        3 - lives
-    )}`;
+
+    context.restore(); // Restore unscaled context for HTML overlays
 }
+
 
 // move function to update game object positions
 function move() {
