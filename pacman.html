@@ -24,15 +24,27 @@
                 <h2>Game Statistics</h2>
                 <!-- Top score -->
                 <p id="highScore">High Score: 0</p>
-                <p id="lives">Lives: <img src="assets/images/blaise/fullHeart.webp" alt=""><img src="assets/images/blaise/fullHeart.webp" alt=""><img src="assets/images/blaise/lostHeart.webp" alt=""> </p>
+                <p id="lives">Lives: <img src="assets/images/blaise/fullHeart.webp" alt=""><img
+                        src="assets/images/blaise/fullHeart.webp" alt=""><img src="assets/images/blaise/lostHeart.webp"
+                        alt=""> </p>
             </div>
             <!-- Live session information -->
             <span id="current-level">
-                <p id="level">Level: 1</p><p id="score">Score: 0</p>
+                <p id="level">Level: 1</p>
+                <p id="score">Score: 0</p>
             </span>
         </section>
         <!-- Game canvas where the game is rendered -->
         <section id="game-container">
+            <div id="pacman_gameOver" class="hidden">
+                <h2>Game Over!</h2>
+                <p id="finalScore">Your final score: 0</p>
+                <span id="gameOverButtons">
+                    <button id="restartButton">Restart Game</button>
+                    <span class="wrap"><a href="#">Try Space Invaders</a>
+                    <a href="#">Try Mini-Crash</a></span>
+                </span>
+            </div>
             <canvas id="board"></canvas>
         </section>
         <!-- Game controls for player input -->

@@ -73,7 +73,7 @@ const level1 = [
     "XxXX X XXX X X       nX X X X",
     "X nX X x   X X XXXXXXXX X X X",
     "X3     X X x X             4X",
-    "XXXXXXXX XXXXXXXXXX XXXXXXXXX"
+    "XXXXXXXX XXXXXXXXXX XXXXXXXXX",
 ];
 const level2 = [
     // Level 2 map layout
@@ -96,31 +96,31 @@ const level2 = [
     "X      XX XnX X X X X X X X X",
     "XX XXX XX XxX x X X X X X X X",
     "Xn           1XnX   X   X  3X",
-    "XXXXXXXXX XXXXXXXXXXXXXXXX XXX"
+    "XXXXXXXXX XXXXXXXXXXXXXXXX XXX",
 ];
 // ... Add more levels HERE ...
 // For example: also make sure to use proper values for walls etc.. you can find them above
 // const level3 = [
-    // "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XPX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XX",
-    // "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+// "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XPX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XX",
+// "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 // ];
 
 // Array of levels make sure to add new levels to this array otherwise they won't load
@@ -265,6 +265,11 @@ window.onload = function () {
     // Event listener for window resize to make canvas responsive
     resizeCanvas(); // Initial resize
     window.addEventListener("resize", resizeCanvas);
+
+    // Event listener for restart button
+    document
+        .querySelector("#restartButton")
+        .addEventListener("click", restartGame);
 };
 
 // Calculate swipe direction and move pacman accordingly
@@ -577,7 +582,8 @@ function update() {
     }
     // Check for game over
     if (gameOver) {
-        // game over function call here, for now just cancel the update loop
+        // show game over screen
+        document.querySelector("#pacman_gameOver").classList.remove("hidden");
         return;
     }
     // Update canvas in a loop
@@ -938,7 +944,28 @@ function death() {
                 "#highScore"
             ).innerText = `High Score: ${highScore}`;
         }
+        // Show final score on game over screen
+        document.querySelector(
+            "#finalScore"
+        ).innerText = `Final Score: ${score}`;
     }
+}
+
+// Game over screen button functions
+function restartGame() {
+    // Reset game state variables
+    powerUpActive = false;
+    // Reset UI elements
+    document.querySelector("#pacman_gameOver").classList.add("hidden");
+    // Reset score and lives
+    score = 0;
+    lives = 3;
+    currentLevel = 0;
+    // Restart game loop
+    gameOver = false;
+    loadMap(currentLevel);
+    resetPositions();
+    update();
 }
 
 // Moving pacman class to handle
