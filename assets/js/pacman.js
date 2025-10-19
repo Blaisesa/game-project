@@ -510,7 +510,7 @@ function backgroundMusic() {
     if (mute) return;
     const bgMusic = new Audio("assets/sounds/blaise/background.mp3");
     bgMusic.loop = true; // Loop the background music
-    bgMusic.volume = 0.25; // Set volume (0.0 to 1.0)
+    bgMusic.volume = 0.1; // Set volume (0.0 to 1.0)
     bgMusic.play(); // Start playing the music
     // Play music after the first interaction due to browser policies
     document.addEventListener(
