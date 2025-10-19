@@ -27,30 +27,62 @@ let portalFrames;
 const animationSpeed = 2; // Speed of animation
 
 // Game maps
+// original level 0 map layout
+//     "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
+//     "X                         n X",
+//     "X XXXX XX X XXX XXXXX X XXXxX",
+//     "X       x X X       X X +   X",
+//     "X X X X X X   X X X X   XxX X",
+//     "X X X X X X X X X X X XXXnX X",
+//     "X XnX X X X X       X     X X",
+//     "X XxX X X X X XX XX X XXX X X",
+//     "Xn    X X         X       X X",
+//     "XXXXX X X XXX 102 X X X X X X",
+//     "      X X     0p0   X X X    ",
+//     "XXXXX X XXXXX 304 X X X X X X",
+//     "X           X     X   X   X X",
+//     "X XXXX XXXX X XXXXX X   X X X",
+//     "X                     X X X X",
+//     "X X X XxX X XX X X X XX   X X",
+//     "X X X   X X  X P   X n  X X X",
+//     "X X X X   X    X X x XX X X X",
+//     "X   Xn  X X+XX X   X  X X   X",
+//     "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
 const level0 = [
     // 0: empty, X: wall, x: vent, n: nuclear waste, +: power-up, 1: blue alien, 2: green alien, 3: pink alien, 4: purple alien, P: pacman start, p: portal, " ": food
-    "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
-    "X                         n X",
-    "X XXXX XX X XXX XXXXX X XXXxX",
-    "X       x X X       X X +   X",
-    "X X X X X X   X X X X   XxX X",
-    "X X X X X X X X X X X XXXnX X",
-    "X XnX X X X X       X     X X",
-    "X XxX X X X X XX XX X XXX X X",
-    "Xn    X X         X       X X",
-    "XXXXX X X XXX 102 X X X X X X",
-    "      X X     0p0   X X X    ",
-    "XXXXX X XXXXX 304 X X X X X X",
-    "X           X     X   X   X X",
-    "X XXXX XXXX X XXXXX X   X X X",
-    "X                     X X X X",
-    "X X X XxX X XX X X X XX   X X",
-    "X X X   X X  X P   X n  X X X",
-    "X X X X   X    X X x XX X X X",
-    "X   Xn  X X+XX X   X  X X   X",
-    "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
+    "XXXXXXXXX0XXXXXXXXXX XXXXXXXX",
+    "X0000000000000000000000000n0X",
+    "X0XXXX0XX0X0XXX0XXXXX0X0XXXxX",
+    "X0000000x0X0X0000000X0X0+000X",
+    "X0X0X0X0X0X000X0X0X0X000XxX0X",
+    "X0X0X0X0X0X0X0X0X0X0X0XXXnX0X",
+    "X0XnX0X0X0X0X0000000X00000X0X",
+    "X0XxX0X0X0X0X0XX0XX0X0XXX0X0X",
+    "Xn0000X0X000000000X0000000X0X",
+    "XXXXX0X0X0XXX01020X0X0X0X0X0X",
+    "000000X0X000000p0000X0X0X0000",
+    "XXXXX0X0XXXXX03040X0X0X0X0X0X",
+    "X00000000000X00000X000X000X0X",
+    "X0XXXX0XXXX0X0XXXXX0X000X0X0X",
+    "X000000000000000000000X0X0X0X",
+    "X0X0X0XxX0X0XX0X0X0X0XX000X0X",
+    "X0X0X000X0X00X0P000X0n00X0X0X",
+    "X0X0X0X000X0000X0X0x0XX0X0X0X",
+    "X000Xn00X0X+XX0X000X00X0X000X",
+    "XXXXXXXXX0XXXXXXXXXX XXXXXXXX",
 ];
-// Additional levels (level1, level2, etc.) can be defined similarly
+// Additional levels (level1, level2, etc.)
+const level1 = [
+    // Level 1 map layout
+    
+];
+const level2 = [
+    // Level 2 map layout
+];
+// ... Add more levels HERE ...
+
+// Array of levels make sure to add new levels to this array otherwise they won't load
+const levels = [level0, level1, level2]; // Array of levels
 
 // Create sets for ingame objects
 // Walls and Vents
@@ -85,6 +117,15 @@ let levelComplete = false;
 let powerUpActive = false;
 let paused = false;
 let mute = false;
+// Touch control variables
+// These will store the starting and ending touch positions to determine swipe direction
+let touchStartX = 0;
+let touchEndX = 0;
+let touchStartY = 0;
+let touchEndY = 0;
+
+// Load the current level
+const currentMap = levels[currentLevel];
 
 // Resize canvas to fit window while maintaining aspect ratio
 function resizeCanvas() {
@@ -96,14 +137,13 @@ function resizeCanvas() {
 
     scale = Math.min(scaleX, scaleY); // Use this scale to draw everything
 
-    board.width = boardWidth * scale;   // Actual canvas width in pixels
+    board.width = boardWidth * scale; // Actual canvas width in pixels
     board.height = boardHeight * scale; // Actual canvas height in pixels
 
     context.imageSmoothingEnabled = false; // Preserve pixelated look
 
     draw(); // Redraw everything at new scale
 }
-
 
 // Initialize the game canvas and context
 window.onload = function () {
@@ -152,10 +192,68 @@ window.onload = function () {
             e.preventDefault();
         }
     });
+    // Event listener for touch controls
+    // Touch start
+    document.addEventListener(
+        // touch start event to capture the initial touch position
+        "touchstart",
+        (e) => {
+            const touch = e.changedTouches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        },
+        { passive: true }
+    );
+
+    // Touch end
+    document.addEventListener(
+        // touch end event to capture the final touch position
+        "touchend",
+        (e) => {
+            const touch = e.changedTouches[0];
+            touchEndX = touch.clientX;
+            touchEndY = touch.clientY;
+            // Calculate swipe direction and move pacman accordingly
+            handleSwipe();
+        },
+        { passive: true }
+    );
+
     // Event listener for window resize to make canvas responsive
     resizeCanvas(); // Initial resize
     window.addEventListener("resize", resizeCanvas);
 };
+
+// Calculate swipe direction and move pacman accordingly
+function handleSwipe() {
+    // Calculate differences in touch positions
+    // Delta values represent the distance moved in each direction
+    // Positive deltaX indicates a right swipe, negative indicates left
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    // Minimum swipe distance threshold (pixels)
+    // This prevents accidental small movements such as taps from triggering a direction change
+    const threshold = 30;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        // Determine left or right swipe based on deltaX
+        // If deltaX is positive, it's a right swipe; if negative, it's a left swipe
+        if (deltaX > threshold) {
+            pacman.updateDirection("R"); // Swipe right
+        } else if (deltaX < -threshold) {
+            pacman.updateDirection("L"); // Swipe left
+        }
+    } else {
+        // Vertical swipe
+        if (deltaY > threshold) {
+            pacman.updateDirection("D"); // Swipe down
+        } else if (deltaY < -threshold) {
+            pacman.updateDirection("U"); // Swipe up
+        }
+    }
+}
 
 // Function to load images
 function loadImages() {
@@ -186,8 +284,7 @@ function loadImages() {
     pinkAlienImage = new Image();
     pinkAlienImage.src = "assets/images/blaise/aliens/pinkAlien0.webp";
     purpleAlienImage = new Image();
-    purpleAlienImage.src =
-        "assets/images/blaise/aliens/purpleAlien0.webp";
+    purpleAlienImage.src = "assets/images/blaise/aliens/purpleAlien0.webp";
 
     // Animated Pacman frames
     pacmanFrames = {
@@ -225,9 +322,12 @@ function loadMap() {
     powerUps.clear();
     aliens.clear();
 
+    // Get the current map layout
+    const map = levels[currentLevel];
+
     for (let r = 0; r < rowCount; r++) {
         for (let c = 0; c < colCount; c++) {
-            const row = level0[r];
+            const row = map[r];
             const levelChar = row[c];
 
             const x = c * tileSize;
@@ -270,6 +370,13 @@ function loadMap() {
                     tileSize,
                     tileSize
                 );
+                alien.updateDirection = Movement.prototype.updateDirection; // Assign movement methods
+                alien.updateVelocity = Movement.prototype.updateVelocity; // Assign movement methods
+                // set initial direction and velocity
+                alien.speed = tileSize / 4; // Alien speed
+                const newDirection = direction[Math.floor(Math.random() * 4)];
+                alien.direction = newDirection;
+                alien.updateVelocity();
                 aliens.add(alien);
             } else if (levelChar === "2") {
                 // Green Alien
@@ -280,6 +387,13 @@ function loadMap() {
                     tileSize,
                     tileSize
                 );
+                alien.updateDirection = Movement.prototype.updateDirection; // Assign movement methods
+                alien.updateVelocity = Movement.prototype.updateVelocity; // Assign movement methods
+                // set initial direction and velocity
+                alien.speed = tileSize / 4; // Alien speed
+                const newDirection = direction[Math.floor(Math.random() * 4)];
+                alien.direction = newDirection;
+                alien.updateVelocity();
                 aliens.add(alien);
             } else if (levelChar === "3") {
                 // Pink Alien
@@ -290,6 +404,13 @@ function loadMap() {
                     tileSize,
                     tileSize
                 );
+                alien.updateDirection = Movement.prototype.updateDirection; // Assign movement methods
+                alien.updateVelocity = Movement.prototype.updateVelocity; // Assign movement methods
+                // set initial direction and velocity
+                alien.speed = tileSize / 4; // Alien speed
+                const newDirection = direction[Math.floor(Math.random() * 4)];
+                alien.direction = newDirection;
+                alien.updateVelocity();
                 aliens.add(alien);
             } else if (levelChar === "4") {
                 // Purple Alien
@@ -300,6 +421,13 @@ function loadMap() {
                     tileSize,
                     tileSize
                 );
+                alien.updateDirection = Movement.prototype.updateDirection; // Assign movement methods
+                alien.updateVelocity = Movement.prototype.updateVelocity; // Assign movement methods
+                // set initial direction and velocity
+                alien.speed = tileSize / 4; // Alien speed
+                const newDirection = direction[Math.floor(Math.random() * 4)];
+                alien.direction = newDirection;
+                alien.updateVelocity();
                 aliens.add(alien);
             } else if (levelChar === "P") {
                 // Pacman Start
@@ -334,7 +462,7 @@ function backgroundMusic() {
     if (mute) return;
     const bgMusic = new Audio("assets/sounds/blaise/background.mp3");
     bgMusic.loop = true; // Loop the background music
-    bgMusic.volume = 0.25; // Set volume (0.0 to 1.0) 
+    bgMusic.volume = 0.25; // Set volume (0.0 to 1.0)
     bgMusic.play(); // Start playing the music
     // Play music after the first interaction due to browser policies
     document.addEventListener(
@@ -404,11 +532,13 @@ function update() {
         // Reset to mouth half open when not moving
         pacman.frameIndex = 1;
     }
-    // Update canvas in a loop 
+    // Update canvas in a loop
     // Update based on velocities within the move function
     move();
     // Redraw all game objects
     draw();
+    // Check for level completion
+    checkLevelComplete();
     // We set it using a timeout instead of setInterval to have more control
     setTimeout(update, 50); // Update every 50 milliseconds (20 FPS)
 }
@@ -417,13 +547,19 @@ function update() {
 function draw() {
     context.clearRect(0, 0, board.width, board.height);
 
-    context.save();           // Save current context
+    context.save(); // Save current context
     context.scale(scale, scale); // Scale everything by the scale factor
 
     // Draw Pacman
     if (pacman) {
         const frame = pacmanFrames[pacman.direction][pacman.frameIndex];
-        context.drawImage(frame, pacman.x, pacman.y, pacman.width, pacman.height);
+        context.drawImage(
+            frame,
+            pacman.x,
+            pacman.y,
+            pacman.width,
+            pacman.height
+        );
     }
 
     // Draw walls
@@ -433,7 +569,13 @@ function draw() {
 
     // Draw aliens, vents, power-ups, nuclear waste, food, etc.
     for (let alien of aliens) {
-        context.drawImage(alien.image, alien.x, alien.y, alien.width, alien.height);
+        context.drawImage(
+            alien.image,
+            alien.x,
+            alien.y,
+            alien.width,
+            alien.height
+        );
     }
 
     for (let vent of vents) {
@@ -441,27 +583,66 @@ function draw() {
     }
 
     for (let nuclearWaste of nuclearWastes) {
-        context.drawImage(nuclearWaste.image, nuclearWaste.x, nuclearWaste.y, nuclearWaste.width, nuclearWaste.height);
+        context.drawImage(
+            nuclearWaste.image,
+            nuclearWaste.x,
+            nuclearWaste.y,
+            nuclearWaste.width,
+            nuclearWaste.height
+        );
         context.globalCompositeOperation = "destination-over";
     }
 
     for (let powerUp of powerUps) {
-        context.drawImage(powerUp.image, powerUp.x, powerUp.y, powerUp.width, powerUp.height);
+        context.drawImage(
+            powerUp.image,
+            powerUp.x,
+            powerUp.y,
+            powerUp.width,
+            powerUp.height
+        );
         context.globalCompositeOperation = "destination-over";
     }
 
     for (let food of foods) {
         context.fillStyle = "green";
         context.beginPath();
-        context.arc(food.x + food.width/2, food.y + food.height/2, food.width/2, 0, Math.PI * 2);
+        context.arc(
+            food.x + food.width / 2,
+            food.y + food.height / 2,
+            food.width / 2,
+            0,
+            Math.PI * 2
+        );
         context.fill();
         // z index to show under pacman and aliens
         context.globalCompositeOperation = "destination-over";
     }
+    // Change the score display in the HTML
+    document.querySelector("#score").innerText = `Score: ${score}`;
+    // Update lives img display in the HTML
+    // Get lifeImages from the DOM
+    const lifeImages = document.querySelectorAll("#lives img");
+    // Update life images based on current lives
+    if (lifeImages && lifeImages.length >= 3) {
+        lifeImages[0].src =
+            lives >= 1
+                ? "assets/images/blaise/fullHeart.webp"
+                : "assets/images/blaise/lostHeart.webp";
+        lifeImages[1].src =
+            lives >= 2
+                ? "assets/images/blaise/fullHeart.webp"
+                : "assets/images/blaise/lostHeart.webp";
+        lifeImages[2].src =
+            lives >= 3
+                ? "assets/images/blaise/fullHeart.webp"
+                : "assets/images/blaise/lostHeart.webp";
+    }
+    // update the level display in the HTML
+    document.querySelector("#level").innerText = `Level: ${currentLevel + 1}`;
 
     context.restore(); // Restore unscaled context for HTML overlays
 }
-
 
 // move function to update game object positions
 function move() {
@@ -484,8 +665,36 @@ function move() {
     // Check for collisions with vents
     for (let vent of vents) {
         if (collision(pacman, vent)) {
-            pacman.x -= pacman.velocityX;
-            pacman.y -= pacman.velocityY;
+            // Horizontal collision
+            if (
+                pacman.velocityX > 0 &&
+                pacman.x + pacman.width > vent.x &&
+                pacman.x < vent.x + vent.width
+            ) {
+                pacman.x = vent.x - pacman.width;
+            } else if (
+                pacman.velocityX < 0 &&
+                pacman.x < vent.x + vent.width &&
+                pacman.x + pacman.width > vent.x + vent.width
+            ) {
+                pacman.x = vent.x + vent.width;
+            }
+
+            // Vertical collision
+            if (
+                pacman.velocityY > 0 &&
+                pacman.y + pacman.height > vent.y &&
+                pacman.y < vent.y
+            ) {
+                pacman.y = vent.y - pacman.height;
+            } else if (
+                pacman.velocityY < 0 &&
+                pacman.y < vent.y + vent.height &&
+                pacman.y + pacman.height > vent.y + vent.height
+            ) {
+                pacman.y = vent.y + vent.height;
+            }
+
             break; // Exit loop after handling collision
         }
     }
@@ -620,14 +829,12 @@ function powerUpEffect() {
         for (let alien of aliens) {
             const imgPath = alien.image.src;
             if (imgPath.includes("blueAlien0")) {
-                alien.image.src =
-                    "assets/images/blaise/aliens/blueAlien1.webp";
+                alien.image.src = "assets/images/blaise/aliens/blueAlien1.webp";
             } else if (imgPath.includes("greenAlien0")) {
                 alien.image.src =
                     "assets/images/blaise/aliens/greenAlien1.webp";
             } else if (imgPath.includes("pinkAlien0")) {
-                alien.image.src =
-                    "assets/images/blaise/aliens/pinkAlien1.webp";
+                alien.image.src = "assets/images/blaise/aliens/pinkAlien1.webp";
             } else if (imgPath.includes("purpleAlien0")) {
                 alien.image.src =
                     "assets/images/blaise/aliens/purpleAlien1.webp";
@@ -647,17 +854,29 @@ function revertPowerUpEffect() {
     for (let alien of aliens) {
         const imgPath = alien.image.src;
         if (imgPath.includes("blueAlien1")) {
-            alien.image.src =
-                "assets/images/blaise/aliens/blueAlien0.webp";
+            alien.image.src = "assets/images/blaise/aliens/blueAlien0.webp";
         } else if (imgPath.includes("greenAlien1")) {
-            alien.image.src =
-                "assets/images/blaise/aliens/greenAlien0.webp";
+            alien.image.src = "assets/images/blaise/aliens/greenAlien0.webp";
         } else if (imgPath.includes("pinkAlien1")) {
-            alien.image.src =
-                "assets/images/blaise/aliens/pinkAlien0.webp";
+            alien.image.src = "assets/images/blaise/aliens/pinkAlien0.webp";
         } else if (imgPath.includes("purpleAlien1")) {
-            alien.image.src =
-                "assets/images/blaise/aliens/purpleAlien0.webp";
+            alien.image.src = "assets/images/blaise/aliens/purpleAlien0.webp";
+        }
+    }
+}
+
+// increment level function
+function checkLevelComplete() {
+    // Check if all food pellets are eaten
+    if (foods.size === 0) {
+        currentLevel++;
+        if (currentLevel < levels.length) {
+            loadMap(currentLevel);
+        } else {
+            // All levels completed - handle game completion - for now, reset to first level
+            currentLevel = 0; // Reset to first level or handle game completion
+            loadMap();
+            resetPositions();
         }
     }
 }
