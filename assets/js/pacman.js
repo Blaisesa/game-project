@@ -290,15 +290,23 @@ function handleSwipe() {
         // If deltaX is positive, it's a right swipe; if negative, it's a left swipe
         if (deltaX > threshold) {
             pacman.updateDirection("R"); // Swipe right
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "R";
         } else if (deltaX < -threshold) {
             pacman.updateDirection("L"); // Swipe left
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "L";
         }
     } else {
         // Vertical swipe
         if (deltaY > threshold) {
             pacman.updateDirection("D"); // Swipe down
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "D";
         } else if (deltaY < -threshold) {
             pacman.updateDirection("U"); // Swipe up
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "U";
         }
     }
 }
@@ -596,7 +604,7 @@ function update() {
     // Check for level completion
     checkLevelComplete();
     // We set it using a timeout instead of setInterval to have more control
-    setTimeout(update, 50); // Update every 50 milliseconds (20 FPS)
+    setTimeout(update, 40); // Update every 50 milliseconds (20 FPS)
 }
 
 // draw function to render all game objects on the canvas
@@ -705,7 +713,7 @@ function move() {
     // Update pacman to next direction if possible
     // Try to update direction if nextDirection is different
     if (pacman.nextDirection !== pacman.direction) {
-        // Create a test position for the next move
+        // Create a next position for the next move
         const next = {
             x: pacman.x,
             y: pacman.y,
@@ -1030,8 +1038,12 @@ function movePacman(e) {
         desired = "R";
     }
     if (!desired) return; // Exit if no valid direction
-
+    // Set pacman's next direction
     pacman.nextDirection = desired;
+    // Allow pacman to move right away if currently stationary
+    if (pacman.velocityX === 0 && pacman.velocityY === 0) {
+        pacman.updateDirection(desired);
+    }
 }
 
 // collision detection function AABB method
