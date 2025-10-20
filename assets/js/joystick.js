@@ -15,21 +15,21 @@ const keyDirectionMap = {
 
 // Update joystick image based on active keys
 function updateJoystick() {
-    let src = "assets/images/joystick/";
+    let img = "assets/images/joystick/";
 
     if (activeKeys.has("U")) {
-        src += "forward.png";
+        img += "Forward.png";
     } else if (activeKeys.has("D")) {
-        src += "backward.png";
+        img += "Backward.png";
     } else if (activeKeys.has("L")) {
-        src += "left.png";
+        img += "Left.png";
     } else if (activeKeys.has("R")) {
-        src += "right.png";
+        img += "Right.png";
     } else {
-        src += "central.png";
+        img += "Central.png";
     }
 
-    joystick.src = src;
+    joystick.src = img;
 }
 
 // Listen for keydown events
