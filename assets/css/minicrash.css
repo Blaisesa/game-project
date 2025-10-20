@@ -1,0 +1,86 @@
+/* ---------- 1. Global Reset & Theme ---------- */
+#minicrash {
+    --bg-color: #0b1220;
+    --card-color: #111a2f;
+    --text-color: #e4e8f2;
+    --accent: #3bc7ff;
+    --accent-light: #6de0ff;
+    --danger: #ff5f5f;
+    --radius: 1rem;
+    --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    font-family: "Inter", "Segoe UI", sans-serif;
+    color: var(--text-color);
+    background: var(--bg-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding: 1rem;
+}
+
+
+/* Remove inherited margins/padding inside */
+#minicrash * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Message Panel */
+#minicrash header#message-panel {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card-color);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1rem 1.5rem;
+    margin-top: 1.5rem;
+    display: flex !important;
+      flex-direction: row !important;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    text-align: left;
+    white-space: nowrap;
+    gap: 1rem; /* adds breathing room between title and button */
+    margin-inline: auto; /* keeps it centred horizontally */
+}
+
+#minicrash #message-panel h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--accent-light);
+    letter-spacing: 0.5px;
+    flex-shrink: 0; /* prevents them from compressing or wrapping */
+}
+#minicrash #help-btn {
+    background: var(--accent);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0; /* prevents them from compressing or wrapping */
+}
+
+#minicrash #help-btn:hover {
+    background: var(--accent-light);
+    transform: scale(1.05);
+}
+
+
+/* Override global header layout for Mini-Crash only */
+/* #minicrash header#message-panel {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 1rem;
+  text-align: left;
+} */
