@@ -246,7 +246,7 @@ main#game {
     max-height: 70vh; /* limit height so joystick fits below */
     border: 4px solid black;
     padding: 0.5rem;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     box-sizing: border-box;
 }
 
@@ -296,7 +296,7 @@ main#game {
     padding: 1rem;
     border: 4px solid black;
     border-top: none;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(7px);
 }
 
@@ -325,7 +325,7 @@ canvas {
     max-height: 70vh; /* keeps canvas within viewport */
     display: block;
     border: 4px solid black;
-    box-shadow: 0 0 10px rgba(255,255,255,0.8);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
     background-color: rgb(0, 0, 14);
 }
 
@@ -577,13 +577,13 @@ button {
         margin-bottom: 1rem;
     }
 
-    .gameBtn{
-    display: none;
+    .gameBtn {
+        display: none;
     }
 
     #gamePage nav {
         display: contents;
-    };
+    }
 }
 
 @media (max-width: 600px) {
@@ -600,14 +600,15 @@ button {
         font-size: 0.8rem;
     }
     #lives img {
-            width: 1.2rem;
-            height: 1.2rem;
-            margin-left: 0.3rem;
+        width: 1.2rem;
+        height: 1.2rem;
+        margin-left: 0.3rem;
     }
     #current-level {
         font-size: 0.8rem;
     }
-    button, #gameOverButtons a {
+    button,
+    #gameOverButtons a {
         width: 250px;
         font-size: 0.6rem;
     }
