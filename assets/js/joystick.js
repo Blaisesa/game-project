@@ -42,7 +42,7 @@ window.addEventListener("keydown", (e) => {
     }
 });
 
-// listen for mobile touch events
+// listen for mobile touch events to simulate joystick input
 document.addEventListener(
     // touch start event to capture the initial touch position
     "touchstart",
@@ -54,7 +54,7 @@ document.addEventListener(
     { passive: true }
 );
 
-// Touch end
+// Touch end event variables to store touch positions
 document.addEventListener(
     // touch end event to capture the final touch position
     "touchend",
@@ -92,15 +92,16 @@ function Swipe() {
             activeKeys.add("U");
         }
     }
-
+    // Update joystick image
     updateJoystick();
     resetJoystick();
 }
 
-// Reset joystick after 100ms on keyup or touchend
+// Reset joystick after 150ms on keyup or touchend events
+// This ensures the joystick returns to the neutral position in a smooth transition
 function resetJoystick() {
     setTimeout(() => {
         activeKeys.clear();
         updateJoystick();
-    }, 150);
+    }, 150); // 150ms delay before resetting increase this number to hold the position longer
 }

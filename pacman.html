@@ -12,16 +12,33 @@
 </head>
 
 <body id="pacman">
+    <!-- Navigation between games -->
+    <nav>
+        <!-- Hamburger Menu -->
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <!-- Game Titles -->
+        <ul id="nav-links">
+            <li><a href="pacman.html">Pac-Man</a></li>
+            <li><a href="spaceinvaders.html">Space Invaders</a></li>
+            <li><a href="minicrash.html">Mini-Crash</a></li>
+        </ul>
+    </nav>
     <!-- Game Header -->
     <header>
+        <span><a class="gameBtn" href="#">Prev Game</a></span>
         <h1>Pac-Man in Space?!</h1>
+        <span><a class="gameBtn" href="#">Next Game</a></span>
     </header>
     <!-- Main content area for the game -->
     <main id="game">
         <!-- Game statistics information -->
         <section id="board-container">
             <div id="stats">
-                <h2>Game Statistics</h2>
                 <!-- Top score -->
                 <p id="highScore">High Score: 0</p>
                 <p id="lives">Lives: <img src="assets/images/blaise/fullHeart.webp" alt=""><img
@@ -42,25 +59,21 @@
                 <span id="gameOverButtons">
                     <button id="restartButton">Restart Game</button>
                     <span class="wrap"><a href="#">Try Space Invaders</a>
-                    <a href="#">Try Mini-Crash</a></span>
+                        <a href="#">Try Mini-Crash</a></span>
                 </span>
             </div>
             <canvas id="board"></canvas>
         </section>
         <!-- Game controls for player input -->
         <section id="controls">
-            <!-- joystick container influenced by Joystick.js -->
-            <img id="joystick" src="assets/images/joystick/Central.png" alt="">
+            <span id="joystickContainer"><!-- joystick container influenced by Joystick.js -->
+                <img id="joystick" src="assets/images/joystick/Central.png" alt="">
+                <!-- linkedIn Profiles open in new tab -->
+                <p>Developed by <a href="https://www.linkedin.com/in/blaise-smyka/" target="_blank"
+                        aria-label="Blaise's linked in profile link" rel="noopener">Blaise</a></p>
+            </span>
         </section>
     </main>
-    <!-- Footer for the game lobby to provide additional information and links to each of the developers -->
-    <footer>
-        <span>
-            <!-- linkedIn Profiles open in new tab -->
-            <p>Developed by <a href="https://www.linkedin.com/in/blaise-smyka/" target="_blank"
-                    aria-label="Blaise's linked in profile link" rel="noopener">Blaise</a></p>
-        </span>
-    </footer>
     <script src="./assets/js/pacman.js" defer></script>
     <script src="./assets/js/joystick.js" defer></script>
 </body>
