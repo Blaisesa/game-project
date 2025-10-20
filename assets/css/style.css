@@ -213,7 +213,7 @@ footer span a:hover {
     text-decoration: underline;
 }
 
-body#pacman {
+body#gamePage {
     overflow: hidden;
     height: 100vh;
     width: 100vw;
@@ -339,14 +339,14 @@ canvas {
 #controls span {
     margin-top: 1.5rem;
 }
-#pacman header {
+#gamePage header {
     flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 20px;
     margin-bottom: 1rem;
 }
-#pacman header h1 {
+#gamePage header h1 {
     font-size: 1rem;
     text-align: center;
 }
@@ -442,7 +442,7 @@ canvas {
 .hidden {
     display: none;
 }
-#pacman nav {
+#gamePage nav {
     display: none;
 }
 
@@ -539,7 +539,7 @@ canvas {
     display: none;
     }
 
-    #pacman nav {
+    #gamePage nav {
         display: contents;
     };
 }
