@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body id="minicrash">
     <!-- Game Header -->
     <header>
         <h1>Mini- Crash!</h1>
@@ -32,7 +32,7 @@
         </section>
         <!-- Game canvas where the game is rendered -->
         <section id="game-container">
-            <canvas></canvas>
+            <canvas id="crash-board"></canvas>
         </section>
         <!-- Game controls for player input -->
         <section id="controls">
@@ -48,5 +48,7 @@
                     aria-label="Blaise's linked in profile link" rel="noopener">Hans</a></p>
         </span>
     </footer>
+
+    <script src="./assets/js/minicrash.js" defer></script>
 </body>
 </html>
