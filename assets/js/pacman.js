@@ -230,7 +230,7 @@ window.onload = function () {
     // Remove default arrow key scrolling behavior
     window.addEventListener("keydown", function (e) {
         if (
-            ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)
+            ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)
         ) {
             e.preventDefault();
         }
@@ -270,6 +270,25 @@ window.onload = function () {
     document
         .querySelector("#restartButton")
         .addEventListener("click", restartGame);
+
+    // Event listener to pause the game if user presses spacebar
+    document.addEventListener("keydown", (e) => {
+        if (e.code === "Space") {
+            paused = true;
+        }
+    });
+    // Event listener to resume the game if user presses resume button
+    document.querySelector("#resumeButton").addEventListener("click", () => {
+        paused = false;
+        document.querySelector("#pacman_gamePaused").classList.add("hidden");
+        update();
+    });
+    // Restart level if user clicks restart level button and hide game paused screen
+    document.querySelector("#restartButtonPaused").addEventListener("click", () => {
+        paused = false;
+        document.querySelector("#pacman_gamePaused").classList.add("hidden");
+        restartGame();
+    });
 };
 
 // Calculate swipe direction and move pacman accordingly
@@ -594,6 +613,12 @@ function update() {
     if (gameOver) {
         // show game over screen
         document.querySelector("#pacman_gameOver").classList.remove("hidden");
+        return;
+    }
+    // Check for paused
+    if (paused) {
+        // show paused screen
+        document.querySelector("#pacman_gamePaused").classList.remove("hidden");
         return;
     }
     // Update canvas in a loop
@@ -947,11 +972,11 @@ function powerUpEffect() {
             }
         }
 
-        // Set a timer to deactivate power-up after 10 seconds
+        // 10s timer before calling if statement
         setTimeout(() => {
             powerUpActive = false;
             revertPowerUpEffect();
-        }, 10000); // 10 seconds duration
+        }, 10000); // Power-up lasts for 10 seconds
     }
 }
 
