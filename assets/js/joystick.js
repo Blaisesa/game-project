@@ -15,7 +15,7 @@ const keyDirectionMap = {
 
 // Update joystick image based on active keys
 function updateJoystick() {
-    let src = "assets/images/joystick/";
+    let src = "./assets/images/joystick/";
 
     if (activeKeys.has("U")) {
         src += "forward.png";
