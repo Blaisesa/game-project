@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body id="gamePage">
     <!-- Game Header -->
     <header>
         <h1>Mini- Crash!</h1>
@@ -36,17 +36,12 @@
         </section>
         <!-- Game controls for player input -->
         <section id="controls">
-            <!-- joystick container influenced by Joystick.js -->
-            <img src="assets/images/joystick/Central.png" alt="">
+            <span id="joystickContainer"><!-- joystick container influenced by Joystick.js -->
+                <img id="joystick" src="assets/images/joystick/Central.png" alt="">
+                <!-- linkedIn Profiles open in new tab -->
+                <p>Developed by <a href="https://www.linkedin.com/in/blaise-smyka/" target="_blank"
+                        aria-label="Blaise's linked in profile link" rel="noopener">Blaise</a></p>
+            </span>
         </section>
-    </main>
-    <!-- Footer for the game lobby to provide additional information and links to each of the developers -->
-    <footer>
-        <span>
-            <!-- linkedIn Profiles open in new tab -->
-            <p>Developed by <a href="https://www.linkedin.com/in/blaise-smyka/" target="_blank"
-                    aria-label="Blaise's linked in profile link" rel="noopener">Hans</a></p>
-        </span>
-    </footer>
 </body>
 </html>

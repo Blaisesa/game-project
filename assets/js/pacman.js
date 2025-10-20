@@ -290,15 +290,23 @@ function handleSwipe() {
         // If deltaX is positive, it's a right swipe; if negative, it's a left swipe
         if (deltaX > threshold) {
             pacman.updateDirection("R"); // Swipe right
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "R";
         } else if (deltaX < -threshold) {
             pacman.updateDirection("L"); // Swipe left
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "L";
         }
     } else {
         // Vertical swipe
         if (deltaY > threshold) {
             pacman.updateDirection("D"); // Swipe down
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "D";
         } else if (deltaY < -threshold) {
             pacman.updateDirection("U"); // Swipe up
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "U";
         }
     }
 }
@@ -487,7 +495,9 @@ function loadMap() {
                     tileSize
                 );
                 // Movement properties and starting direction
-                pacman.direction = "R";
+                pacman.direction = "R"; // Initial direction
+                // Assigning next direction to implement smoother direction changes
+                pacman.nextDirection = "R"; // Start moving right
                 // Reset velocities
                 pacman.velocityX = 0;
                 pacman.velocityY = 0;
@@ -594,7 +604,7 @@ function update() {
     // Check for level completion
     checkLevelComplete();
     // We set it using a timeout instead of setInterval to have more control
-    setTimeout(update, 50); // Update every 50 milliseconds (20 FPS)
+    setTimeout(update, 40); // Update every 50 milliseconds (20 FPS)
 }
 
 // draw function to render all game objects on the canvas
@@ -700,6 +710,51 @@ function draw() {
 
 // move function to update game object positions
 function move() {
+    // Update pacman to next direction if possible
+    // Try to update direction if nextDirection is different
+    if (pacman.nextDirection !== pacman.direction) {
+        // Create a next position for the next move
+        const next = {
+            x: pacman.x,
+            y: pacman.y,
+            width: pacman.width,
+            height: pacman.height,
+        };
+        const speed = pacman.speed;
+
+        // Move next position slightly in the next direction
+        if (pacman.nextDirection === "U") next.y -= speed;
+        else if (pacman.nextDirection === "D") next.y += speed;
+        else if (pacman.nextDirection === "L") next.x -= speed;
+        else if (pacman.nextDirection === "R") next.x += speed;
+
+        // Check if turning is possible (no wall collision)
+        let canTurn = true;
+        for (let wall of walls) {
+            if (collision(next, wall)) {
+                canTurn = false;
+                break;
+            }
+        }
+        // Check for vents and prevent turning into them
+        for (let vent of vents) {
+            if (collision(next, vent)) {
+                canTurn = false;
+                break;
+            }
+        }
+        // Check if pacman is near the center of a tile to allow turning
+        // This is to ensure smooth turning at intersections
+        if (Math.abs(pacman.x % tileSize) < 2 && Math.abs(pacman.y % tileSize) < 2) {
+            canTurn = canTurn;
+        } else {
+            canTurn = false;
+        }
+        // If clear, actually change direction
+        if (canTurn) {
+            pacman.updateDirection(pacman.nextDirection);
+        }
+    }
     // Update pacman position based on velocity
     pacman.x += pacman.velocityX;
     pacman.y += pacman.velocityY;
@@ -970,15 +1025,24 @@ function restartGame() {
 
 // Moving pacman class to handle
 function movePacman(e) {
+    // Determine desired direction
+    let desired;
     // Update pacman direction based on arrow key input
     if (e.code === "ArrowUp" || e.code === "KeyW") {
-        pacman.updateDirection("U");
+        desired = "U";
     } else if (e.code === "ArrowDown" || e.code === "KeyS") {
-        pacman.updateDirection("D");
+        desired = "D";
     } else if (e.code === "ArrowLeft" || e.code === "KeyA") {
-        pacman.updateDirection("L");
+        desired = "L";
     } else if (e.code === "ArrowRight" || e.code === "KeyD") {
-        pacman.updateDirection("R");
+        desired = "R";
+    }
+    if (!desired) return; // Exit if no valid direction
+    // Set pacman's next direction
+    pacman.nextDirection = desired;
+    // Allow pacman to move right away if currently stationary
+    if (pacman.velocityX === 0 && pacman.velocityY === 0) {
+        pacman.updateDirection(desired);
     }
 }
 
