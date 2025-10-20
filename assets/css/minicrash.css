@@ -20,7 +20,6 @@
     padding: 1rem;
 }
 
-
 /* Remove inherited margins/padding inside */
 #minicrash * {
     box-sizing: border-box;
@@ -38,7 +37,7 @@
     padding: 1rem 1.5rem;
     margin-top: 1.5rem;
     display: flex !important;
-      flex-direction: row !important;
+    flex-direction: row !important;
     justify-content: space-between;
     align-items: center;
     flex-wrap: nowrap;
@@ -74,7 +73,6 @@
     transform: scale(1.05);
 }
 
-
 /* Override global header layout for Mini-Crash only */
 /* #minicrash header#message-panel {
   display: flex !important;
@@ -87,21 +85,51 @@
 
 /* ---------- Multiplier Display ---------- */
 #minicrash #display {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#minicrash #mult {
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--accent-light);
+    background: var(--card-color);
+    border-radius: var(--radius);
+    box-shadow: 0 0 10px rgba(107, 224, 255, 0.5);
+    padding: 1rem 2rem;
+    min-width: 150px;
+    text-align: center;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Hover & Active Multiplier States */
+#minicrash #mult:hover {
+    transform: scale(1.05);
+    color: var(--accent);
+    box-shadow: 0 0 20px rgba(107, 224, 255, 0.7);
+}
+
+#minicrash #mult.active {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(59, 199, 255, 0.9);
+    color: #fff;
+}
+/* ---------- Rocket Area ---------- */
+#minicrash #rocket-area {
   margin-top: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 160px;
+  width: 100%;
+  position: relative;
 }
 
-#minicrash #mult {
-  font-size: 2.8rem;
-  font-weight: 600;
-  color: var(--accent-light);
-  background: var(--card-color);
-  border-radius: var(--radius);
-  box-shadow: 0 0 10px rgba(107, 224, 255, 0.5);
-  padding: 1rem 2rem;
-  min-width: 150px;
-  text-align: center;
-  transition: transform 0.2s ease, color 0.2s ease;
+#minicrash #rocket {
+  width: 80px;
+  height: auto;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 8px rgba(107, 224, 255, 0.5));
 }
