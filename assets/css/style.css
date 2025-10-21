@@ -627,6 +627,14 @@ button {
     #pacman_start p {
         font-size: 0.9rem;
     }
+    #pausePacman {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+        align-self: flex-end;
+        margin-bottom: 0.5rem;
+        width: auto;
+        padding: 10px 15px;
+    }
 }
 
 @media (max-width: 600px) {
