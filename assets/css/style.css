@@ -584,6 +584,9 @@ button {
     #gamePage nav {
         display: contents;
     }
+    #muteSoundEffect {
+        margin-top: 1rem;
+    }
 }
 
 @media (max-width: 600px) {

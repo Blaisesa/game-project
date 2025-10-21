@@ -23,8 +23,9 @@ let ventImage;
 
 // Animated image variables
 let pacmanFrames;
-let portalFrames;
 const animationSpeed = 2; // Speed of animation
+let portalFrames = [];
+const portalAnimationSpeed = 5; // slower than pacman
 
 // Game maps
 // original level 0 map layout
@@ -32,24 +33,45 @@ const level0 = [
     // 0: empty, X: wall, x: vent, n: nuclear waste, +: power-up, 1: blue alien, 2: green alien, 3: pink alien, 4: purple alien, P: pacman start, p: portal, " ": food
     "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
     "X                         n X",
-    "X XXXX XX X XXX XXXXX X XXXxX",
-    "X       x X X       X X +   X",
-    "X X X X X X   X X X X   XxX X",
+    "X XXXXXXX X XXXXXXXXXXXXXXX X",
+    "X       x X X       XXX +   X",
+    "X X X X X X X X X X X   XxX X",
     "X X X X X X X X X X X XXXnX X",
     "X XnX X X X X       X     X X",
-    "X XxX X X X X XX XX X XXX X X",
-    "Xn    X X         X       X X",
-    "XXXXX X X XXX 102 X X X X X X",
+    "X X X X X X X XX XX X XXX X X",
+    "Xn  X X X X       X       X X",
+    "X XXX X X XXX 102 X X X X X X",
     "      X X     0p0   X X X    ",
-    "XXXXX X XXXXX 304 X X X X X X",
-    "X           X     X   X   X X",
-    "X XXXX XXXX X XXXXX X   X X X",
-    "X                     X X X X",
+    "X XXX X XXXXX 304 X X X X X X",
+    "X           X     X X X X X X",
+    "X XXXX XXXX X XXXXX X X X X X",
+    "X X                   X X X X",
     "X X X XxX X XX X X X XX   X X",
-    "X X X   X X  X P   X n  X X X",
-    "X X X X   X    X X x XX X X X",
-    "X   Xn  X X+XX X   X  X X   X",
+    "X X X   X X XX P X X n  X X X",
+    "X X X X X X XX X X X XX X X X",
+    "X    n     +                X",
     "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
+    // Level 0 map with no food pellets for level clearing testing purposes
+    // "XXXXXXXXX0XXXXXXXXXX0XXXXXXXX",
+    // "X0000000000000000000000000n0X",
+    // "X0XXXXXXX0X0XXXXXXXXXXXXXXX0X",
+    // "X0000000x0X0X0000000XXX0+000X",
+    // "X0X0X0X0X0X0X0X0X0X0X000XxX0X",
+    // "X0X0X0X0X0X0X0X0X0X0X0XXXnX0X",
+    // "X0XnX0X0X0X0X0000000X00000X0X",
+    // "X0X0X0X0X0X0X0XX0XX0X0XXX0X0X",
+    // "Xn00X0X0X0X0000000X0000000X0X",
+    // "X0XXX0X0X0XXX01020X0X0X0X0X0X",
+    // "000000X0X000000p0000X0X0X0000",
+    // "X0XXX0X0XXXXX03040X0X0X0X0X0X",
+    // "X00000000000X00000X0X0X0X0X0X",
+    // "X0XXXX0XXXX0X0XXXXX0X0X0X0X0X",
+    // "X0X0000000000000000000X0X0X0X",
+    // "X0X0X0XxX0X0XX0X0X0X0XX000X0X",
+    // "X0X0X000X0X0XX0P0X0X0n00X0X0X",
+    // "X0X0X0X0X0X0XX0X0X0X0XX0X0X0X",
+    // "X0000n00000+0000000000000000X",
+    // "XXXXXXXXX0XXXXXXXXXX XXXXXXXX",
 ];
 // Additional levels (level1, level2, etc.)
 const level1 = [
@@ -160,6 +182,9 @@ let levelComplete = false;
 let powerUpActive = false;
 let paused = false;
 let mute = false;
+let muteSoundEffects = false;
+let bgMusic; // Background music variable
+let powerUpTimer;; // Power-up timer variable
 // Touch control variables
 // These will store the starting and ending touch positions to determine swipe direction
 let touchStartX = 0;
@@ -198,6 +223,8 @@ window.onload = function () {
 
     // Load images
     loadImages();
+    // Load portal frames
+    loadPortalFrames();
     // Load the initial map
     loadMap();
     // Start background music
@@ -230,7 +257,13 @@ window.onload = function () {
     // Remove default arrow key scrolling behavior
     window.addEventListener("keydown", function (e) {
         if (
-            ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)
+            [
+                "ArrowUp",
+                "ArrowDown",
+                "ArrowLeft",
+                "ArrowRight",
+                "Space",
+            ].includes(e.code)
         ) {
             e.preventDefault();
         }
@@ -274,7 +307,14 @@ window.onload = function () {
     // Event listener to pause the game if user presses spacebar
     document.addEventListener("keydown", (e) => {
         if (e.code === "Space") {
-            paused = true;
+            paused = !paused;
+            if (paused) {
+                document.querySelector("#pacman_gamePaused").classList.remove("hidden");
+                paused = true;
+            } else {
+                document.querySelector("#pacman_gamePaused").classList.add("hidden");
+                update();
+            }
         }
     });
     // Event listener to resume the game if user presses resume button
@@ -284,12 +324,34 @@ window.onload = function () {
         update();
     });
     // Restart level if user clicks restart level button and hide game paused screen
-    document.querySelector("#restartButtonPaused").addEventListener("click", () => {
-        paused = false;
-        document.querySelector("#pacman_gamePaused").classList.add("hidden");
-        restartGame();
+    document
+        .querySelector("#restartButtonPaused")
+        .addEventListener("click", () => {
+            paused = false;
+            document
+                .querySelector("#pacman_gamePaused")
+                .classList.add("hidden");
+            restartGame();
+        });
+    // Event listener to mute/unmute music
+    document.querySelector("#muteButton").addEventListener("click", () => {
+        mute = !mute;
+        if (mute && bgMusic) {
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
+        } else if (!mute && bgMusic) {
+            bgMusic.play();
+        }
+        // Edit the button text to unmute
+        document.querySelector("#muteButton").innerText = mute ? "Unmute Music" : "Mute Music";
     });
-};
+    // Event listener to mute/unmute sound effects
+    document.querySelector("#muteSoundEffect").addEventListener("click", () => {
+        muteSoundEffects = !muteSoundEffects;
+        // Edit the button text to unmute
+        document.querySelector("#muteSoundEffect").innerText = muteSoundEffects ? "Unmute Effects" : "Mute Effects";
+    });
+}
 
 // Calculate swipe direction and move pacman accordingly
 function handleSwipe() {
@@ -384,6 +446,16 @@ function loadImages() {
 
         pacmanFrames["D"][i] = new Image();
         pacmanFrames["D"][i].src = `${path}down${i}.png`;
+    }
+}
+
+// Load the portal animation frames
+function loadPortalFrames() {
+    const path = "assets/images/blaise/portal/";
+    for (let i = 0; i < 4; i++) {
+        const img = new Image();
+        img.src = `${path}frame${i}.webp`;
+        portalFrames.push(img);
     }
 }
 
@@ -535,32 +607,40 @@ function loadMap() {
 
 // Load Game Music Effects
 function backgroundMusic() {
-    // Check if mute is enabled
-    if (mute) return;
-    const bgMusic = new Audio("assets/sounds/blaise/background.mp3");
-    bgMusic.loop = true; // Loop the background music
-    bgMusic.volume = 0.1; // Set volume (0.0 to 1.0)
-    bgMusic.play(); // Start playing the music
-    // Play music after the first interaction due to browser policies
-    document.addEventListener(
-        "click",
-        function playMusic() {
-            bgMusic.play();
-            document.removeEventListener("click", playMusic);
-        },
-        { once: true }
-    );
+    if (!bgMusic) {
+        bgMusic = new Audio("assets/sounds/blaise/background.mp3");
+        bgMusic.loop = true;
+        bgMusic.volume = 0.1;
+        // Play music after first click due to browser policy
+        document.addEventListener(
+            "click",
+            function playMusic() {
+                if (!mute) bgMusic.play();
+                // Remove listener after first click to avoid multiple plays
+                document.removeEventListener("click", playMusic);
+            },
+            { once: true }
+        );
+    }
+    if (!mute) {
+        bgMusic.play();
+    } else {
+        bgMusic.pause();
+        // reset to start
+        bgMusic.currentTime = 0;
+    }
 }
+
 // Food eaten sound effect
 function playFoodSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const foodSound = new Audio("assets/sounds/blaise/chomp.mp3");
     foodSound.volume = 0.1; // Set volume (0.0 to 1.0)
     foodSound.play();
 }
 // Eat Nuclear Waste sound effect
 function playNuclearWasteSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const nuclearWasteSound = new Audio(
         "assets/sounds/blaise/eatnuclearWaste.mp3"
     );
@@ -569,24 +649,31 @@ function playNuclearWasteSound() {
 }
 // Power-Up sound effect
 function playPowerUpSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const powerUpSound = new Audio("assets/sounds/blaise/powerUp.mp3");
     powerUpSound.volume = 0.4; // Set volume (0.0 to 1.0)
     powerUpSound.play();
 }
 // Death sound effect
 function playDeathSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const deathSound = new Audio("assets/sounds/blaise/death.mp3");
     deathSound.volume = 0.4; // Set volume (0.0 to 1.0)
     deathSound.play();
 }
 // Eating alien sound effect
 function playEatAlienSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const eatAlienSound = new Audio("assets/sounds/blaise/eatAlien.mp3");
     eatAlienSound.volume = 0.3; // Set volume (0.0 to 1.0)
     eatAlienSound.play();
+}
+// Play portal sound effect
+function playPortalSound() {
+    if (muteSoundEffects) return;
+    const portalSound = new Audio("assets/sounds/blaise/portal.mp3");
+    portalSound.volume = 0.4; // Set volume (0.0 to 1.0)
+    portalSound.play();
 }
 
 // Update function for game objects and redrawing the canvas
@@ -649,6 +736,23 @@ function draw() {
             pacman.width,
             pacman.height
         );
+    }
+
+    // Draw Portal
+    if (portal) {
+        portal.frameCounter++;
+        if (portal.frameCounter >= portalAnimationSpeed) {
+            portal.frameCounter = 0;
+            portal.frameIndex = (portal.frameIndex + 1) % portalFrames.length;
+        }
+        context.drawImage(
+            portalFrames[portal.frameIndex],
+            portal.x,
+            portal.y,
+            portal.width,
+            portal.height
+        );
+        context.globalCompositeOperation = "source-over";
     }
 
     // Draw walls
@@ -770,7 +874,10 @@ function move() {
         }
         // Check if pacman is near the center of a tile to allow turning
         // This is to ensure smooth turning at intersections
-        if (Math.abs(pacman.x % tileSize) < 2 && Math.abs(pacman.y % tileSize) < 2) {
+        if (
+            Math.abs(pacman.x % tileSize) < 2 &&
+            Math.abs(pacman.y % tileSize) < 2
+        ) {
             canTurn = canTurn;
         } else {
             canTurn = false;
@@ -832,6 +939,19 @@ function move() {
             break; // Exit loop after handling collision
         }
     }
+    // Check for collisions with portal
+    if (portal && collision(pacman, portal)) {
+        // Move to next level
+        currentLevel++;
+        if (currentLevel < levels.length) {
+            loadMap(currentLevel);
+            portal = null; // hide portal
+            playPortalSound(); // Play portal sound effect
+            // Delay for a second before starting next level
+            resetPositions();
+        }
+    }
+
     // Check for collisions with food pellets
     for (let food of foods) {
         if (collision(pacman, food)) {
@@ -908,7 +1028,7 @@ function move() {
         }
         // Randomly change direction at intervals
         if (alien.x % tileSize === 0 && alien.y % tileSize === 0) {
-            if (Math.random() < 0.4) {
+            if (Math.random() < 0.5) {
                 const newDirection = direction[Math.floor(Math.random() * 4)];
                 alien.updateDirection(newDirection);
             }
@@ -956,27 +1076,29 @@ function move() {
 // Power-up effect for aliens
 function powerUpEffect() {
     if (powerUpActive) {
+        // Clear existing timer if any
+        if (powerUpTimer) clearTimeout(powerUpTimer);
+
         // Change alien images to frightened versions
         for (let alien of aliens) {
             const imgPath = alien.image.src;
             if (imgPath.includes("blueAlien0")) {
                 alien.image.src = "assets/images/blaise/aliens/blueAlien1.webp";
             } else if (imgPath.includes("greenAlien0")) {
-                alien.image.src =
-                    "assets/images/blaise/aliens/greenAlien1.webp";
+                alien.image.src = "assets/images/blaise/aliens/greenAlien1.webp";
             } else if (imgPath.includes("pinkAlien0")) {
                 alien.image.src = "assets/images/blaise/aliens/pinkAlien1.webp";
             } else if (imgPath.includes("purpleAlien0")) {
-                alien.image.src =
-                    "assets/images/blaise/aliens/purpleAlien1.webp";
+                alien.image.src = "assets/images/blaise/aliens/purpleAlien1.webp";
             }
         }
 
-        // 10s timer before calling if statement
-        setTimeout(() => {
+        // Set new timer for 10 seconds
+        powerUpTimer = setTimeout(() => {
             powerUpActive = false;
             revertPowerUpEffect();
-        }, 10000); // Power-up lasts for 10 seconds
+            powerUpTimer = null; // Clear the timer reference
+        }, 10000);
     }
 }
 
@@ -998,18 +1120,47 @@ function revertPowerUpEffect() {
 
 // increment level function
 function checkLevelComplete() {
-    // Check if all food pellets are eaten
     if (foods.size === 0) {
-        currentLevel++;
-        if (currentLevel < levels.length) {
-            loadMap(currentLevel);
-        } else {
-            // All levels completed - handle game completion - for now, reset to first level
-            currentLevel = 0; // Reset to first level or handle game completion
-            loadMap();
-            resetPositions();
+        // Instead of immediately loading next level, spawn portal
+        if (!portal) {
+            spawnPortal(); // Show portal
         }
     }
+}
+
+// Spawn the portal
+function spawnPortal() {
+    const portalTiles = 3; // 3x3 portal
+    const map = levels[currentLevel];
+
+    let portalRow = 0;
+    let portalCol = 0;
+
+    // Find the "p" tile in the current map
+    for (let r = 0; r < rowCount; r++) {
+        for (let c = 0; c < colCount; c++) {
+            if (map[r][c] === "p") {
+                portalRow = r;
+                portalCol = c;
+                break;
+            }
+        }
+    }
+
+    // Calculate top-left corner so the portal is centered on the "p" tile
+    const x = (portalCol - Math.floor(portalTiles / 2)) * tileSize;
+    const y = (portalRow - Math.floor(portalTiles / 2)) * tileSize;
+
+    // Create the portal block with 3x3 size
+    portal = new Block(
+        portalFrames[0],
+        x,
+        y,
+        tileSize * portalTiles,
+        tileSize * portalTiles
+    );
+    portal.frameIndex = 0;
+    portal.frameCounter = 0;
 }
 
 // Death function to handle life decrement and reset positions
