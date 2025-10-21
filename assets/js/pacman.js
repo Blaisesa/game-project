@@ -322,27 +322,22 @@ window.onload = function () {
             }
         }
     });
-    // Double tap to pause on mobile
-    let lastTap = 0;
-    document.addEventListener("touchend", (e) => {
-        const currentTime = new Date().getTime();
-        if (currentTime - lastTap < 300) {
-            // Double tap detected
-            paused = !paused;
-            if (paused) {
-                document
-                    .querySelector("#pacman_gamePaused")
-                    .classList.remove("hidden");
-            } else {
-                document
-                    .querySelector("#pacman_gamePaused")
-                    .classList.add("hidden");
-                update();
-            }
-        }
-        lastTap = currentTime;
-    });
     
+    // touchscreen pause button
+    document.querySelector("#pausePacman").addEventListener("click", () => {
+        paused = !paused;
+        // Change the text of the button based on pause state
+        const pauseScreen = document.querySelector("#pacman_gamePaused");
+        if (paused) {
+            pauseScreen.classList.remove("hidden");
+            document.querySelector("#pausePacman").innerText = "Resume";
+        } else {
+            pauseScreen.classList.add("hidden");
+            document.querySelector("#pausePacman").innerText = "Pause";
+            update(); // resume the game loop
+        }
+    });
+
     // Event listener to resume the game if user presses resume button
     document.querySelector("#resumeButton").addEventListener("click", () => {
         paused = false;
