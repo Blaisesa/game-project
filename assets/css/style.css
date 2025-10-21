@@ -487,9 +487,36 @@ button {
 #gamePage nav {
     display: none;
 }
+.touch {
+    display: none;
+}
+#pacman_start {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--color-primary);
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    backdrop-filter: blur(10px);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+#pacman_start h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+#pacman_start p {
+    font-size: 1rem;
+    color: var(--color-secondary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    text-align: center;
+    margin: 1rem;
+    line-height: 1rem;
+}
 
 /* responsive styles */
-
 @media (max-width: 900px) {
     header h1 {
         font-size: 2rem;
@@ -587,6 +614,18 @@ button {
     #muteSoundEffect {
         margin-top: 1rem;
     }
+    .keyboard {
+        display: none;
+    }
+    .touch {
+        display: block;
+    }
+    #pacman_start h2 {
+        font-size: 1.5rem;
+    }
+    #pacman_start p {
+        font-size: 0.9rem;
+    }
 }
 
 @media (max-width: 600px) {
@@ -614,5 +653,11 @@ button {
     #gameOverButtons a {
         width: 250px;
         font-size: 0.6rem;
+    }
+    #pacman_start h2 {
+        font-size: 1.2rem;
+    }
+    #pacman_start p {
+        font-size: 0.8rem;
     }
 }

@@ -178,13 +178,14 @@ let level = 0;
 let scale = 1; // Global scale factor
 let gameOver = false;
 let gameWin = false;
+let gameStarted = false;
 let levelComplete = false;
 let powerUpActive = false;
 let paused = false;
 let mute = false;
 let muteSoundEffects = false;
 let bgMusic; // Background music variable
-let powerUpTimer;; // Power-up timer variable
+let powerUpTimer; // Power-up timer variable
 // Touch control variables
 // These will store the starting and ending touch positions to determine swipe direction
 let touchStartX = 0;
@@ -304,19 +305,44 @@ window.onload = function () {
         .querySelector("#restartButton")
         .addEventListener("click", restartGame);
 
-    // Event listener to pause the game if user presses spacebar
+    // Event listener to pause the game if user presses spacebar or double taps
     document.addEventListener("keydown", (e) => {
-        if (e.code === "Space") {
+        if (gameStarted && e.code === "Space") {
             paused = !paused;
             if (paused) {
-                document.querySelector("#pacman_gamePaused").classList.remove("hidden");
+                document
+                    .querySelector("#pacman_gamePaused")
+                    .classList.remove("hidden");
                 paused = true;
             } else {
-                document.querySelector("#pacman_gamePaused").classList.add("hidden");
+                document
+                    .querySelector("#pacman_gamePaused")
+                    .classList.add("hidden");
                 update();
             }
         }
     });
+    // Double tap to pause on mobile
+    let lastTap = 0;
+    document.addEventListener("touchend", (e) => {
+        const currentTime = new Date().getTime();
+        if (currentTime - lastTap < 300) {
+            // Double tap detected
+            paused = !paused;
+            if (paused) {
+                document
+                    .querySelector("#pacman_gamePaused")
+                    .classList.remove("hidden");
+            } else {
+                document
+                    .querySelector("#pacman_gamePaused")
+                    .classList.add("hidden");
+                update();
+            }
+        }
+        lastTap = currentTime;
+    });
+    
     // Event listener to resume the game if user presses resume button
     document.querySelector("#resumeButton").addEventListener("click", () => {
         paused = false;
@@ -343,15 +369,51 @@ window.onload = function () {
             bgMusic.play();
         }
         // Edit the button text to unmute
-        document.querySelector("#muteButton").innerText = mute ? "Unmute Music" : "Mute Music";
+        document.querySelector("#muteButton").innerText = mute
+            ? "Unmute Music"
+            : "Mute Music";
     });
     // Event listener to mute/unmute sound effects
     document.querySelector("#muteSoundEffect").addEventListener("click", () => {
         muteSoundEffects = !muteSoundEffects;
         // Edit the button text to unmute
-        document.querySelector("#muteSoundEffect").innerText = muteSoundEffects ? "Unmute Effects" : "Mute Effects";
+        document.querySelector("#muteSoundEffect").innerText = muteSoundEffects
+            ? "Unmute Effects"
+            : "Mute Effects";
     });
-}
+    // Start the game logic
+    if (gameStarted === false) {
+        // listen for spacebar click to start the game
+        document.addEventListener(
+            "keydown",
+            (e) => {
+                if (e.code === "Space") {
+                    gameStarted = true;
+                    document
+                        .querySelector("#pacman_start")
+                        .classList.add("hidden");
+                    loadMap();
+                    update();
+                }
+            },
+            { once: true } // <- correct placement
+        );
+    }
+
+    // mobile tap to start the game
+    if (!gameStarted) {
+        document.addEventListener(
+            "touchstart",
+            (e) => {
+                gameStarted = true;
+                document.querySelector("#pacman_start").classList.add("hidden");
+                loadMap();
+                update();
+            },
+            { once: true } // <- fires only once and then removes itself
+        );
+    }
+};
 
 // Calculate swipe direction and move pacman accordingly
 function handleSwipe() {
@@ -678,6 +740,8 @@ function playPortalSound() {
 
 // Update function for game objects and redrawing the canvas
 function update() {
+    // Check if the game started
+    if (!gameStarted) return;
     // Pacman animation logic
     //Only animate if pacman is moving and game is not over or paused
     if (
@@ -1085,11 +1149,13 @@ function powerUpEffect() {
             if (imgPath.includes("blueAlien0")) {
                 alien.image.src = "assets/images/blaise/aliens/blueAlien1.webp";
             } else if (imgPath.includes("greenAlien0")) {
-                alien.image.src = "assets/images/blaise/aliens/greenAlien1.webp";
+                alien.image.src =
+                    "assets/images/blaise/aliens/greenAlien1.webp";
             } else if (imgPath.includes("pinkAlien0")) {
                 alien.image.src = "assets/images/blaise/aliens/pinkAlien1.webp";
             } else if (imgPath.includes("purpleAlien0")) {
-                alien.image.src = "assets/images/blaise/aliens/purpleAlien1.webp";
+                alien.image.src =
+                    "assets/images/blaise/aliens/purpleAlien1.webp";
             }
         }
 
