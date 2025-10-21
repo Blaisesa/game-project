@@ -1135,47 +1135,52 @@ function move() {
 
 // Power-up effect for aliens
 function powerUpEffect() {
-    if (powerUpActive) {
-        // Clear any existing timer
-        if (powerUpTimer) clearTimeout(powerUpTimer);
-        if (powerUpInterval) clearInterval(powerUpInterval);
+    const powerUpDuration = 10; // seconds
 
-        // Change alien images to frightened versions
-        for (let alien of aliens) {
-            const imgPath = alien.image.src;
-            if (imgPath.includes("blueAlien0")) alien.image.src = "assets/images/blaise/aliens/blueAlien1.webp";
-            if (imgPath.includes("greenAlien0")) alien.image.src = "assets/images/blaise/aliens/greenAlien1.webp";
-            if (imgPath.includes("pinkAlien0")) alien.image.src = "assets/images/blaise/aliens/pinkAlien1.webp";
-            if (imgPath.includes("purpleAlien0")) alien.image.src = "assets/images/blaise/aliens/purpleAlien1.webp";
-        }
+    // Always reset the flag
+    powerUpActive = true;
 
-        // Show power-up timer bar
-        const powerUpTimerBar = document.querySelector("#timerLine");
-        powerUpTimerBar.parentElement.classList.remove("hidden");
-        powerUpTimerBar.style.width = "100%";
+    // Clear previous timers
+    if (powerUpInterval) clearInterval(powerUpInterval);
+    if (powerUpTimer) clearTimeout(powerUpTimer);
 
-        let timeLeft = 10; // seconds
-        const totalTime = timeLeft;
-
-        // Update the width of the bar every 100ms for smoother animation
-        powerUpInterval = setInterval(() => {
-            timeLeft -= 0.1; // decrease in tenths of a second
-            if (timeLeft <= 0) {
-                timeLeft = 0;
-                clearInterval(powerUpInterval);
-            }
-            powerUpTimerBar.style.width = `${(timeLeft / totalTime) * 100}%`;
-        }, 100);
-
-        // Set a timeout to end the power-up effect
-        powerUpTimer = setTimeout(() => {
-            powerUpActive = false;
-            revertPowerUpEffect();
-            powerUpTimer = null;
-            powerUpInterval = null;
-        }, timeLeft * 1000);
+    // Change alien images to frightened versions
+    for (let alien of aliens) {
+        const imgPath = alien.image.src;
+        if (imgPath.includes("blueAlien0")) alien.image.src = "assets/images/blaise/aliens/blueAlien1.webp";
+        if (imgPath.includes("greenAlien0")) alien.image.src = "assets/images/blaise/aliens/greenAlien1.webp";
+        if (imgPath.includes("pinkAlien0")) alien.image.src = "assets/images/blaise/aliens/pinkAlien1.webp";
+        if (imgPath.includes("purpleAlien0")) alien.image.src = "assets/images/blaise/aliens/purpleAlien1.webp";
     }
+
+    // Show power-up timer bar
+    const powerUpTimerBar = document.querySelector("#timerLine");
+    powerUpTimerBar.parentElement.classList.remove("hidden");
+    powerUpTimerBar.style.width = "100%";
+
+    let startTime = Date.now(); // track start time
+
+    // Update the bar every 50ms for smoother animation
+    powerUpInterval = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000; // seconds
+        const timeLeft = Math.max(powerUpDuration - elapsed, 0);
+        powerUpTimerBar.style.width = `${(timeLeft / powerUpDuration) * 100}%`;
+
+        if (timeLeft <= 0) {
+            clearInterval(powerUpInterval);
+            powerUpInterval = null;
+        }
+    }, 50);
+
+    // End power-up effect after full duration
+    powerUpTimer = setTimeout(() => {
+        powerUpActive = false;
+        revertPowerUpEffect();
+        powerUpTimer = null;
+        powerUpInterval = null;
+    }, powerUpDuration * 1000);
 }
+
 
 
 // Revert alien images back to normal after power-up effect ends
