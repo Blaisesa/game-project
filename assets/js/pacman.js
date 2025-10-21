@@ -31,46 +31,47 @@ const portalAnimationSpeed = 5; // slower than pacman
 // original level 0 map layout
 const level0 = [
     // 0: empty, X: wall, x: vent, n: nuclear waste, +: power-up, 1: blue alien, 2: green alien, 3: pink alien, 4: purple alien, P: pacman start, p: portal, " ": food
-    // "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
-    // "X                         n X",
-    // "X XXXXXXX X XXXXXXXXXXXXXXX X",
-    // "X       x X X       XXX +   X",
-    // "X X X X X X X X X X X   XxX X",
-    // "X X X X X X X X X X X XXXnX X",
-    // "X XnX X X X X       X     X X",
-    // "X X X X X X X XX XX X XXX X X",
-    // "Xn  X X X X       X       X X",
-    // "X XXX X X XXX 102 X X X X X X",
-    // "      X X     0p0   X X X    ",
-    // "X XXX X XXXXX 304 X X X X X X",
-    // "X           X     X X X X X X",
-    // "X XXXX XXXX X XXXXX X X X X X",
-    // "X X                   X X X X",
-    // "X X X XxX X XX X X X XX   X X",
-    // "X X X   X X XX P X X n  X X X",
-    // "X X X X X X XX X X X XX X X X",
-    // "X    n     +                X",
-    // "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
-    "XXXXXXXXX0XXXXXXXXXX0XXXXXXXX",
-    "X0000000000000000000000000n0X",
-    "X0XXXXXXX0X0XXXXXXXXXXXXXXX0X",
-    "X0000000x0X0X0000000XXX0+000X",
-    "X0X0X0X0X0X0X0X0X0X0X000XxX0X",
-    "X0X0X0X0X0X0X0X0X0X0X0XXXnX0X",
-    "X0XnX0X0X0X0X0000000X00000X0X",
-    "X0X0X0X0X0X0X0XX0XX0X0XXX0X0X",
-    "Xn00X0X0X0X0000000X0000000X0X",
-    "X0XXX0X0X0XXX01020X0X0X0X0X0X",
-    "000000X0X000000p0000X0X0X0000",
-    "X0XXX0X0XXXXX03040X0X0X0X0X0X",
-    "X00000000000X00000X0X0X0X0X0X",
-    "X0XXXX0XXXX0X0XXXXX0X0X0X0X0X",
-    "X0X0000000000000000000X0X0X0X",
-    "X0X0X0XxX0X0XX0X0X0X0XX000X0X",
-    "X0X0X000X0X0XX0P0X0X0n00X0X0X",
-    "X0X0X0X0X0X0XX0X0X0X0XX0X0X0X",
-    "X0000n00000+0000000000000000X",
-    "XXXXXXXXX0XXXXXXXXXX XXXXXXXX",
+    "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
+    "X                         n X",
+    "X XXXXXXX X XXXXXXXXXXXXXXX X",
+    "X       x X X       XXX +   X",
+    "X X X X X X X X X X X   XxX X",
+    "X X X X X X X X X X X XXXnX X",
+    "X XnX X X X X       X     X X",
+    "X X X X X X X XX XX X XXX X X",
+    "Xn  X X X X       X       X X",
+    "X XXX X X XXX 102 X X X X X X",
+    "      X X     0p0   X X X    ",
+    "X XXX X XXXXX 304 X X X X X X",
+    "X           X     X X X X X X",
+    "X XXXX XXXX X XXXXX X X X X X",
+    "X X                   X X X X",
+    "X X X XxX X XX X X X XX   X X",
+    "X X X   X X XX P X X n  X X X",
+    "X X X X X X XX X X X XX X X X",
+    "X    n     +                X",
+    "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
+    // Level 0 map with no food pellets for level clearing testing purposes
+    // "XXXXXXXXX0XXXXXXXXXX0XXXXXXXX",
+    // "X0000000000000000000000000n0X",
+    // "X0XXXXXXX0X0XXXXXXXXXXXXXXX0X",
+    // "X0000000x0X0X0000000XXX0+000X",
+    // "X0X0X0X0X0X0X0X0X0X0X000XxX0X",
+    // "X0X0X0X0X0X0X0X0X0X0X0XXXnX0X",
+    // "X0XnX0X0X0X0X0000000X00000X0X",
+    // "X0X0X0X0X0X0X0XX0XX0X0XXX0X0X",
+    // "Xn00X0X0X0X0000000X0000000X0X",
+    // "X0XXX0X0X0XXX01020X0X0X0X0X0X",
+    // "000000X0X000000p0000X0X0X0000",
+    // "X0XXX0X0XXXXX03040X0X0X0X0X0X",
+    // "X00000000000X00000X0X0X0X0X0X",
+    // "X0XXXX0XXXX0X0XXXXX0X0X0X0X0X",
+    // "X0X0000000000000000000X0X0X0X",
+    // "X0X0X0XxX0X0XX0X0X0X0XX000X0X",
+    // "X0X0X000X0X0XX0P0X0X0n00X0X0X",
+    // "X0X0X0X0X0X0XX0X0X0X0XX0X0X0X",
+    // "X0000n00000+0000000000000000X",
+    // "XXXXXXXXX0XXXXXXXXXX XXXXXXXX",
 ];
 // Additional levels (level1, level2, etc.)
 const level1 = [
@@ -183,6 +184,7 @@ let paused = false;
 let mute = false;
 let muteSoundEffects = false;
 let bgMusic; // Background music variable
+let powerUpTimer;; // Power-up timer variable
 // Touch control variables
 // These will store the starting and ending touch positions to determine swipe direction
 let touchStartX = 0;
@@ -1074,27 +1076,29 @@ function move() {
 // Power-up effect for aliens
 function powerUpEffect() {
     if (powerUpActive) {
+        // Clear existing timer if any
+        if (powerUpTimer) clearTimeout(powerUpTimer);
+
         // Change alien images to frightened versions
         for (let alien of aliens) {
             const imgPath = alien.image.src;
             if (imgPath.includes("blueAlien0")) {
                 alien.image.src = "assets/images/blaise/aliens/blueAlien1.webp";
             } else if (imgPath.includes("greenAlien0")) {
-                alien.image.src =
-                    "assets/images/blaise/aliens/greenAlien1.webp";
+                alien.image.src = "assets/images/blaise/aliens/greenAlien1.webp";
             } else if (imgPath.includes("pinkAlien0")) {
                 alien.image.src = "assets/images/blaise/aliens/pinkAlien1.webp";
             } else if (imgPath.includes("purpleAlien0")) {
-                alien.image.src =
-                    "assets/images/blaise/aliens/purpleAlien1.webp";
+                alien.image.src = "assets/images/blaise/aliens/purpleAlien1.webp";
             }
         }
 
-        // 10s timer before calling if statement
-        setTimeout(() => {
+        // Set new timer for 10 seconds
+        powerUpTimer = setTimeout(() => {
             powerUpActive = false;
             revertPowerUpEffect();
-        }, 10000); // Power-up lasts for 10 seconds
+            powerUpTimer = null; // Clear the timer reference
+        }, 10000);
     }
 }
 
