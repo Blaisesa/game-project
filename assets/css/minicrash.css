@@ -1,3 +1,11 @@
+/* ---------- Mini-Crash Font Reset ---------- */
+#minicrash,
+#minicrash * {
+  font-family: "Inter", "Segoe UI", sans-serif !important;
+  letter-spacing: normal;
+  text-shadow: none;
+}
+
 /* ---------- 1. Global Reset & Theme ---------- */
 #minicrash {
     --bg-color: #0b1220;
@@ -20,7 +28,6 @@
     padding: 1rem;
 }
 
-
 /* Remove inherited margins/padding inside */
 #minicrash * {
     box-sizing: border-box;
@@ -38,7 +45,7 @@
     padding: 1rem 1.5rem;
     margin-top: 1.5rem;
     display: flex !important;
-      flex-direction: row !important;
+    flex-direction: row !important;
     justify-content: space-between;
     align-items: center;
     flex-wrap: nowrap;
@@ -74,7 +81,6 @@
     transform: scale(1.05);
 }
 
-
 /* Override global header layout for Mini-Crash only */
 /* #minicrash header#message-panel {
   display: flex !important;
@@ -87,21 +93,165 @@
 
 /* ---------- Multiplier Display ---------- */
 #minicrash #display {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #minicrash #mult {
-  font-size: 2.8rem;
-  font-weight: 600;
-  color: var(--accent-light);
-  background: var(--card-color);
-  border-radius: var(--radius);
-  box-shadow: 0 0 10px rgba(107, 224, 255, 0.5);
-  padding: 1rem 2rem;
-  min-width: 150px;
-  text-align: center;
-  transition: transform 0.2s ease, color 0.2s ease;
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--accent-light);
+    background: var(--card-color);
+    border-radius: var(--radius);
+    box-shadow: 0 0 10px rgba(107, 224, 255, 0.5);
+    padding: 1rem 2rem;
+    min-width: 150px;
+    text-align: center;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
+
+/* Hover & Active Multiplier States */
+#minicrash #mult:hover {
+    transform: scale(1.05);
+    color: var(--accent);
+    box-shadow: 0 0 20px rgba(107, 224, 255, 0.7);
+}
+
+#minicrash #mult.active {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(59, 199, 255, 0.9);
+    color: #fff;
+}
+/* ---------- Rocket Area ---------- */
+#minicrash #rocket-area {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 160px;
+    width: 100%;
+    position: relative;
+}
+
+#minicrash #rocket {
+    width: 80px;
+    height: auto;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 0 8px rgba(107, 224, 255, 0.5));
+}
+
+/* ---------- 2. Controls (Start / Cash Out) ---------- */
+#minicrash #controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 480px;
+  margin: 1.5rem auto 0;
+  flex-wrap: wrap;
+}
+
+#minicrash #controls button {
+  flex: 1 1 45%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.8rem 0;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+#minicrash #controls button:hover {
+  background: var(--accent-light);
+  transform: translateY(-2px);
+}
+
+#minicrash #cashout-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Bet Controls (Grid) ---------- */
+#minicrash #bet-controls {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 even columns by default */
+  gap: 0.5rem 0.75rem;
+  width: 100%;
+  max-width: 480px;
+  align-items: center;
+  justify-items: center;
+}
+
+/* Make the “Bet:” label span the full row */
+#minicrash #bet-controls > span:first-child {
+  grid-column: 1 / -1;     /* full width row */
+  justify-self: start;     /* left align the label */
+  color: var(--accent-light);
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Buttons fill their grid cell evenly */
+#minicrash .bet-btn {
+  width: 100%;
+  background: var(--card-color);
+  color: var(--text-color);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+/* Hover & active states */
+#minicrash .bet-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-1px);
+}
+#minicrash .bet-btn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent-light);
+  box-shadow: 0 0 8px rgba(59, 199, 255, 0.6);
+}
+
+/* ---------- Responsive: 2x2 on narrow screens ---------- */
+@media (max-width: 480px) {
+  #minicrash #bet-controls {
+    grid-template-columns: repeat(2, 1fr); /* 2 per row */
+  }
+}
+
+
+/* ---------- Footer ---------- */
+#minicrash footer {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+#minicrash footer a {
+  color: var(--accent-light);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#minicrash footer a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
