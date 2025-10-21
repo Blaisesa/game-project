@@ -938,10 +938,7 @@ function move() {
             portal = null; // hide portal
             playPortalSound(); // Play portal sound effect
             // Delay for a second before starting next level
-            setTimeout(() => {
-                // Reset pacman and alien positions
-                resetPositions();
-            }, 3000);
+            resetPositions();
         }
     }
 
