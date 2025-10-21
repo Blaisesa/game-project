@@ -516,6 +516,23 @@ button {
     margin: 1rem;
     line-height: 1rem;
 }
+#powerUpTimerContainer {
+    width: 80%;           /* Or whatever width you want */
+    height: 4px;           /* Bar height */
+    background-color: #555; /* Background color for the container */
+    border: 1px solid #333; 
+    position: fixed;        /* So it stays on top */
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#timerLine {
+    height: 100%;
+    width: 100%;           /* Full width initially */
+    background-color: red; 
+    transition: width 0.1s linear; /* Smooth shrinking */
+}
 
 /* responsive styles */
 @media (max-width: 900px) {

@@ -37,7 +37,7 @@
     <!-- Main content area for the game -->
     <main id="game">
         <!-- Game statistics information -->
-         <button id="pausePacman" class="touch">Pause</button>
+        <button id="pausePacman" class="touch">Pause</button>
         <section id="board-container">
             <div id="stats">
                 <!-- Top score -->
@@ -68,7 +68,8 @@
                 <span id="pausedButtons">
                     <button id="resumeButton" class="keyboard">Resume Game</button>
                     <button id="restartButtonPaused">Restart Game</button>
-                    <span class="row"><button id="muteButton">Mute Music</button> <button id="muteSoundEffect">Mute Effects</button></span>
+                    <span class="row"><button id="muteButton">Mute Music</button> <button id="muteSoundEffect">Mute
+                            Effects</button></span>
                 </span>
             </div>
             <div id="pacman_start" class="">
@@ -76,10 +77,14 @@
                 <p class="touch">Tap to Start</p>
                 <p class="keyboard">Press Space to Start</p>
                 <p class="keyboard">Use Arrow Keys or WASD to Move, and <br><br>Space to Pause</p>
-                <p class="touch">Swipe in the direction you want to move! Double-tap to Pause</p>
+                <p class="touch">Swipe in the direction you want to move!</p>
             </div>
-                </span>
+            </span>
             </div>
+            <div id="powerUpTimerContainer" class="hidden">
+                <div id="timerLine"></div>
+            </div>
+
             <canvas id="board"></canvas>
         </section>
         <!-- Game controls for player input -->
