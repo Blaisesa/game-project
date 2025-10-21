@@ -181,6 +181,8 @@ let levelComplete = false;
 let powerUpActive = false;
 let paused = false;
 let mute = false;
+let muteSoundEffects = false;
+let bgMusic; // Background music variable
 // Touch control variables
 // These will store the starting and ending touch positions to determine swipe direction
 let touchStartX = 0;
@@ -322,7 +324,25 @@ window.onload = function () {
                 .classList.add("hidden");
             restartGame();
         });
-};
+    // Event listener to mute/unmute music
+    document.querySelector("#muteButton").addEventListener("click", () => {
+        mute = !mute;
+        if (mute && bgMusic) {
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
+        } else if (!mute && bgMusic) {
+            bgMusic.play();
+        }
+        // Edit the button text to unmute
+        document.querySelector("#muteButton").innerText = mute ? "Unmute Music" : "Mute Music";
+    });
+    // Event listener to mute/unmute sound effects
+    document.querySelector("#muteSoundEffect").addEventListener("click", () => {
+        muteSoundEffects = !muteSoundEffects;
+        // Edit the button text to unmute
+        document.querySelector("#muteSoundEffect").innerText = muteSoundEffects ? "Unmute Effects" : "Mute Effects";
+    });
+}
 
 // Calculate swipe direction and move pacman accordingly
 function handleSwipe() {
@@ -578,32 +598,40 @@ function loadMap() {
 
 // Load Game Music Effects
 function backgroundMusic() {
-    // Check if mute is enabled
-    if (mute) return;
-    const bgMusic = new Audio("assets/sounds/blaise/background.mp3");
-    bgMusic.loop = true; // Loop the background music
-    bgMusic.volume = 0.1; // Set volume (0.0 to 1.0)
-    bgMusic.play(); // Start playing the music
-    // Play music after the first interaction due to browser policies
-    document.addEventListener(
-        "click",
-        function playMusic() {
-            bgMusic.play();
-            document.removeEventListener("click", playMusic);
-        },
-        { once: true }
-    );
+    if (!bgMusic) {
+        bgMusic = new Audio("assets/sounds/blaise/background.mp3");
+        bgMusic.loop = true;
+        bgMusic.volume = 0.1;
+        // Play music after first click due to browser policy
+        document.addEventListener(
+            "click",
+            function playMusic() {
+                if (!mute) bgMusic.play();
+                // Remove listener after first click to avoid multiple plays
+                document.removeEventListener("click", playMusic);
+            },
+            { once: true }
+        );
+    }
+    if (!mute) {
+        bgMusic.play();
+    } else {
+        bgMusic.pause();
+        // reset to start
+        bgMusic.currentTime = 0;
+    }
 }
+
 // Food eaten sound effect
 function playFoodSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const foodSound = new Audio("assets/sounds/blaise/chomp.mp3");
     foodSound.volume = 0.1; // Set volume (0.0 to 1.0)
     foodSound.play();
 }
 // Eat Nuclear Waste sound effect
 function playNuclearWasteSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const nuclearWasteSound = new Audio(
         "assets/sounds/blaise/eatnuclearWaste.mp3"
     );
@@ -612,28 +640,28 @@ function playNuclearWasteSound() {
 }
 // Power-Up sound effect
 function playPowerUpSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const powerUpSound = new Audio("assets/sounds/blaise/powerUp.mp3");
     powerUpSound.volume = 0.4; // Set volume (0.0 to 1.0)
     powerUpSound.play();
 }
 // Death sound effect
 function playDeathSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const deathSound = new Audio("assets/sounds/blaise/death.mp3");
     deathSound.volume = 0.4; // Set volume (0.0 to 1.0)
     deathSound.play();
 }
 // Eating alien sound effect
 function playEatAlienSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const eatAlienSound = new Audio("assets/sounds/blaise/eatAlien.mp3");
     eatAlienSound.volume = 0.3; // Set volume (0.0 to 1.0)
     eatAlienSound.play();
 }
 // Play portal sound effect
 function playPortalSound() {
-    if (mute) return;
+    if (muteSoundEffects) return;
     const portalSound = new Audio("assets/sounds/blaise/portal.mp3");
     portalSound.volume = 0.4; // Set volume (0.0 to 1.0)
     portalSound.play();
@@ -1091,7 +1119,6 @@ function checkLevelComplete() {
     }
 }
 
-
 // Spawn the portal
 function spawnPortal() {
     const portalTiles = 3; // 3x3 portal
@@ -1116,11 +1143,16 @@ function spawnPortal() {
     const y = (portalRow - Math.floor(portalTiles / 2)) * tileSize;
 
     // Create the portal block with 3x3 size
-    portal = new Block(portalFrames[0], x, y, tileSize * portalTiles, tileSize * portalTiles);
+    portal = new Block(
+        portalFrames[0],
+        x,
+        y,
+        tileSize * portalTiles,
+        tileSize * portalTiles
+    );
     portal.frameIndex = 0;
     portal.frameCounter = 0;
 }
-
 
 // Death function to handle life decrement and reset positions
 function death() {
