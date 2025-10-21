@@ -305,7 +305,14 @@ window.onload = function () {
     // Event listener to pause the game if user presses spacebar
     document.addEventListener("keydown", (e) => {
         if (e.code === "Space") {
-            paused = true;
+            paused = !paused;
+            if (paused) {
+                document.querySelector("#pacman_gamePaused").classList.remove("hidden");
+                paused = true;
+            } else {
+                document.querySelector("#pacman_gamePaused").classList.add("hidden");
+                update();
+            }
         }
     });
     // Event listener to resume the game if user presses resume button
@@ -743,6 +750,7 @@ function draw() {
             portal.width,
             portal.height
         );
+        context.globalCompositeOperation = "source-over";
     }
 
     // Draw walls
@@ -1018,7 +1026,7 @@ function move() {
         }
         // Randomly change direction at intervals
         if (alien.x % tileSize === 0 && alien.y % tileSize === 0) {
-            if (Math.random() < 0.4) {
+            if (Math.random() < 0.5) {
                 const newDirection = direction[Math.floor(Math.random() * 4)];
                 alien.updateDirection(newDirection);
             }
