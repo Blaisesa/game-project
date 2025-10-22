@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,45 +9,54 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/minicrash.css">
+
 </head>
-<body>
-    <!-- Game Header -->
-    <header>
-        <h1>Mini- Crash!</h1>
+
+<body id="minicrash">
+    <!-- Header -->
+    <header id="message-panel">
+        <h1>Mini-Crash!</h1>
+        <button id="help-btn" aria-label="Help">?</button>
     </header>
-    <!-- Main content area for the game -->
-    <main id="game">
-        <!-- Game statistics information -->
-        <section id="board-container">
-            <div id="stats">
-                <h2>Game Statistics</h2>
-                <p>Statistic 1</p>
-                <p>Statistic 2</p>
-                <p>Statistic 3</p>
-            </div>
-            <div>
-                <p>Statistic 1</p>
-                <p>Statistic 2</p>
-                <p>Statistic 3</p>
-            </div>
+
+    <!-- Main Game Area -->
+    <main id="crash-game">
+
+        <!-- Multiplier Display -->
+        <section id="display">
+            <div id="mult">x1.00</div>
         </section>
-        <!-- Game canvas where the game is rendered -->
-        <section id="game-container">
-            <canvas></canvas>
+
+        <!-- Rocket Visual -->
+        <section id="rocket-area">
+            <img id="rocket" src="assets/images/mini-crash/mini-crash-rocket.png" alt="Rocket" />
         </section>
-        <!-- Game controls for player input -->
+
+        <!-- Start / Cashout Buttons -->
         <section id="controls">
-            <!-- joystick container influenced by Joystick.js -->
-            <img src="assets/images/joystick/Central.png" alt="">
+            <button id="start-btn">START</button>
+            <button id="cashout-btn" disabled>CASH OUT</button>
+        </section>
+
+        <!-- Bet Selection -->
+        <section id="bet-controls">
+            <span>Bet:</span>
+            <button class="bet-btn" data-bet="0.25">0.25c</button>
+            <button class="bet-btn" data-bet="0.5">50c</button>
+            <button class="bet-btn" data-bet="1">€1</button>
+            <button class="bet-btn" data-bet="2">€2</button>
         </section>
     </main>
-    <!-- Footer for the game lobby to provide additional information and links to each of the developers -->
+
+    <!-- Footer -->
     <footer>
-        <span>
-            <!-- linkedIn Profiles open in new tab -->
-            <p>Developed by <a href="https://www.linkedin.com/in/blaise-smyka/" target="_blank"
-                    aria-label="Blaise's linked in profile link" rel="noopener">Hans</a></p>
-        </span>
+        <p>Developed by <a href="https://www.linkedin.com/in/hanswinkelmann/" target="_blank" rel="noopener">Hans</a>
+        </p>
     </footer>
+
+    <!-- JavaScript -->
+    <script src="./assets/js/minicrash.js" defer></script>
 </body>
+
 </html>
