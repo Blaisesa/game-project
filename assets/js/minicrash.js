@@ -19,6 +19,7 @@ const loopInterval = 10; // Interval in ms (100 = slow, 10 = fast)
 
 // DOM Elements
 let multDisplay, startBtn, cashoutBtn, rocket, betButtons;
+let messageDisplay = document.querySelector("#message-panel h1")
 
 // DOM ELEMENT HOOKS
 multDisplay = document.getElementById("mult");
@@ -129,8 +130,11 @@ function cashOut() {
 
 // CRASH PHASE (LOSE)
 function triggerCrash() {
-    console.log(`💥 Crash at ${currentMult.toFixed(2)}x`);
-    console.log("Loop cleared:", loopTimer);
+    // console.log(`💥 Crash at ${currentMult.toFixed(2)}x`);
+    // console.log("Loop cleared:", loopTimer);
+    displayMessage(`You crashed at ${currentMult.toFixed(2)}`);
+
+    endRound();
     clearInterval(loopTimer);
     loopTimer = null;
     // (next: show message, disable buttons, endRound())
@@ -140,10 +144,13 @@ function triggerCrash() {
 function endRound() {}
 
 
-// 🧩 SUPPORT / UTILITY
+// SUPPORT / UTILITY
 function displayMessage(msg) {
-    console.log("MESSAGE", msg);
-
+    // console.log("MESSAGE", msg);
+messageDisplay.textContent = msg;
+    setTimeout(function() {
+  messageDisplay.textContent = "Mini-Crash!";
+}, 4000);
 }
 
 function showHelp() {}
