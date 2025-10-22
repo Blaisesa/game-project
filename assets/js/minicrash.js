@@ -19,7 +19,7 @@ const loopInterval = 10; // Interval in ms (100 = slow, 10 = fast)
 
 // DOM Elements
 let multDisplay, startBtn, cashoutBtn, rocket, betButtons;
-let messageDisplay = document.querySelector("#message-panel h1")
+let messageDisplay = document.querySelector("#message-panel h1");
 
 // DOM ELEMENT HOOKS
 multDisplay = document.getElementById("mult");
@@ -130,27 +130,36 @@ function cashOut() {
 
 // CRASH PHASE (LOSE)
 function triggerCrash() {
-    // console.log(`💥 Crash at ${currentMult.toFixed(2)}x`);
+    console.log(`💥 Crash at ${currentMult.toFixed(2)}x`);
     // console.log("Loop cleared:", loopTimer);
-    displayMessage(`You crashed at ${currentMult.toFixed(2)}`);
-
-    endRound();
     clearInterval(loopTimer);
     loopTimer = null;
+    //displat etx in red
+    displayMessage(`You crashed at ${currentMult.toFixed(2)}x`, "crash");
+
+    // endRound();
+
     // (next: show message, disable buttons, endRound())
 }
 
 // END ROUND PHASE
 function endRound() {}
 
-
 // SUPPORT / UTILITY
-function displayMessage(msg) {
+function displayMessage(msg, type) {
+    if (type === "crash") {
+        messageDisplay.style.color = "red";
+    } else if (type === "win") {
+        messageDisplay.style.color = "#6de0ff";
+    } else {
+        messageDisplay.style.color = "#e4e8f2";
+    }
+
     // console.log("MESSAGE", msg);
-messageDisplay.textContent = msg;
-    setTimeout(function() {
-  messageDisplay.textContent = "Mini-Crash!";
-}, 4000);
+    messageDisplay.textContent = msg;
+    setTimeout(function () {
+        messageDisplay.textContent = "Mini-Crash!";
+    }, 4000);
 }
 
 function showHelp() {}
