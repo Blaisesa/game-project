@@ -4,9 +4,9 @@
 
 1. [Overview](#overview)
 2. [Games](#games)
-    - [Game 1: Pac-Man in Space!](#game-1-pac-man-in-space!)
-    - [Game 2: Space Invaders](#game-2-space-invaders)
-    - [Game 3: Mini Crash](#game-3-mini-crash)
+    - [Game 1: Pac-Man in Space! - Developed my Blaise](#game-1-pac-man-in-space)
+    - [Game 2: Space Invaders - Developed by Rhys](#game-2-space-invaders)
+    - [Game 3: Mini Crash - Developed by Hans](#game-3-mini-crash)
 3. [Team Collaboration](#team-collaboration)
 4. [Deployment & Setup](#deployment--setup)
 5. [Testing](#testing)
@@ -55,7 +55,7 @@ This setup promoted independence while encouraging teamwork, review, and cross-s
 
 
 <details>
-<summary>Wireframes</summary>
+<summary><b>Wireframes</b></summary>
 
 </details>
 
@@ -76,14 +76,22 @@ This setup promoted independence while encouraging teamwork, review, and cross-s
 
 
 <details>
-  <summary>Fonts & Colors</summary>
+  <summary><b>Fonts & Colors</b></summary>
+
+  | Color Pallete                    | Visualized colors                   |
+  |----------------------------------|----------------------------------|
+  | ![color pallete](assets/images/readme/blaise/colors.png) | ![visualized colors](assets/images/readme/blaise/colorP.png) |
+
+ <b>Font</b>
+
+   ![google font](assets/images/readme/blaise/font.png) 
 
 </details>
 
 
 ---
 
-## 🎮 Games
+## Games
 
 ### Game 1: Pac-Man in Space!
 Developed & Designed by: Blaise<br>
@@ -101,15 +109,15 @@ Instead of the traditional ghosts, players must now evade Space Invader-style al
 
 | **Tools**     | **Purpose**                                  |
 |------------------|----------------------------------------------|
-| Canva       | Purpose      |
-| Freesounds       | Purpose      |
-| Gif frame Splitter       | Purpose      |
+| Canva       | Designing visual elements and layouts      |
+| Freesounds       | Sourcing free sound effects and music      |
+| Gif Splitter       | Breaking GIFs into frames for animation      |
 
 | **Languages**     | **Purpose**                                  |
 |------------------|----------------------------------------------|
-| HTML       | Purpose      |
-| CSS       | Purpose      |
-| JavaScript       | Purpose      |
+| HTML       | Structuring content for the games      |
+| CSS       | Styling the UI and animations      |
+| JavaScript       | Game logic, interactions, and functionality      |
 
 
 </details>
@@ -132,13 +140,13 @@ The objective is to collect all food pellets in the maze to clear the level. <b>
 <details>
   <summary><strong>Wireframes</strong></summary>
 
-  | Desktop Lobby                    | Desktop Game                    |
-  |----------------------------------|----------------------------------|
-  | ![PC Wireframe 1](assets/images/readme/blaise/pcLobby.png) | ![PC Wireframe 2](assets/images/readme/blaise/pcGame.png) |
+  | Desktop Lobby                    | Desktop Game                    | Mobile Lobby                    | Mobile Game                    |
+  |----------------------------------|----------------------------------|----------------------------------|----------------------------------|
+  | ![PC Wireframe 1](assets/images/readme/blaise/pcLobby.png) | ![PC Wireframe 2](assets/images/readme/blaise/pcGame.png) | ![Mobile Wireframe 1](assets/images/readme/blaise/mobileLobby.png) | ![Mobile Wireframe 2](assets/images/readme/blaise/mobileGame.png) |
 
-  | Mobile Lobby                    | Mobile Game                    |
-  |----------------------------------|----------------------------------|
-  | ![Mobile Wireframe 1](assets/images/readme/blaise/mobileLobby.png) | ![Mobile Wireframe 2](assets/images/readme/blaise/mobileGame.png) |
+  | Map Layout 1                    | Map Layout 2                    | Map Layout 3                    |
+  |----------------------------------|----------------------------------|----------------------------------|
+  | ![map 1](assets/images/readme/blaise/map1.png) | ![map 2](assets/images/readme/blaise/map2.png) | ![map 3](assets/images/readme/blaise/map3.png) |
 
 </details>
 
@@ -146,6 +154,24 @@ The objective is to collect all food pellets in the maze to clear the level. <b>
 
 <details>
   <summary><strong>In-Game Features</strong></summary>
+  Aliens flee when power-up is collected
+When Pac-Man eats a power-up, nearby alien enemies enter a frightened state and run away, allowing Pac-Man to temporarily chase and eat them.
+
+<br>
+Portal appears upon level completion
+Once all food pellets are collected, a portal becomes visible on the map. Colliding with this portal transports the player to the next level.
+
+<br>
+Pac-Man teleports through tunnels
+Moving through designated tunnels on the map teleports Pac-Man from one side of the maze to the other, maintaining continuous gameplay flow.
+
+<br>
+Pac-Man cannot pass through vents
+Certain areas, like vents, act as solid obstacles that block Pac-Man’s movement, requiring the player to navigate around them.
+
+<br>
+Next movement direction is saved to avoid missed turns
+When a player inputs a direction that cannot be immediately taken (e.g., blocked by a wall), the game remembers this input and executes the turn as soon as it becomes possible.
 
 </details>
 
@@ -153,6 +179,14 @@ The objective is to collect all food pellets in the maze to clear the level. <b>
 
 <details>
   <summary><strong>Screenshots</strong></summary>
+
+  | Start Game                    | In-Game                    |
+  |----------------------------------|----------------------------------|
+  | ![start game](assets/images/readme/blaise/startGame.png) | ![in game](assets/images/readme/blaise/ingame.png) |
+
+  | Paused Game                    | Game Over! 3                    |
+  |----------------------------------|----------------------------------|
+  | ![paused game](assets/images/readme/blaise/pausedGame.png) | ![game over](assets/images/readme/blaise/gameOver.png) |
 
 </details>
 
