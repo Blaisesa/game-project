@@ -11,56 +11,67 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <!-- HTML body elements -->
+
 <body>
-<!-- Navigation between games -->
-<nav>
-    <!-- Game Titles -->
-    <ul id="nav-links">
-        <li><a href="#">Pac-Man</a> -</li>
-        <li><a href="#">Space Invaders</a> -</li>
-        <li><a href="#">Crash Out</a></li>
-    </ul>
-</nav>
-<!-- Header for the game lobby -->
-<header>
-    <h1>Welcome to the Space Arcade</h1>
-    <p>Your one-stop destination for all things gaming!</p>
-</header>
-<!-- Main content area for game card descriptions and details -->
-<main id="game-lobby">
-    <!-- Game Cards containing the info and imgs of each game -->
-    <section class="game-card">
+    <!-- Navigation between games -->
+    <nav>
+        <img src="assets/images/logo.webp" alt="" id="logo">
+        <!-- Hamburger Menu -->
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <!-- Game Titles -->
+        <ul id="nav-links">
+            <li><a href="pacman.html">Pac-Man</a></li>
+            <li><a href="spaceinvaders.html">Space Invaders</a></li>
+            <li><a href="minicrash.html">Mini-Crash</a></li>
+        </ul>
+    </nav>
+    <!-- Header for the game lobby -->
+    <header>
+        <h1>Welcome to the Mini Arcade</h1>
+        <p>Your one-stop destination for all things gaming!</p>
+    </header>
+    <!-- Main content area for game card descriptions and details -->
+    <main id="game-lobby">
+        <!-- Game Cards containing the info and imgs of each game -->
+        <section class="game-card">
             <div class="img-card">
-                <p>Space for game cover image</p>
+                <img src="assets/images/blaise/pacmanCover.webp" alt="Pac-Man in Space game cover image">
             </div>
-            <h2>Pac-Man <br>Visits Space!</h2>
-            <a href="#">Play Now</a>
-    </section>
-    <section class="game-card">
+            <h2>Pac-Man<br>in Space!</h2>
+            <a href="pacman.html">Play Now</a>
+        </section>
+        <section class="game-card">
             <div class="img-card">
                 <p>Space for game cover image</p>
             </div>
             <h2>Galactic <br>Space Invaders</h2>
-            <a href="#">Play Now</a>
-    </section>
-    <section class="game-card">
+            <a href="spaceinvaders.html">Play Now</a>
+        </section>
+        <section class="game-card">
             <div class="img-card">
                 <p>Space for game cover image</p>
             </div>
-            <h2>Crash Out<br>Blast Off</h2>
-            <a href="#">Play Now</a>
-    </section>
-</main>
-<!-- Footer for the game lobby to provide additional information and links to each of the developers -->
-<footer>
-    <p>Developed by Space Arcade Team</p>
-    <!-- list of developers and links to their profiles -->
-    <span>
-        <a href="#">Blaise</a>,
-        <a href="#">Hans</a> &
-        <a href="#">Rhys</a>
-    </span>
-</footer>
+            <h2>Mini-Crash<br>Blast Off</h2>
+            <a href="minicrash.html">Play Now</a>
+        </section>
+    </main>
+    <!-- Footer for the game lobby to provide additional information and links to each of the developers -->
+    <footer>
+        <p>Developed by Space Arcade Team</p>
+        <!-- list of developers and links to their profiles -->
+        <span>
+            <!-- linkedIn Profiles open in new tab -->
+            <a href="https://www.linkedin.com/in/blaise-smyka/" target="_blank"
+                aria-label="Blaise's linked in profile link" rel="noopener">Blaise</a>,
+            <a href="#" target="_blank" aria-label="Hans's linked in profile link" rel="noopener">Hans</a> &
+            <a href="#" target="_blank" aria-label="Rhys's linked in profile link" rel="noopener">Rhys</a>
+        </span>
+    </footer>
 
 </body>
 

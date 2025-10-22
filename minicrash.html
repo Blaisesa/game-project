@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini-Crash Game</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/minicrash.css">
+
+</head>
+
+<body id="minicrash">
+    <!-- Header -->
+    <header id="message-panel">
+        <h1>Mini-Crash!</h1>
+        <button id="help-btn" aria-label="Help">?</button>
+    </header>
+
+    <!-- Main Game Area -->
+    <main id="crash-game">
+
+        <!-- Multiplier Display -->
+        <section id="display">
+            <div id="mult">x1.00</div>
+        </section>
+
+        <!-- Rocket Visual -->
+        <section id="rocket-area">
+            <img id="rocket" src="assets/images/mini-crash/mini-crash-rocket.png" alt="Rocket" />
+        </section>
+
+        <!-- Start / Cashout Buttons -->
+        <section id="controls">
+            <button id="start-btn">START</button>
+            <button id="cashout-btn" disabled>CASH OUT</button>
+        </section>
+
+        <!-- Bet Selection -->
+        <section id="bet-controls">
+            <span>Bet:</span>
+            <button class="bet-btn" data-bet="0.25">0.25c</button>
+            <button class="bet-btn" data-bet="0.5">50c</button>
+            <button class="bet-btn" data-bet="1">€1</button>
+            <button class="bet-btn" data-bet="2">€2</button>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Developed by <a href="https://www.linkedin.com/in/hanswinkelmann/" target="_blank" rel="noopener">Hans</a>
+        </p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="./assets/js/minicrash.js" defer></script>
+</body>
+
+</html>

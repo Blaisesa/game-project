@@ -1,5 +1,5 @@
 /* imports */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
 /* reset styles */
 * {
@@ -10,7 +10,7 @@
 
 /* global styles */
 :root {
-    --font-family: 'Press Start 2P', cursive;
+    --font-family: "Press Start 2P", cursive;
     --color-primary: pink;
     --color-secondary: purple;
     --color-hover: white;
@@ -30,12 +30,31 @@ body {
     min-height: 100vh;
 }
 
+a {
+    text-decoration: none;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.9);
+    color: var(--color-primary);
+}
+a:hover {
+    color: var(--color-hover);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
 /* navigation styles */
 nav {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 1rem;
+}
+
+nav img {
+    width: 100px;
+    height: 70px;
+    margin-right: 1rem;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
 
 nav ul {
@@ -60,6 +79,24 @@ nav ul li a:hover {
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
 
+/* hamburger menu styles */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    height: 3px;
+    width: 25px;
+    background-color: var(--color-primary);
+    margin: 4px 0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+/* hamburger toggle styles */
+#menu-toggle {
+    display: none;
+}
 
 /* header styles */
 header {
@@ -76,7 +113,7 @@ header h1 {
     font-size: 2.5rem;
     color: var(--color-primary);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}  
+}
 header p {
     font-size: 1.2rem;
     color: var(--color-secondary);
@@ -115,9 +152,11 @@ header p {
     height: 200px;
     object-fit: cover;
     background-color: var(--color-background);
+    box-shadow: 0 0 5px var(--color-primary);
     margin-bottom: 1rem;
 }
 
+/* game card text styles */
 .game-card h2 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
@@ -139,6 +178,8 @@ header p {
     font-size: 1.1rem;
     transition: 300ms;
 }
+
+/* game card hover styles */
 .game-card:hover {
     text-shadow: 0 0 5px rgba(68, 0, 255, 0.8);
     transform: scale(1.05);
@@ -169,16 +210,480 @@ footer span a {
     font-weight: bold;
     text-shadow: 3px 3px 1px rgba(0, 0, 0, 0.8);
 }
+
 footer span a:hover {
     text-decoration: underline;
 }
 
+body#gamePage {
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+}
+
+/* game page styles */
+main#game {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 2rem;
+}
+
+/* Game board container styles */
+#board-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    max-height: 70vh; /* limit height so joystick fits below */
+    border: 4px solid black;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+}
+
+/* Game stats container styles */
+#stats {
+    margin-top: 1rem;
+    color: var(--color-primary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    font-size: 0.9rem;
+    text-align: flex-start;
+    display: flex;
+    flex-direction: column;
+}
+
+#stats h2 {
+    margin-bottom: 1rem;
+    color: var(--color-secondary);
+    font-size: 1rem;
+}
+
+#current-level {
+    margin-top: 0.5rem;
+    color: var(--color-primary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    font-size: 1rem;
+}
+
+#score,
+#lives {
+    margin-top: 0.5rem;
+}
+#lives img {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: 0.5rem;
+}
+
+/* Game background container styles */
+#game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90vw;
+    max-width: 700px; /* optional max width */
+    height: auto;
+    padding: 1rem;
+    border: 4px solid black;
+    border-top: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(7px);
+}
+
+/* game canvas styles */
+
+/* joystick styles */
+#joystick {
+    width: 18vw; /* responsive to viewport width */
+    max-width: 120px; /* optional max size */
+    height: 130px;
+    margin-bottom: 10px;
+}
+
+#controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+/* joystick container styles, We set it to the bottom center */
+canvas {
+    width: 100%;
+    height: auto;
+    max-height: 70vh; /* keeps canvas within viewport */
+    display: block;
+    border: 4px solid black;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    background-color: rgb(0, 0, 14);
+}
+
+#joystickContainer {
+    position: relative; /* stays under canvas */
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+#controls span {
+    margin-top: 1.5rem;
+}
+#gamePage header {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 1rem;
+}
+#gamePage header h1 {
+    font-size: 1rem;
+    text-align: center;
+}
+.gameBtn {
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    margin-top: 10px;
+    border: 2px dashed var(--color-primary);
+    transition: 300ms;
+    cursor: pointer;
+}
+.gameBtn:hover {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Game Over styles */
+/* Pac-man */
+#pacman_gameOver {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--color-primary);
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    backdrop-filter: blur(10px);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+#pacman_gameOver h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+#pacman_gameOver p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--color-secondary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+#pacman_gamePaused {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--color-primary);
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    backdrop-filter: blur(10px);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+#pacman_gamePaused h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+#pacman_gamePaused p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--color-secondary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+#gameOverButtons {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+#pausedButtons {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+button {
+    font-family: var(--font-family);
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: 2px dashed var(--color-primary);
+    background-color: var(--color-secondary);
+    width: 330px;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: 300ms;
+}
+.wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+#gameOverButtons a {
+    font-family: var(--font-family);
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: 2px dashed var(--color-primary);
+    background-color: var(--color-secondary);
+    width: 330px;
+    color: var(--color-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 300ms;
+}
+#gameOverButtons a:hover {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+#gameOverButtons button:hover {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+#pausedButtons a:hover {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+#pausedButtons button:hover {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+.hidden {
+    display: none;
+}
+#gamePage nav {
+    display: none;
+}
+.touch {
+    display: none;
+}
+#pacman_start {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--color-primary);
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    backdrop-filter: blur(10px);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+#pacman_start h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+#pacman_start p {
+    font-size: 1rem;
+    color: var(--color-secondary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    text-align: center;
+    margin: 1rem;
+    line-height: 1rem;
+}
+#powerUpTimerContainer {
+    width: 80%;           /* Or whatever width you want */
+    height: 4px;           /* Bar height */
+    background-color: #555; /* Background color for the container */
+    border: 1px solid #333; 
+    position: fixed;        /* So it stays on top */
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#timerLine {
+    height: 100%;
+    width: 100%;           /* Full width initially */
+    background-color: red; 
+    transition: width 0.1s linear; /* Smooth shrinking */
+}
+
 /* responsive styles */
-@media (max-width: 768px) {
-    nav {
-        display: none;
-    }
+@media (max-width: 900px) {
     header h1 {
         font-size: 2rem;
+    }
+
+    /* hamburger menu styles */
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+
+    .hamburger span {
+        height: 3px;
+        width: 25px;
+        background-color: var(--color-primary);
+        margin: 4px 0;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+        z-index: 1001;
+        transition: all 0.3s ease;
+    }
+
+    #menu-toggle {
+        display: none;
+    }
+
+    #nav-links {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        padding: 0;
+        gap: 15px;
+        background: rgba(17, 17, 17, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        /* purple shadow */
+        box-shadow: 0 4px 8px rgba(128, 0, 128, 0.6);
+    }
+
+    #menu-toggle:checked ~ #nav-links {
+        /* this will show the menu */
+        display: flex;
+        max-height: 500px;
+        padding: 1rem;
+        width: 100%;
+    }
+
+    /* transform menu to make an X out of a hamburger style */
+    /*rotate and move top line*/
+    #menu-toggle:checked + .hamburger span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 10px);
+    }
+
+    /*use this transform of the middle span (child (2)) to hide it*/
+    #menu-toggle:checked + .hamburger span:nth-child(2) {
+        opacity: 0;
+    }
+
+    /*rotate and move bottom line*/
+    #menu-toggle:checked + .hamburger span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -10px);
+    }
+
+    /* Change logo position */
+    #logo {
+        position: sticky;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0 0 -20px 0;
+    }
+
+    /* Footer styles */
+    footer {
+        margin-bottom: 1rem;
+    }
+
+    .gameBtn {
+        display: none;
+    }
+
+    #gamePage nav {
+        display: contents;
+    }
+    #muteSoundEffect {
+        margin-top: 1rem;
+    }
+    .keyboard {
+        display: none;
+    }
+    .touch {
+        display: block;
+    }
+    #pacman_start h2 {
+        font-size: 1.5rem;
+    }
+    #pacman_start p {
+        font-size: 0.9rem;
+    }
+    #pausePacman {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+        align-self: flex-end;
+        margin-bottom: 0.5rem;
+        width: auto;
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    #board-container {
+        max-height: 60vh;
+    }
+    canvas {
+        max-height: 60vh;
+    }
+    #joystick {
+        width: 22vw;
+    }
+    #stats {
+        font-size: 0.8rem;
+    }
+    #lives img {
+        width: 1.2rem;
+        height: 1.2rem;
+        margin-left: 0.3rem;
+    }
+    #current-level {
+        font-size: 0.8rem;
+    }
+    button,
+    #gameOverButtons a {
+        width: 250px;
+        font-size: 0.6rem;
+    }
+    #pacman_start h2 {
+        font-size: 1.2rem;
+    }
+    #pacman_start p {
+        font-size: 0.8rem;
     }
 }
