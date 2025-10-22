@@ -61,7 +61,7 @@ function resetGame() {
 
 // START GAME PHASE
 function startGame() {
-    if (gameRunning) return; // 1️⃣ stop if already running
+    if (gameRunning) return; // (1). stop if already running
 
     console.log("startGame() running...");
     gameRunning = true;
@@ -70,10 +70,10 @@ function startGame() {
     cashoutBtn.disabled = false;
 
     currentMult = 1.0;
-    crashMult = Math.random() * (25 - 1.5) + 1.5; // 2️⃣ random crash point
+    crashMult = Math.random() * (25 - 1.5) + 1.5; // (2). random crash point
 
     console.log("crashMult =", crashMult.toFixed(2));
-    multLoop(); // 3️⃣ start multiplier growth
+    multLoop(); // (3). start multiplier growth
 }
 
 // MULT LOOP PHASE
@@ -106,7 +106,26 @@ function displayMult() {
 function updateRocketPosition() {}
 
 // CASH OUT PHASE (WIN)
-function cashOut() {}
+function cashOut() {
+    // 1. cheeck if game loop is running
+    if (!gameRunning) return; // if game not running, do nothing
+
+    // 2. stop loop - clearInterval(loopTimer)
+
+    clearInterval(loopTimer);
+    loopTimer = null; // clears the handle
+
+    // 3. save winMult = currentMult
+    winMult = currentMult;
+
+    // 4. calculate winValue = betValue * winMult
+
+    winValue = betValue * winMult;
+
+    // 5. display winValue, and endRound
+    displayMessage(`You won €${winValue.toFixed(2)} at ${winMult.toFixed(2)}x`);
+    endRound();
+}
 
 // CRASH PHASE (LOSE)
 function triggerCrash() {
@@ -120,8 +139,13 @@ function triggerCrash() {
 // END ROUND PHASE
 function endRound() {}
 
+
 // 🧩 SUPPORT / UTILITY
-function displayMessage(msg) {}
+function displayMessage(msg) {
+    console.log("MESSAGE", msg);
+
+}
+
 function showHelp() {}
 function hideHelp() {}
 
