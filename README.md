@@ -157,19 +157,19 @@ The objective is to collect all food pellets in the maze to clear the level. <b>
   Aliens flee when power-up is collected
 When Pac-Man eats a power-up, nearby alien enemies enter a frightened state and run away, allowing Pac-Man to temporarily chase and eat them.
 
-<br>
+<br><br>
 Portal appears upon level completion
 Once all food pellets are collected, a portal becomes visible on the map. Colliding with this portal transports the player to the next level.
 
-<br>
+<br><br>
 Pac-Man teleports through tunnels
 Moving through designated tunnels on the map teleports Pac-Man from one side of the maze to the other, maintaining continuous gameplay flow.
 
-<br>
+<br><br>
 Pac-Man cannot pass through vents
 Certain areas, like vents, act as solid obstacles that block Pac-Man’s movement, requiring the player to navigate around them.
 
-<br>
+<br><br>
 Next movement direction is saved to avoid missed turns
 When a player inputs a direction that cannot be immediately taken (e.g., blocked by a wall), the game remembers this input and executes the turn as soon as it becomes possible.
 
