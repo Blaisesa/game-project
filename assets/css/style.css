@@ -11,8 +11,8 @@
 /* global styles */
 :root {
     --font-family: "Press Start 2P", cursive;
-    --color-primary: pink;
-    --color-secondary: purple;
+    --color-primary: #BF46D5;
+    --color-secondary: #6B4CC0;
     --color-hover: white;
     --color-background: black;
 }

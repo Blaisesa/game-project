@@ -19,6 +19,7 @@ const loopInterval = 10; // Interval in ms (100 = slow, 10 = fast)
 
 // DOM Elements
 let multDisplay, startBtn, cashoutBtn, rocket, betButtons;
+let messageDisplay = document.querySelector("#message-panel h1");
 
 // DOM ELEMENT HOOKS
 multDisplay = document.getElementById("mult");
@@ -61,7 +62,7 @@ function resetGame() {
 
 // START GAME PHASE
 function startGame() {
-    if (gameRunning) return; // 1️⃣ stop if already running
+    if (gameRunning) return; // (1). stop if already running
 
     console.log("startGame() running...");
     gameRunning = true;
@@ -70,10 +71,10 @@ function startGame() {
     cashoutBtn.disabled = false;
 
     currentMult = 1.0;
-    crashMult = Math.random() * (25 - 1.5) + 1.5; // 2️⃣ random crash point
+    crashMult = Math.random() * (25 - 1.5) + 1.5; // (2). random crash point
 
     console.log("crashMult =", crashMult.toFixed(2));
-    multLoop(); // 3️⃣ start multiplier growth
+    multLoop(); // (3). start multiplier growth
 }
 
 // MULT LOOP PHASE
@@ -106,22 +107,61 @@ function displayMult() {
 function updateRocketPosition() {}
 
 // CASH OUT PHASE (WIN)
-function cashOut() {}
+function cashOut() {
+    // 1. cheeck if game loop is running
+    if (!gameRunning) return; // if game not running, do nothing
+
+    // 2. stop loop - clearInterval(loopTimer)
+
+    clearInterval(loopTimer);
+    loopTimer = null; // clears the handle
+
+    // 3. save winMult = currentMult
+    winMult = currentMult;
+
+    // 4. calculate winValue = betValue * winMult
+
+    winValue = betValue * winMult;
+
+    // 5. display winValue, and endRound
+    displayMessage(`You won €${winValue.toFixed(2)} at ${winMult.toFixed(2)}x`);
+    endRound();
+}
 
 // CRASH PHASE (LOSE)
 function triggerCrash() {
     console.log(`💥 Crash at ${currentMult.toFixed(2)}x`);
-    console.log("Loop cleared:", loopTimer);
+    // console.log("Loop cleared:", loopTimer);
     clearInterval(loopTimer);
     loopTimer = null;
+    //displat etx in red
+    displayMessage(`You crashed at ${currentMult.toFixed(2)}x`, "crash");
+
+    // endRound();
+
     // (next: show message, disable buttons, endRound())
 }
 
 // END ROUND PHASE
 function endRound() {}
 
-// 🧩 SUPPORT / UTILITY
-function displayMessage(msg) {}
+// SUPPORT / UTILITY
+function displayMessage(msg, type) {
+    if (type === "crash") {
+        messageDisplay.style.color = "red";
+    } else if (type === "win") {
+        messageDisplay.style.color = "#6de0ff";
+    } else {
+        messageDisplay.style.color = "#e4e8f2";
+    }
+
+    // console.log("MESSAGE", msg);
+    messageDisplay.textContent = msg;
+    setTimeout(function () {
+        messageDisplay.textContent = "Mini-Crash!";
+    }, 4000);
+}
+
 function showHelp() {}
 function hideHelp() {}
 
