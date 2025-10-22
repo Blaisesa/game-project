@@ -11,8 +11,8 @@
 /* global styles */
 :root {
     --font-family: "Press Start 2P", cursive;
-    --color-primary: pink;
-    --color-secondary: purple;
+    --color-primary: #BF46D5;
+    --color-secondary: #6B4CC0;
     --color-hover: white;
     --color-background: black;
 }
@@ -152,6 +152,7 @@ header p {
     height: 200px;
     object-fit: cover;
     background-color: var(--color-background);
+    box-shadow: 0 0 5px var(--color-primary);
     margin-bottom: 1rem;
 }
 
@@ -487,9 +488,53 @@ button {
 #gamePage nav {
     display: none;
 }
+.touch {
+    display: none;
+}
+#pacman_start {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--color-primary);
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    backdrop-filter: blur(10px);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+#pacman_start h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+#pacman_start p {
+    font-size: 1rem;
+    color: var(--color-secondary);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    text-align: center;
+    margin: 1rem;
+    line-height: 1rem;
+}
+#powerUpTimerContainer {
+    width: 80%;           /* Or whatever width you want */
+    height: 4px;           /* Bar height */
+    background-color: #555; /* Background color for the container */
+    border: 1px solid #333; 
+    position: fixed;        /* So it stays on top */
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#timerLine {
+    height: 100%;
+    width: 100%;           /* Full width initially */
+    background-color: red; 
+    transition: width 0.1s linear; /* Smooth shrinking */
+}
 
 /* responsive styles */
-
 @media (max-width: 900px) {
     header h1 {
         font-size: 2rem;
@@ -584,6 +629,29 @@ button {
     #gamePage nav {
         display: contents;
     }
+    #muteSoundEffect {
+        margin-top: 1rem;
+    }
+    .keyboard {
+        display: none;
+    }
+    .touch {
+        display: block;
+    }
+    #pacman_start h2 {
+        font-size: 1.5rem;
+    }
+    #pacman_start p {
+        font-size: 0.9rem;
+    }
+    #pausePacman {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+        align-self: flex-end;
+        margin-bottom: 0.5rem;
+        width: auto;
+        padding: 10px 15px;
+    }
 }
 
 @media (max-width: 600px) {
@@ -611,5 +679,11 @@ button {
     #gameOverButtons a {
         width: 250px;
         font-size: 0.6rem;
+    }
+    #pacman_start h2 {
+        font-size: 1.2rem;
+    }
+    #pacman_start p {
+        font-size: 0.8rem;
     }
 }

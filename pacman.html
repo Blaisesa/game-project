@@ -30,13 +30,14 @@
     </nav>
     <!-- Game Header -->
     <header>
-        <span><a class="gameBtn" href="#">Prev Game</a></span>
+        <span><a class="gameBtn" href="minicrash.html">Prev Game</a></span>
         <h1>Pac-Man in Space?!</h1>
-        <span><a class="gameBtn" href="#">Next Game</a></span>
+        <span><a class="gameBtn" href="spaceinvaders.html">Next Game</a></span>
     </header>
     <!-- Main content area for the game -->
     <main id="game">
         <!-- Game statistics information -->
+        <button id="pausePacman" class="touch">Pause</button>
         <section id="board-container">
             <div id="stats">
                 <!-- Top score -->
@@ -58,17 +59,32 @@
                 <p id="finalScore">Your final score: 0</p>
                 <span id="gameOverButtons">
                     <button id="restartButton">Restart Game</button>
-                    <span class="wrap"><a href="#">Try Space Invaders</a>
-                        <a href="#">Try Mini-Crash</a></span>
+                    <span class="wrap"><a href="spaceinvaders.html">Try Space Invaders</a>
+                        <a href="minicrash.html">Try Mini-Crash</a></span>
                 </span>
             </div>
             <div id="pacman_gamePaused" class="hidden">
                 <h2>Game Paused!</h2>
                 <span id="pausedButtons">
-                    <button id="resumeButton">Resume Game</button>
+                    <button id="resumeButton" class="keyboard">Resume Game</button>
                     <button id="restartButtonPaused">Restart Game</button>
+                    <span class="row"><button id="muteButton">Mute Music</button> <button id="muteSoundEffect">Mute
+                            Effects</button></span>
                 </span>
             </div>
+            <div id="pacman_start" class="">
+                <h2>Get Ready!!</h2>
+                <p class="touch">Tap to Start</p>
+                <p class="keyboard">Press Space to Start</p>
+                <p class="keyboard">Use Arrow Keys or WASD to Move, and <br><br>Space to Pause</p>
+                <p class="touch">Swipe in the direction you want to move!</p>
+            </div>
+            </span>
+            </div>
+            <div id="powerUpTimerContainer" class="hidden">
+                <div id="timerLine"></div>
+            </div>
+
             <canvas id="board"></canvas>
         </section>
         <!-- Game controls for player input -->
