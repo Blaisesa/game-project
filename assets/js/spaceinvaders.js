@@ -33,6 +33,7 @@ const FIRE_COOLDOWN = 200; // ms between shots
 
 // game state
 let gameOver = false;
+let victory = false;
 
 //draws images on the canvas
 window.onload = () => {
@@ -126,7 +127,7 @@ window.addEventListener("keyup", (e) => {
 });
 
 function updatePlayer() {
-    if (gameOver) return; // no movement after death
+    if (gameOver || victory) return; // no movement after death or victory
     // Moves the player left with arrow keys or 'a' key
     if ((keys["ArrowLeft"] || keys["a"]) && player.x > 0) {
         player.x -= player.speed;
@@ -142,7 +143,7 @@ function updatePlayer() {
 
 // bullet function
 function fireBullet() {
-    if (gameOver) return;
+    if (gameOver || victory) return;
     const now = Date.now();
     if (now - lastFireTime < FIRE_COOLDOWN) return; // enforce cooldown
     lastFireTime = now;
@@ -202,6 +203,10 @@ function updateBullets() {
                 // collision: remove both bullet and alien
                 bullets.splice(bi, 1);
                 aliens.splice(ai, 1);
+                // If we removed the last alien, set victory
+                if (aliens.length === 0) {
+                    victory = true;
+                }
                 break; // bullet is gone, move to next bullet
             }
         }
@@ -225,8 +230,16 @@ setInterval(updatePlayer, 1000 / 60);
 
 // startGame function
 function startGame() {
+    // reset player position
     player.x = CANVAS_WIDTH / 2 - player.width / 2;
     player.y = CANVAS_HEIGHT - player.height - 10;
+    // reset state
+    bullets.length = 0;
+    createAliens();
+    pendingDirection = 1;
+    gameOver = false;
+    victory = false;
+    // start or resume the loop
     gameLoop();
 }
 // main game loop
@@ -253,6 +266,20 @@ function gameLoop() {
         ctx.textAlign = "center";
         ctx.fillText("GAME OVER", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
         // still request frames to keep the overlay visible and responsive to potential restart
+        requestAnimationFrame(gameLoop);
+        return;
+    }
+
+    // Victory overlay
+    if (victory) {
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.fillStyle = "#270ae1ff"; // green
+        ctx.font = "32px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("CONGRATULATIONS!", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 10);
+        ctx.font = "18px Arial";
+        ctx.fillText("You Killed All The Aliens! Earth is Safe!", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 25);
         requestAnimationFrame(gameLoop);
         return;
     }
