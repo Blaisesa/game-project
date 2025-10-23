@@ -1112,8 +1112,8 @@ function move() {
             } else {
                 alien.updateDirection(dy > 0 ? "D" : "U");
             }
-            // Slow down aliens
-            alien.speed = tileSize / 8; // Reduce speed
+            // Reset alien speed to frightened speed
+            alien.speed = tileSize / 6; // Reduce speed
             alien.updateVelocity();
         }
         if (powerUpActive && collision(pacman, alien)) {
