@@ -187,6 +187,8 @@ let muteSoundEffects = false;
 let bgMusic; // Background music variable
 let powerUpTimer; // Power-up timer variable
 let powerUpInterval; // Power-up interval variable
+let powerUpRemaining = 0; // in seconds
+let powerUpStartTime = 0; // timestamp when power-up started
 // Touch control variables
 // These will store the starting and ending touch positions to determine swipe direction
 let touchStartX = 0;
@@ -306,45 +308,48 @@ window.onload = function () {
         .querySelector("#restartButton")
         .addEventListener("click", restartGame);
 
-    // Event listener to pause the game if user presses spacebar or double taps
+    // Event listener to pause the game if user presses spacebar
     document.addEventListener("keydown", (e) => {
         if (gameStarted && e.code === "Space") {
             paused = !paused;
+            const pauseScreen = document.querySelector("#pacman_gamePaused");
+
             if (paused) {
-                document
-                    .querySelector("#pacman_gamePaused")
-                    .classList.remove("hidden");
-                paused = true;
+                pauseScreen.classList.remove("hidden");
+                pausePowerUp(); // pause power-up timers
             } else {
-                document
-                    .querySelector("#pacman_gamePaused")
-                    .classList.add("hidden");
-                update();
+                pauseScreen.classList.add("hidden");
+                resumePowerUp(); // resume power-up timers
+                update(); // resume game loop
             }
         }
     });
-    
+
     // touchscreen pause button
     document.querySelector("#pausePacman").addEventListener("click", () => {
         paused = !paused;
-        // Change the text of the button based on pause state
         const pauseScreen = document.querySelector("#pacman_gamePaused");
+
         if (paused) {
             pauseScreen.classList.remove("hidden");
+            pausePowerUp(); // pause power-up timers
             document.querySelector("#pausePacman").innerText = "Resume";
         } else {
             pauseScreen.classList.add("hidden");
+            resumePowerUp(); // resume power-up timers
             document.querySelector("#pausePacman").innerText = "Pause";
-            update(); // resume the game loop
+            update();
         }
     });
 
     // Event listener to resume the game if user presses resume button
     document.querySelector("#resumeButton").addEventListener("click", () => {
-        paused = false;
-        document.querySelector("#pacman_gamePaused").classList.add("hidden");
-        update();
-    });
+    paused = false;
+    document.querySelector("#pacman_gamePaused").classList.add("hidden");
+    resumePowerUp(); // resume power-up timers
+    update();
+});
+
     // Restart level if user clicks restart level button and hide game paused screen
     document
         .querySelector("#restartButtonPaused")
@@ -1135,8 +1140,6 @@ function move() {
 // Power-up effect for aliens
 function powerUpEffect() {
     const powerUpDuration = 10; // seconds
-
-    // Always reset the flag
     powerUpActive = true;
 
     // Clear previous timers
@@ -1146,32 +1149,39 @@ function powerUpEffect() {
     // Change alien images to frightened versions
     for (let alien of aliens) {
         const imgPath = alien.image.src;
-        if (imgPath.includes("blueAlien0")) alien.image.src = "assets/images/blaise/aliens/blueAlien1.webp";
-        if (imgPath.includes("greenAlien0")) alien.image.src = "assets/images/blaise/aliens/greenAlien1.webp";
-        if (imgPath.includes("pinkAlien0")) alien.image.src = "assets/images/blaise/aliens/pinkAlien1.webp";
-        if (imgPath.includes("purpleAlien0")) alien.image.src = "assets/images/blaise/aliens/purpleAlien1.webp";
+        if (imgPath.includes("blueAlien0"))
+            alien.image.src = "assets/images/blaise/aliens/blueAlien1.webp";
+        if (imgPath.includes("greenAlien0"))
+            alien.image.src = "assets/images/blaise/aliens/greenAlien1.webp";
+        if (imgPath.includes("pinkAlien0"))
+            alien.image.src = "assets/images/blaise/aliens/pinkAlien1.webp";
+        if (imgPath.includes("purpleAlien0"))
+            alien.image.src = "assets/images/blaise/aliens/purpleAlien1.webp";
     }
 
-    // Show power-up timer bar
     const powerUpTimerBar = document.querySelector("#timerLine");
     powerUpTimerBar.parentElement.classList.remove("hidden");
     powerUpTimerBar.style.width = "100%";
 
-    let startTime = Date.now(); // track start time
+    powerUpStartTime = Date.now();
+    powerUpRemaining = powerUpDuration;
 
-    // Update the bar every 50ms for smoother animation
+    // Interval for progress bar
     powerUpInterval = setInterval(() => {
-        const elapsed = (Date.now() - startTime) / 1000; // seconds
-        const timeLeft = Math.max(powerUpDuration - elapsed, 0);
-        powerUpTimerBar.style.width = `${(timeLeft / powerUpDuration) * 100}%`;
-
-        if (timeLeft <= 0) {
-            clearInterval(powerUpInterval);
-            powerUpInterval = null;
+        if (!paused) {
+            const elapsed = (Date.now() - powerUpStartTime) / 1000;
+            const timeLeft = Math.max(powerUpRemaining - elapsed, 0);
+            powerUpTimerBar.style.width = `${
+                (timeLeft / powerUpDuration) * 100
+            }%`;
+            if (timeLeft <= 0) {
+                clearInterval(powerUpInterval);
+                powerUpInterval = null;
+            }
         }
     }, 50);
 
-    // End power-up effect after full duration
+    // Timer to end effect
     powerUpTimer = setTimeout(() => {
         powerUpActive = false;
         revertPowerUpEffect();
@@ -1180,17 +1190,61 @@ function powerUpEffect() {
     }, powerUpDuration * 1000);
 }
 
+function pausePowerUp() {
+    if (!powerUpActive) return;
+    if (powerUpTimer) {
+        clearTimeout(powerUpTimer);
+        powerUpTimer = null;
+    }
+    if (powerUpInterval) {
+        clearInterval(powerUpInterval);
+        powerUpInterval = null;
+    }
+    // Update remaining time
+    powerUpRemaining -= (Date.now() - powerUpStartTime) / 1000;
+}
 
+function resumePowerUp() {
+    if (!powerUpActive || powerUpRemaining <= 0) return;
+
+    powerUpStartTime = Date.now();
+    const powerUpTimerBar = document.querySelector("#timerLine");
+
+    // Restart interval
+    powerUpInterval = setInterval(() => {
+        if (!paused) {
+            const elapsed = (Date.now() - powerUpStartTime) / 1000;
+            const timeLeft = Math.max(powerUpRemaining - elapsed, 0);
+            powerUpTimerBar.style.width = `${(timeLeft / 10) * 100}%`; // 10 = original duration
+            if (timeLeft <= 0) {
+                clearInterval(powerUpInterval);
+                powerUpInterval = null;
+            }
+        }
+    }, 50);
+
+    // Restart timeout
+    powerUpTimer = setTimeout(() => {
+        powerUpActive = false;
+        revertPowerUpEffect();
+        powerUpTimer = null;
+        powerUpInterval = null;
+    }, powerUpRemaining * 1000);
+}
 
 // Revert alien images back to normal after power-up effect ends
 function revertPowerUpEffect() {
     // Reset alien images to normal
     for (let alien of aliens) {
         const imgPath = alien.image.src;
-        if (imgPath.includes("blueAlien1")) alien.image.src = "assets/images/blaise/aliens/blueAlien0.webp";
-        if (imgPath.includes("greenAlien1")) alien.image.src = "assets/images/blaise/aliens/greenAlien0.webp";
-        if (imgPath.includes("pinkAlien1")) alien.image.src = "assets/images/blaise/aliens/pinkAlien0.webp";
-        if (imgPath.includes("purpleAlien1")) alien.image.src = "assets/images/blaise/aliens/purpleAlien0.webp";
+        if (imgPath.includes("blueAlien1"))
+            alien.image.src = "assets/images/blaise/aliens/blueAlien0.webp";
+        if (imgPath.includes("greenAlien1"))
+            alien.image.src = "assets/images/blaise/aliens/greenAlien0.webp";
+        if (imgPath.includes("pinkAlien1"))
+            alien.image.src = "assets/images/blaise/aliens/pinkAlien0.webp";
+        if (imgPath.includes("purpleAlien1"))
+            alien.image.src = "assets/images/blaise/aliens/purpleAlien0.webp";
     }
 
     // Hide power-up timer bar
