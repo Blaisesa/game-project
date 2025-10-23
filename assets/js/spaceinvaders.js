@@ -8,6 +8,9 @@ const background = new Image();
 background.src = "assets/images/rhys/background.png";
 const playerImage = new Image();
 playerImage.src = "assets/images/rhys/ship/frame0.png";
+// bullet image for player shots
+const bulletImage = new Image();
+bulletImage.src = "assets/images/rhys/laser-bullet.png";
 const blueAlienImage = new Image();
 blueAlienImage.src = "assets/images/blaise/aliens/blueAlien0.webp";
 const greenAlienImage = new Image();
@@ -19,6 +22,13 @@ purpleAlienImage.src = "assets/images/blaise/aliens/purpleAlien0.webp";
 
 const PLAYER_WIDTH = 50;
 const PLAYER_HEIGHT = 50;
+// bullet constants & state
+const BULLET_WIDTH = 8;
+const BULLET_HEIGHT = 16;
+const BULLET_SPEED = 6;
+const bullets = []; // { x, y, width, height, speed }
+let lastFireTime = 0;
+const FIRE_COOLDOWN = 200; // ms between shots
 
 //draws images on the canvas
 window.onload = () => {
@@ -101,6 +111,10 @@ function drawAliens() {
 const keys = {};
 window.addEventListener("keydown", (e) => {
     keys[e.key] = true;
+    // Fire on Space (use code for reliability across layouts)
+    if (e.code === "Space") {
+        fireBullet();
+    }
 });
 
 window.addEventListener("keyup", (e) => {
@@ -121,6 +135,40 @@ function updatePlayer() {
     }
 }
 
+// bullet function
+function fireBullet() {
+    const now = Date.now();
+    if (now - lastFireTime < FIRE_COOLDOWN) return; // enforce cooldown
+    lastFireTime = now;
+
+    const bx = player.x + player.width / 2 - BULLET_WIDTH / 2;
+    // start slightly overlapping the player's top so it visually comes out
+    const by = player.y - BULLET_HEIGHT / 2;
+    bullets.push({ x: bx, y: by, width: BULLET_WIDTH, height: BULLET_HEIGHT, speed: BULLET_SPEED });
+}
+
+function updateBullets() {
+    for (const i of bullets) {
+        i.y -= i.speed;
+    }
+    // remove bullets that have left the top of the screen
+    for (let i = bullets.length - 1; i >= 0; i--) {
+        if (bullets[i].y + bullets[i].height < 0) bullets.splice(i, 1);
+    }
+}
+
+function drawBullets() {
+    for (const i of bullets) {
+        // draw bullet image if loaded; fall back to a filled rect if not
+        if (bulletImage.complete) {
+            ctx.drawImage(bulletImage, i.x, i.y, i.width, i.height);
+        } else {
+            ctx.fillStyle = "#ff0";
+            ctx.fillRect(i.x, i.y, i.width, i.height);
+        }
+    }
+}
+
 // update player position at 60fps
 setInterval(updatePlayer, 1000 / 60);
 
@@ -135,9 +183,11 @@ function gameLoop() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.drawImage(background, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
-    // update and render aliens
+    // update bullets, aliens and render
+    updateBullets();
     moveAliens();
     drawAliens();
+    drawBullets();
     requestAnimationFrame(gameLoop);
 }
 
