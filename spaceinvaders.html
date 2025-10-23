@@ -19,15 +19,15 @@
         <!-- Game statistics information -->
         <section id="board-container">
             <div id="stats">
-                <h2>Game Statistics</h2>
-                <p>Statistic 1</p>
-                <p>Statistic 2</p>
-                <p>Statistic 3</p>
+                <h2 id="highscore">High Score: 0</h2>
+                <p id="lives">Lives: <img src="assets/images/blaise/fullHeart.webp" alt="hearts left in red"><img
+                        src="assets/images/blaise/fullHeart.webp" alt="hearts gone in silver"><img src="assets/images/blaise/lostHeart.webp"
+                        alt=""></p>
+                <p></p>
             </div>
             <div id="current-level">
-                <p>Statistic 1</p>
-                <p>Statistic 2</p>
-                <p>Statistic 3</p>
+                <p id="level">Level: 1</p>
+                <p id="score">Score: 0</p>
             </div>
         </section>
         <!-- Game canvas where the game is rendered -->
@@ -44,5 +44,7 @@
             </span>
         </section>
         <script type="module" src="assets/js/spaceinvaders.js"></script>
+        <script src="assets/js/joystick.js"></script>
+    </main>
 </body>
 </html>
