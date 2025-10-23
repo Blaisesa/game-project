@@ -177,6 +177,10 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+#minicrash #start-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 /* ---------- Bet Controls (Grid) ---------- */
 #minicrash #bet-controls {

@@ -137,13 +137,28 @@ function triggerCrash() {
     //displat etx in red
     displayMessage(`You crashed at ${currentMult.toFixed(2)}x`, "crash");
 
-    // endRound();
+    endRound();
 
     // (next: show message, disable buttons, endRound())
 }
 
 // END ROUND PHASE
-function endRound() {}
+function endRound() {
+    console.log("endRound() running...");
+
+    // 1. Disable buttons
+    startBtn.disabled = true;
+    cashoutBtn.disabled = true;
+
+    // 2. Wait 2 seconds before reset
+    setTimeout(() => {
+        console.log("Resetting game after delay...");
+        resetGame();
+        document.querySelector("#start-btn").innerText = `REPLAY`;
+    }, 2000);
+
+
+}
 
 // SUPPORT / UTILITY
 function displayMessage(msg, type) {
