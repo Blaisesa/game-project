@@ -98,7 +98,7 @@ This setup promoted independence while encouraging teamwork, review, and cross-s
 
 ### Game 1: Pac-Man in Space!
 Developed & Designed by: Blaise<br>
-Github link here!
+[View Github](https://github.com/blaisesa)
 
 <strong>Description</strong>
 
@@ -211,8 +211,7 @@ Moving through designated tunnels on the map teleports Pac-Man from one side of 
     }
 
 <br><br>
-Pac-Man cannot pass through vents
-Certain areas, like vents, act as solid obstacles that block Pac-Man’s movement, requiring the player to navigate around them.
+Pac-Man cannot pass through vents, they act as solid obstacles that block Pac-Man’s movement, requiring the player to navigate around them.
 
     for (let vent of vents) {
         if (collision(pacman, vent)) {
@@ -383,7 +382,9 @@ Planned updates and enhancements for future versions include:
 
 ### Progress Tracker
 
-Project Board
+After initial planning, we set up a GitHub Project board to manage tasks, track progress, and facilitate collaboration. Each team member created issues for their assigned tasks, which were then organized with their labels.
+
+[View the Project Board](https://github.com/users/Blaisesa/projects/5)
 
 ---
 

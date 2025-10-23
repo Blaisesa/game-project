@@ -25,7 +25,7 @@ let ventImage;
 let pacmanFrames;
 const animationSpeed = 2; // Speed of animation
 let portalFrames = [];
-const portalAnimationSpeed = 5; // slower than pacman
+const portalAnimationSpeed = 1; // faster than pacman
 
 // Game maps
 // original level 0 map layout
@@ -658,7 +658,6 @@ function loadMap() {
                 const food = new Block(null, x + 14, y + 14, 4, 4);
                 foods.add(food);
             }
-            // Portal to be added later
         }
     }
 }
