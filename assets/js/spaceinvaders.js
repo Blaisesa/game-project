@@ -22,6 +22,7 @@ purpleAlienImage.src = "assets/images/blaise/aliens/purpleAlien0.webp";
 
 const PLAYER_WIDTH = 50;
 const PLAYER_HEIGHT = 50;
+
 // bullet constants & state
 const BULLET_WIDTH = 8;
 const BULLET_HEIGHT = 16;
@@ -29,6 +30,9 @@ const BULLET_SPEED = 6;
 const bullets = []; // { x, y, width, height, speed }
 let lastFireTime = 0;
 const FIRE_COOLDOWN = 200; // ms between shots
+
+// game state
+let gameOver = false;
 
 //draws images on the canvas
 window.onload = () => {
@@ -122,6 +126,7 @@ window.addEventListener("keyup", (e) => {
 });
 
 function updatePlayer() {
+    if (gameOver) return; // no movement after death
     // Moves the player left with arrow keys or 'a' key
     if ((keys["ArrowLeft"] || keys["a"]) && player.x > 0) {
         player.x -= player.speed;
@@ -137,6 +142,7 @@ function updatePlayer() {
 
 // bullet function
 function fireBullet() {
+    if (gameOver) return;
     const now = Date.now();
     if (now - lastFireTime < FIRE_COOLDOWN) return; // enforce cooldown
     lastFireTime = now;
@@ -144,7 +150,28 @@ function fireBullet() {
     const bx = player.x + player.width / 2 - BULLET_WIDTH / 2;
     // start slightly overlapping the player's top so it visually comes out
     const by = player.y - BULLET_HEIGHT / 2;
-    bullets.push({ x: bx, y: by, width: BULLET_WIDTH, height: BULLET_HEIGHT, speed: BULLET_SPEED });
+    bullets.push({
+        x: bx,
+        y: by,
+        width: BULLET_WIDTH,
+        height: BULLET_HEIGHT,
+        speed: BULLET_SPEED,
+    });
+}
+
+// check if any alien overlaps the player -> trigger game over
+function checkAlienPlayerCollision() {
+    for (const a of aliens) {
+        if (
+            player.x < a.x + a.width &&
+            player.x + player.width > a.x &&
+            player.y < a.y + a.height &&
+            player.y + player.height > a.y
+        ) {
+            gameOver = true;
+            return;
+        }
+    }
 }
 
 function updateBullets() {
@@ -207,11 +234,29 @@ function gameLoop() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.drawImage(background, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+
     // update bullets, aliens and render
     updateBullets();
     moveAliens();
+
+    // check collision between aliens and the player
+    if (!gameOver) checkAlienPlayerCollision();
     drawAliens();
     drawBullets();
+
+    // If game over, draw overlay and stop further inputs/updates visually
+    if (gameOver) {
+        ctx.fillStyle = "rgba(0,0,0,0.8)";
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.fillStyle = "#e90b0bff";
+        ctx.font = "36px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("GAME OVER", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+        // still request frames to keep the overlay visible and responsive to potential restart
+        requestAnimationFrame(gameLoop);
+        return;
+    }
+
     requestAnimationFrame(gameLoop);
 }
 
@@ -239,13 +284,13 @@ function moveAliens() {
         return;
     }
 
-    // If hitting left wall, correct overshoot, move down and reverse
+    // If hitting left wall, move down and reverse
     if (leftmost <= 0) {
         const overshoot = -leftmost;
         if (overshoot > 0) {
             for (const i of aliens) i.x += overshoot;
         }
-        for (const i of aliens) i.y += 7; // descend a bit
+        for (const i of aliens) i.y += 12; // descend value
         pendingDirection = 1;
         return;
     }
