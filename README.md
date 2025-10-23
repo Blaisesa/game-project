@@ -345,7 +345,7 @@ Github link here!
 
 After initial planning, we set up a GitHub Project board to manage tasks, track progress, and facilitate collaboration. Each team member created issues for their assigned tasks, which were then organized with their labels.
 
-[View the Project Board](https://github.com/blaisesa)
+[View the Project Board](https://github.com/users/Blaisesa/projects/5)
 
 ---
 
