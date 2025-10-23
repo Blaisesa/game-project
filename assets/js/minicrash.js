@@ -56,6 +56,9 @@ function resetGame() {
 
     // 3. Reset game state
     gameRunning = false;
+
+    //reset message colour
+    messageDisplay.style.color = "#e4e8f2";
 }
 // Unused for now //
 // function setBet() {}
@@ -156,8 +159,6 @@ function endRound() {
         resetGame();
         document.querySelector("#start-btn").innerText = `REPLAY`;
     }, 2000);
-
-
 }
 
 // SUPPORT / UTILITY
@@ -174,7 +175,7 @@ function displayMessage(msg, type) {
     messageDisplay.textContent = msg;
     setTimeout(function () {
         messageDisplay.textContent = "Mini-Crash!";
-    }, 4000);
+    }, 2000);
 }
 
 function showHelp() {}
