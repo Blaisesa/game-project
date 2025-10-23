@@ -304,30 +304,64 @@ Github link here!
 Developed & Designed by: Hans<br>
 Github link here!
 
-<details>
-  <summary><strong>Description</strong></summary>
-  
-</details>
 
-<details>
-<summary><strong>Assets & Tools</strong></summary>
 
-</details>
+## DETAILS
 
-<details>
-  <summary><strong>How to Play!</strong></summary>
+## Game 3: Mini-Crash
 
-</details>
+### Description
+**Mini-Crash** is a fast-paced multiplier game inspired by real-world “crash” titles seen in crypto and casino gaming.  
+Players place a bet, watch the multiplier rise from **1.00x** upward — and must decide **when to cash out** before the crash happens!  
+The aim is simple: hold your nerve to earn bigger rewards, but don’t wait too long… every second counts.
 
-<details>
-  <summary><strong>In-Game Features</strong></summary>
+---
 
-</details>
+### Assets & Tools
+- **Languages:** HTML5, CSS3, JavaScript (ES6)
+- **IDE:** Visual Studio Code  
+- **Version Control:** Git & GitHub  
+- **Design Tools:** Figma (wireframe) and Canva (UI mockups)  
+- **Game Logic:** Custom JavaScript loop controlling multiplier growth and random crash event  
+- **Testing:** Chrome DevTools console, manual playtesting, and peer feedback  
 
-<details>
-  <summary><strong>Screenshots</strong></summary>
+---
 
-</details>
+### How to Play!
+1. Click **Start Game** to begin a new round.  
+2. Watch the **multiplier** rise in real time — starting from 1.00x.  
+3. Click **Cash Out** at any time to lock in your winnings.  
+4. If the multiplier **crashes** before you cash out, you lose your bet.  
+5. After each round, the game automatically resets for another try.
+
+💡 *Tip:* The multiplier can reach up to 25x — but most rounds crash much earlier. Timing and luck are key!
+
+---
+
+### ⭐ In-Game Features
+- Dynamic multiplier animation rising in real time  
+- Randomised crash point for unpredictability  
+- Responsive buttons for Start and Cash-Out  
+- Round-end delay with reset to encourage replay  
+- Clean UI with visual feedback and game messages (e.g. “Crashed!” or “You Won!”)  
+- Console logging for testing and debugging  
+
+---
+
+### 🧭 Future Improvements
+Planned updates and enhancements for future versions include:
+- **Bet Controls:** Add adjustable bet amount and winnings display for a more realistic experience.  
+- **Advanced Randomised Probability:** Improve the crash algorithm to include probability weighting for more varied rounds.  
+- **Help Screen:** Provide an accessible info overlay explaining game rules and controls.  
+- **Audio Feedback:** Add background music and sound effects for Start, Cash Out, and Crash events to increase immersion.  
+
+---
+
+### 🖼️ Screenshots
+*(Insert your images here once uploaded to the repo, e.g.)*  
+`/assets/images/mini-crash-start.png`  
+`/assets/images/mini-crash-win.png`  
+`/assets/images/mini-crash-crashed.png`
 
 ---
 
