@@ -8,7 +8,6 @@ const background = new Image();
 background.src = "assets/images/rhys/background.png";
 const playerImage = new Image();
 playerImage.src = "assets/images/rhys/ship/frame0.png";
-// bullet image for player shots
 const bulletImage = new Image();
 bulletImage.src = "assets/images/rhys/laser-bullet.png";
 const blueAlienImage = new Image();
