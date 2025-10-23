@@ -148,12 +148,36 @@ function fireBullet() {
 }
 
 function updateBullets() {
-    for (const i of bullets) {
-        i.y -= i.speed;
+    // move bullets
+    for (const b of bullets) {
+        b.y -= b.speed;
     }
-    // remove bullets that have left the top of the screen
-    for (let i = bullets.length - 1; i >= 0; i--) {
-        if (bullets[i].y + bullets[i].height < 0) bullets.splice(i, 1);
+
+    // check collisions and remove bullets/aliens that intersect
+    for (let bi = bullets.length - 1; bi >= 0; bi--) {
+        const b = bullets[bi];
+        // remove if off-screen
+        if (b.y + b.height < 0) {
+            bullets.splice(bi, 1);
+            continue;
+        }
+
+        // check against aliens; iterate backwards so splicing is safe
+        for (let ai = aliens.length - 1; ai >= 0; ai--) {
+            const a = aliens[ai];
+            // simple AABB collision
+            if (
+                b.x < a.x + a.width &&
+                b.x + b.width > a.x &&
+                b.y < a.y + a.height &&
+                b.y + b.height > a.y
+            ) {
+                // collision: remove both bullet and alien
+                bullets.splice(bi, 1);
+                aliens.splice(ai, 1);
+                break; // bullet is gone, move to next bullet
+            }
+        }
     }
 }
 
