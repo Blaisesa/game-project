@@ -211,8 +211,7 @@ Moving through designated tunnels on the map teleports Pac-Man from one side of 
     }
 
 <br><br>
-Pac-Man cannot pass through vents
-Certain areas, like vents, act as solid obstacles that block Pac-Man’s movement, requiring the player to navigate around them.
+Pac-Man cannot pass through vents, they act as solid obstacles that block Pac-Man’s movement, requiring the player to navigate around them.
 
     for (let vent of vents) {
         if (collision(pacman, vent)) {
