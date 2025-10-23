@@ -369,12 +369,17 @@ Planned updates and enhancements for future versions include:
 
 ### Roles & Responsibilities
 
-| Team Member | Role | Responsibilities |
-|-------------|------|------------------|
-| Blaise       | --- | ---- ---- ---- |
-| Hans         | --- | ---- ---- ---- |
-| Rhys       | --- | ---- ---- ---- |
+### 👥 Team Contributions
 
+### 👥 Team Contributions
+
+| Team Member | Role | Responsibilities |
+|--------------|------|------------------|
+| **Blaise** | Team Lead | Lead for **Pac-Man**, managed overall project coordination, ensured team progress, and contributed to HTML, CSS, and JavaScript for all games. |
+| **Rhys** | Developer & Tester | Lead for **Space Invaders**, responsible for gameplay implementation, testing, and supported HTML, CSS, and JavaScript across all games. |
+| **Hans** | Game Designer & Developer | Lead for **Mini-Crash**, responsible for core game logic, UI design, and contributed to HTML, CSS, and JavaScript across all games. |
+
+*All team members collaborated closely on coding, testing, and design decisions to ensure consistency and quality across the three mini-games.*
 
 ### Progress Tracker
 
