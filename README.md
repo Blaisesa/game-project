@@ -57,6 +57,9 @@ This setup promoted independence while encouraging teamwork, review, and cross-s
 <details>
 <summary><b>Wireframes</b></summary>
 
+| Desktop Lobby                    | Desktop Game                    | Mobile Lobby                    | Mobile Game                    |
+  |----------------------------------|----------------------------------|----------------------------------|----------------------------------|
+  | ![PC Wireframe 1](assets/images/readme/blaise/pcLobby.png) | ![PC Wireframe 2](assets/images/readme/blaise/pcGame.png) | ![Mobile Wireframe 1](assets/images/readme/blaise/mobileLobby.png) | ![Mobile Wireframe 2](assets/images/readme/blaise/mobileGame.png) |
 </details>
 
 <details>
@@ -157,21 +160,95 @@ The objective is to collect all food pellets in the maze to clear the level. <b>
   Aliens flee when power-up is collected
 When Pac-Man eats a power-up, nearby alien enemies enter a frightened state and run away, allowing Pac-Man to temporarily chase and eat them.
 
+    if (powerUpActive) {
+            // Aliens move away from Pacman
+            const dx = alien.x - pacman.x;
+            const dy = alien.y - pacman.y;
+            // Determine direction to move away
+            if (Math.abs(dx) > Math.abs(dy)) {
+                alien.updateDirection(dx > 0 ? "R" : "L");
+            } else {
+                alien.updateDirection(dy > 0 ? "D" : "U");
+            }
+          }
+
 <br><br>
 Portal appears upon level completion
 Once all food pellets are collected, a portal becomes visible on the map. Colliding with this portal transports the player to the next level.
+
+    function spawnPortal() {
+      const portalTiles = 3; // 3x3 portal
+      const map = levels[currentLevel];
+
+      let portalRow = 0;
+      let portalCol = 0;
+
+    // Find the "p" tile in the current map
+      for (let r = 0; r < rowCount; r++) {
+        for (let c = 0; c < colCount; c++) {
+            if (map[r][c] === "p") {
+                portalRow = r;
+                portalCol = c;
+                break;
+            }
+        }
+      }
+    }
 
 <br><br>
 Pac-Man teleports through tunnels
 Moving through designated tunnels on the map teleports Pac-Man from one side of the maze to the other, maintaining continuous gameplay flow.
 
+    if (pacman.x <= 0) {
+        pacman.x = boardWidth - pacman.width;
+    } else if (pacman.x >= boardWidth - pacman.width) {
+        pacman.x = 0;
+    }
+    if (pacman.y <= 0) {
+        pacman.y = boardHeight - pacman.height;
+    } else if (pacman.y + pacman.height >= boardHeight) {
+        pacman.y = 0;
+    }
+
 <br><br>
 Pac-Man cannot pass through vents
 Certain areas, like vents, act as solid obstacles that block Pac-Man’s movement, requiring the player to navigate around them.
 
-<br><br>
-Next movement direction is saved to avoid missed turns
-When a player inputs a direction that cannot be immediately taken (e.g., blocked by a wall), the game remembers this input and executes the turn as soon as it becomes possible.
+    for (let vent of vents) {
+        if (collision(pacman, vent)) {
+            // Horizontal collision
+            if (
+                pacman.velocityX > 0 &&
+                pacman.x + pacman.width > vent.x &&
+                pacman.x < vent.x + vent.width
+            ) {
+                pacman.x = vent.x - pacman.width;
+            } else if (
+                pacman.velocityX < 0 &&
+                pacman.x < vent.x + vent.width &&
+                pacman.x + pacman.width > vent.x + vent.width
+            ) {
+                pacman.x = vent.x + vent.width;
+            }
+
+            // Vertical collision
+            if (
+                pacman.velocityY > 0 &&
+                pacman.y + pacman.height > vent.y &&
+                pacman.y < vent.y
+            ) {
+                pacman.y = vent.y - pacman.height;
+            } else if (
+                pacman.velocityY < 0 &&
+                pacman.y < vent.y + vent.height &&
+                pacman.y + pacman.height > vent.y + vent.height
+            ) {
+                pacman.y = vent.y + vent.height;
+            }
+
+            break; // Exit loop after handling collision
+        }
+    }
 
 </details>
 
