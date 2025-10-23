@@ -56,6 +56,11 @@ function resetGame() {
 
     // 3. Reset game state
     gameRunning = false;
+
+    //reset message colour
+        messageDisplay.style.color = "#e4e8f2";
+
+
 }
 // Unused for now //
 // function setBet() {}
