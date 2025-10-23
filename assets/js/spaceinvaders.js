@@ -41,6 +41,8 @@ const ENEMY_FIRE_INTERVAL = 700; // ms average between enemy shots (will pick a 
 // game state
 let gameOver = false;
 let victory = false;
+// score
+let score = 0;
 // lives
 const MAX_LIVES = 3;
 let lives = MAX_LIVES;
@@ -244,6 +246,11 @@ function updateBullets() {
                 // collision: remove both bullet and alien
                 bullets.splice(bi, 1);
                 aliens.splice(ai, 1);
+                // increase score for killing an alien
+                score += 100;
+                // update score in the DOM if present
+                const scoreEl = document.querySelector("#score");
+                if (scoreEl) scoreEl.innerText = `Score: ${score}`;
                 // If we removed the last alien, set victory
                 if (aliens.length === 0) {
                     victory = true;
@@ -392,6 +399,10 @@ function startGame() {
     // reset state
     bullets.length = 0;
     enemyBullets.length = 0;
+    // reset score
+    score = 0;
+    const scoreEl = document.querySelector("#score");
+    if (scoreEl) scoreEl.innerText = `Score: ${score}`;
     // reset lives
     lives = MAX_LIVES;
     renderLives();
