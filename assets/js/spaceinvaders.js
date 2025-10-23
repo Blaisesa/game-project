@@ -41,6 +41,9 @@ const ENEMY_FIRE_INTERVAL = 700; // ms average between enemy shots (will pick a 
 // game state
 let gameOver = false;
 let victory = false;
+// lives
+const MAX_LIVES = 3;
+let lives = MAX_LIVES;
 
 //draws images on the canvas
 window.onload = () => {
@@ -61,8 +64,26 @@ window.onload = () => {
     player.y = CANVAS_HEIGHT - player.height - 10;
     // ensure player updates start so movement works immediately
     startPlayerUpdates();
+    renderLives();
     gameLoop();
 };
+
+// update the lives UI in the page
+function renderLives() {
+    const el = document.getElementById("lives");
+    if (!el) return;
+    const full = "assets/images/blaise/fullHeart.webp";
+    const lost = "assets/images/blaise/lostHeart.webp";
+    let html = "Lives: ";
+    for (let i = 0; i < MAX_LIVES; i++) {
+        if (i < lives) {
+            html += `<img src="${full}" alt="life" style="width:20px;height:20px;margin-left:4px">`;
+        } else {
+            html += `<img src="${lost}" alt="lost life" style="width:20px;height:20px;margin-left:4px">`;
+        }
+    }
+    el.innerHTML = html;
+}
 
 // player object
 const player = {
@@ -178,7 +199,18 @@ function checkAlienPlayerCollision() {
             player.y < a.y + a.height &&
             player.y + player.height > a.y
         ) {
-            gameOver = true;
+            // player hit by alien body: lose one life
+            lives -= 1;
+            renderLives();
+            if (lives <= 0) {
+                gameOver = true;
+            } else {
+                // reset player position and clear bullets so the player has a fresh start
+                player.x = CANVAS_WIDTH / 2 - player.width / 2;
+                player.y = CANVAS_HEIGHT - player.height - 10;
+                bullets.length = 0;
+                enemyBullets.length = 0;
+            }
             return;
         }
     }
@@ -245,8 +277,19 @@ function updateEnemyBullets() {
             player.y < eb.y + eb.height &&
             player.y + player.height > eb.y
         ) {
-            // simple game over on hit
-            gameOver = true;
+            // player hit by enemy bullet: lose a life
+            enemyBullets.splice(ei, 1);
+            lives -= 1;
+            renderLives();
+            if (lives <= 0) {
+                gameOver = true;
+                return;
+            }
+            // reset player position and clear bullets so player gets a fresh chance
+            player.x = CANVAS_WIDTH / 2 - player.width / 2;
+            player.y = CANVAS_HEIGHT - player.height - 10;
+            bullets.length = 0;
+            enemyBullets.length = 0;
             return;
         }
     }
@@ -349,6 +392,9 @@ function startGame() {
     // reset state
     bullets.length = 0;
     enemyBullets.length = 0;
+    // reset lives
+    lives = MAX_LIVES;
+    renderLives();
     createAliens();
     pendingDirection = 1;
     gameOver = false;
