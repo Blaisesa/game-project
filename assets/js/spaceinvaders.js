@@ -22,7 +22,7 @@ purpleAlienImage.src = "assets/images/blaise/aliens/purpleAlien0.webp";
 const PLAYER_WIDTH = 50;
 const PLAYER_HEIGHT = 50;
 
-// bullet constants & state
+// Bullet settings and runtime state (player bullets)
 const BULLET_WIDTH = 8;
 const BULLET_HEIGHT = 16;
 const BULLET_SPEED = 6;
@@ -43,6 +43,162 @@ let gameOver = false;
 let victory = false;
 // score
 let score = 0;
+// High score (loaded from localStorage on startup)
+let highScore = 0;
+
+// high score persistence and overlay creation
+function loadHighScore() {
+    try {
+        const stored = parseInt(
+            localStorage.getItem("spaceinvadersHighScore"),
+            10
+        );
+        if (!Number.isNaN(stored)) highScore = stored;
+    } catch (e) {
+        // ignore localStorage errors
+    }
+}
+
+function saveHighScore() {
+    try {
+        localStorage.setItem("spaceinvadersHighScore", String(highScore));
+    } catch (e) {
+        // ignore localStorage errors
+    }
+}
+
+function updateHighScoreIfNeeded() {
+    if (score > highScore) {
+        highScore = score;
+        saveHighScore();
+        const hsEl = document.getElementById("highscore");
+        if (hsEl) hsEl.innerText = `High Score: ${highScore}`;
+        return true;
+    }
+    return false;
+}
+
+function setFinalScoreDom() {
+    const finalEl = document.getElementById("finalScore");
+    if (finalEl) finalEl.innerText = `Final Score: ${score}`;
+}
+
+function createOverlayElement(id) {
+    let overlay = document.getElementById(id);
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = id;
+        overlay.style.position = "fixed";
+        overlay.style.left = "0";
+        overlay.style.top = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.background = "rgba(0,0,0,0.7)";
+        overlay.style.zIndex = "1000";
+        document.body.appendChild(overlay);
+    }
+    return overlay;
+}
+
+// handleGameOver — called when the player runs out of lives.
+// Shows a retry overlay, updates final/high scores, and halts gameplay.
+function handleGameOver() {
+    // set state and stop player updates
+    gameOver = true;
+    stopPlayerUpdates();
+
+    // create update overlay
+    let overlay = document.getElementById("gameOverOverlay");
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "gameOverOverlay";
+        overlay.style.position = "fixed";
+        overlay.style.left = "0";
+        overlay.style.top = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.background = "rgba(0,0,0,0.7)";
+        overlay.style.zIndex = "1000";
+        document.body.appendChild(overlay);
+    }
+
+    // update high score, final score and render a game-over overlay
+    updateHighScoreIfNeeded();
+    setFinalScoreDom();
+
+    overlay = createOverlayElement("gameOverOverlay");
+    overlay.innerHTML = `
+        <div style="text-align:center;color:#fff;font-family:Arial, sans-serif;">
+            <h1 style="margin:0 0 10px 0;">GAME OVER</h1>
+            <p style="margin:0 0 20px 0;font-size:18px;">Final Score: ${score}</p>
+            <button id="retryBtn" style="padding:10px 18px;font-size:16px;cursor:pointer;">Retry</button>
+        </div>
+    `;
+
+    const retryBtn = document.getElementById("retryBtn");
+    if (retryBtn) {
+        retryBtn.addEventListener("click", () => {
+            const ov = document.getElementById("gameOverOverlay");
+            if (ov) ov.remove();
+            // reset game state and start again
+            startGame();
+        });
+    }
+}
+
+// victory screen with your final score and play again button
+function handleVictory() {
+    victory = true;
+    stopPlayerUpdates();
+
+    let overlay = document.getElementById("victoryOverlay");
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "victoryOverlay";
+        overlay.style.position = "fixed";
+        overlay.style.left = "0";
+        overlay.style.top = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.background = "rgba(0,0,0,0.7)";
+        overlay.style.zIndex = "1000";
+        document.body.appendChild(overlay);
+    }
+
+    // update high score, final score and render a victory overlay
+    updateHighScoreIfNeeded();
+    setFinalScoreDom();
+
+    overlay = createOverlayElement("victoryOverlay");
+    overlay.innerHTML = `
+        <div style="text-align:center;color:#fff;font-family:Arial, sans-serif;">
+            <h1 style="margin:0 0 10px 0;">CONGRATULATIONS!</h1>
+            <p style="margin:0 0 20px 0;font-size:18px;">You killed all the aliens! Earth is saved!<p>
+            <br> 
+            <p>Final Score: ${score}</p>
+            <button id="playAgainBtn" style="padding:10px 18px;font-size:16px;cursor:pointer;">Play Again</button>
+        </div>
+    `;
+
+    const btn = document.getElementById("playAgainBtn");
+    if (btn) {
+        btn.addEventListener("click", () => {
+            const ov = document.getElementById("victoryOverlay");
+            if (ov) ov.remove();
+            startGame();
+        });
+    }
+}
+
 // lives
 const MAX_LIVES = 3;
 let lives = MAX_LIVES;
@@ -57,6 +213,10 @@ window.onload = () => {
     ctx.drawImage(pinkAlienImage, 200, 50, 40, 40);
     ctx.drawImage(purpleAlienImage, 250, 50, 40, 40);
 
+    // Load persisted high score (if any) and update the UI
+    loadHighScore();
+    const hsEl = document.getElementById("highscore");
+    if (hsEl) hsEl.innerText = `High Score: ${highScore}`;
     // initialize aliens and draws them
     createAliens();
     drawAliens();
@@ -64,13 +224,14 @@ window.onload = () => {
     // initialize player position and start game loop after DOM ready
     player.x = CANVAS_WIDTH / 2 - player.width / 2;
     player.y = CANVAS_HEIGHT - player.height - 10;
-    // ensure player updates start so movement works immediately
+
+    //updates start movement
     startPlayerUpdates();
     renderLives();
     gameLoop();
 };
 
-// update the lives UI in the page
+// renderLives — update the life icons shown in the UI
 function renderLives() {
     const el = document.getElementById("lives");
     if (!el) return;
@@ -87,7 +248,7 @@ function renderLives() {
     el.innerHTML = html;
 }
 
-// player object
+// player object: position, size and movement speed
 const player = {
     speed: 3,
     width: PLAYER_WIDTH,
@@ -99,14 +260,12 @@ const player = {
 const alienEnemy = {
     width: 40,
     height: 40,
-    x: 0,
-    y: 0,
     speed: 1.5,
 };
 
-// Global alien state
+// Alien formation state
 let pendingDirection = 1; // 1 = moving right, -1 = moving left
-const aliens = []; // will hold individual alien objects {x,y,width,height,image,speed}
+const aliens = []; // array of alien objects: {x,y,width,height,image,speed}
 
 function createAliens(
     rows = 3,
@@ -144,11 +303,12 @@ function drawAliens() {
         ctx.drawImage(i.image, i.x, i.y, i.width, i.height);
     }
 }
+
 // player movement
 const keys = {};
 window.addEventListener("keydown", (e) => {
     keys[e.key] = true;
-    // Fire on Space (use code for reliability across layouts)
+    // Fire on Space key
     if (e.code === "Space") {
         fireBullet();
     }
@@ -205,7 +365,7 @@ function checkAlienPlayerCollision() {
             lives -= 1;
             renderLives();
             if (lives <= 0) {
-                gameOver = true;
+                handleGameOver();
             } else {
                 // reset player position and clear bullets so the player has a fresh start
                 player.x = CANVAS_WIDTH / 2 - player.width / 2;
@@ -251,9 +411,9 @@ function updateBullets() {
                 // update score in the DOM if present
                 const scoreEl = document.querySelector("#score");
                 if (scoreEl) scoreEl.innerText = `Score: ${score}`;
-                // If we removed the last alien, set victory
+                // If we removed the last alien, trigger victory handler
                 if (aliens.length === 0) {
-                    victory = true;
+                    handleVictory();
                 }
                 break; // bullet is gone, move to next bullet
             }
@@ -261,7 +421,7 @@ function updateBullets() {
     }
 }
 
-// enemy bullets update and collision with player
+// updateEnemyBullets — move enemy bullets and handle collisions with player
 function updateEnemyBullets() {
     // move enemy bullets
     for (const b of enemyBullets) {
@@ -289,7 +449,7 @@ function updateEnemyBullets() {
             lives -= 1;
             renderLives();
             if (lives <= 0) {
-                gameOver = true;
+                handleGameOver();
                 return;
             }
             // reset player position and clear bullets so player gets a fresh chance
@@ -358,6 +518,7 @@ function maybeEnemiesShoot() {
     if (shooter) enemyFireFromAlien(shooter);
 }
 
+// drawBullets — render player bullets (or a fallback rectangle if the image isn't ready)
 function drawBullets() {
     for (const i of bullets) {
         // draw bullet image if loaded; fall back to a filled rect if not
@@ -370,6 +531,7 @@ function drawBullets() {
     }
 }
 
+// drawEnemyBullets — render enemy bullets
 function drawEnemyBullets() {
     for (const i of enemyBullets) {
         // draw as red bullets (no asset available currently)
@@ -378,7 +540,7 @@ function drawEnemyBullets() {
     }
 }
 
-// player update interval handle so we can start/stop on game start/over
+// Player update interval: used to start/stop continuous player movement updates
 let playerIntervalId = null;
 function startPlayerUpdates() {
     if (playerIntervalId) clearInterval(playerIntervalId);
@@ -396,6 +558,11 @@ function startGame() {
     // reset player position
     player.x = CANVAS_WIDTH / 2 - player.width / 2;
     player.y = CANVAS_HEIGHT - player.height - 10;
+    // remove any leftover game over overlay (if present)
+    const ov = document.getElementById("gameOverOverlay");
+    if (ov) ov.remove();
+    const vo = document.getElementById("victoryOverlay");
+    if (vo) vo.remove();
     // reset state
     bullets.length = 0;
     enemyBullets.length = 0;
