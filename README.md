@@ -21,7 +21,7 @@
 About The Project <br>
 This group project is a collection of three retro-inspired arcade games, reimagined with modern features and collaborative design. Each game offering a unique experience. The main goal was to explore game development in a team environment while focusing on functionality, design, and player engagement.
 
-Live Project Link
+[Live Project Link](https://blaisesa.github.io/game-project/)
 
 Key Objectives:
 
