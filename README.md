@@ -307,7 +307,7 @@ Pac-Man cannot pass through vents, they act as solid obstacles that block Pac-Ma
 | -------------------------------------------------------- | -------------------------------------------------- |
 | ![start game](assets/images/readme/blaise/startGame.png) | ![in game](assets/images/readme/blaise/ingame.png) |
 
-| Paused Game                                                | Game Over! 3                                           |
+| Paused Game                                                | Game Over!                                            |
 | ---------------------------------------------------------- | ------------------------------------------------------ |
 | ![paused game](assets/images/readme/blaise/pausedGame.png) | ![game over](assets/images/readme/blaise/gameOver.png) |
 
