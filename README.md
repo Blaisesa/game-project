@@ -328,6 +328,14 @@ Developed & Designed by: Rhys<br>
 </details>
 
 <details>
+<summary><strong>Wireframe</strong></summary>
+<b>Galactic Space Invaders Wireframe</b>
+
+![wireframe](assets/images/rhys/gamescreenshots/gsiwireframe.png)
+
+</details>
+
+<details>
 <summary><strong>Assets & Tools</strong></summary>
 
 - <b>Languages:</b> HTML, CSS, JavaScript<br>
