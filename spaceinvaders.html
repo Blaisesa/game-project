@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,11 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/spaceinvaders.css">
 </head>
+
 <body id="gamePage">
-        <!-- Navigation between games -->
+    <!-- Navigation between games -->
     <nav>
         <!-- Hamburger Menu -->
         <input type="checkbox" id="menu-toggle">
@@ -39,11 +42,11 @@
             <div id="stats">
                 <h2 id="highscore">High Score: 0</h2>
                 <p id="lives">Lives: <img src="assets/images/blaise/fullHeart.webp" alt="hearts left in red"><img
-                        src="assets/images/blaise/fullHeart.webp" alt="hearts gone in silver"><img src="assets/images/blaise/lostHeart.webp"
-                        alt=""></p>
+                        src="assets/images/blaise/fullHeart.webp" alt="hearts gone in silver"><img
+                        src="assets/images/blaise/lostHeart.webp" alt=""></p>
                 <p></p>
             </div>
-                <div id="current-level">
+            <div id="current-level">
                 <p id="level">Level: 1</p>
                 <p id="score">Score: 0</p>
                 <p id="finalScore" style="display:none">Final Score: 0</p>
@@ -61,9 +64,17 @@
                 <p>Developed by <a href="https://www.linkedin.com/in/rhys-lewsley/" target="_blank"
                         aria-label="Rhys's linked in profile link" rel="noopener">Rhys</a></p>
             </div>
+
+            <!-- Touch controls: shown on mobile / tablet (hidden on desktop) -->
+            <div id="touch-controls" aria-hidden="false">
+                <button id="btn-left" class="touch-btn" aria-label="Move left">◀</button>
+                <button id="btn-shoot" class="touch-btn shoot-btn" aria-label="Shoot">SHOOT</button>
+                <button id="btn-right" class="touch-btn" aria-label="Move right">▶</button>
+            </div>
         </div>
         <script type="module" src="assets/js/spaceinvaders.js"></script>
         <script src="assets/js/joystick.js"></script>
     </main>
 </body>
+
 </html>
