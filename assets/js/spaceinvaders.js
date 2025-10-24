@@ -43,6 +43,51 @@ let gameOver = false;
 let victory = false;
 // score
 let score = 0;
+let highScore = 0;
+
+// Centralized game-over handler: shows a retry overlay and stops the game loop
+function handleGameOver() {
+    // set state and stop player updates
+    gameOver = true;
+    stopPlayerUpdates();
+
+    // create or update overlay
+    let overlay = document.getElementById("gameOverOverlay");
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "gameOverOverlay";
+        overlay.style.position = "fixed";
+        overlay.style.left = "0";
+        overlay.style.top = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.background = "rgba(0,0,0,0.7)";
+        overlay.style.zIndex = "1000";
+        document.body.appendChild(overlay);
+    }
+
+    overlay.innerHTML = `
+        <div style="text-align:center;color:#fff;font-family:Arial, sans-serif;">
+            <h1 style="margin:0 0 10px 0;">GAME OVER</h1>
+            <p style="margin:0 0 20px 0;font-size:18px;">Final Score: ${score}</p>
+            <button id="retryBtn" style="padding:10px 18px;font-size:16px;cursor:pointer;">Retry</button>
+        </div>
+    `;
+
+    const retryBtn = document.getElementById("retryBtn");
+    if (retryBtn) {
+        retryBtn.addEventListener("click", () => {
+            const ov = document.getElementById("gameOverOverlay");
+            if (ov) ov.remove();
+            // reset game state and start again
+            startGame();
+        });
+    }
+}
+
 // lives
 const MAX_LIVES = 3;
 let lives = MAX_LIVES;
@@ -205,7 +250,7 @@ function checkAlienPlayerCollision() {
             lives -= 1;
             renderLives();
             if (lives <= 0) {
-                gameOver = true;
+                handleGameOver();
             } else {
                 // reset player position and clear bullets so the player has a fresh start
                 player.x = CANVAS_WIDTH / 2 - player.width / 2;
@@ -289,7 +334,7 @@ function updateEnemyBullets() {
             lives -= 1;
             renderLives();
             if (lives <= 0) {
-                gameOver = true;
+                handleGameOver();
                 return;
             }
             // reset player position and clear bullets so player gets a fresh chance
@@ -396,6 +441,9 @@ function startGame() {
     // reset player position
     player.x = CANVAS_WIDTH / 2 - player.width / 2;
     player.y = CANVAS_HEIGHT - player.height - 10;
+    // remove any leftover game over overlay (if present)
+    const ov = document.getElementById("gameOverOverlay");
+    if (ov) ov.remove();
     // reset state
     bullets.length = 0;
     enemyBullets.length = 0;
