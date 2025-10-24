@@ -366,7 +366,7 @@ main#game {
     color: var(--color-primary);
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
     font-size: 0.9rem;
-    text-align: flex-start;
+    text-align: left;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
