@@ -49,7 +49,7 @@ const level0 = [
     "X X X XxX X XX X X X XX   X X",
     "X X X   X X XX P X X n  X X X",
     "X X X X X X XX X X X XX X X X",
-    "X    n     +                X",
+    "X    n                      X",
     "XXXXXXXXX XXXXXXXXXX XXXXXXXX",
     // Level 0 map with no food pellets for level clearing testing purposes
     // "XXXXXXXXX0XXXXXXXXXX0XXXXXXXX",
@@ -583,7 +583,7 @@ function loadMap() {
                 alien.updateDirection = Movement.prototype.updateDirection; // Assign movement methods
                 alien.updateVelocity = Movement.prototype.updateVelocity; // Assign movement methods
                 // set initial direction and velocity
-                alien.speed = tileSize / 4; // Alien speed
+                alien.speed = tileSize / 6; // Alien speed
                 const newDirection = direction[Math.floor(Math.random() * 4)];
                 alien.direction = newDirection;
                 alien.updateVelocity();
@@ -600,7 +600,7 @@ function loadMap() {
                 alien.updateDirection = Movement.prototype.updateDirection; // Assign movement methods
                 alien.updateVelocity = Movement.prototype.updateVelocity; // Assign movement methods
                 // set initial direction and velocity
-                alien.speed = tileSize / 4; // Alien speed
+                alien.speed = tileSize / 6; // Alien speed
                 const newDirection = direction[Math.floor(Math.random() * 4)];
                 alien.direction = newDirection;
                 alien.updateVelocity();
@@ -617,7 +617,7 @@ function loadMap() {
                 alien.updateDirection = Movement.prototype.updateDirection; // Assign movement methods
                 alien.updateVelocity = Movement.prototype.updateVelocity; // Assign movement methods
                 // set initial direction and velocity
-                alien.speed = tileSize / 4; // Alien speed
+                alien.speed = tileSize / 6; // Alien speed
                 const newDirection = direction[Math.floor(Math.random() * 4)];
                 alien.direction = newDirection;
                 alien.updateVelocity();
@@ -634,7 +634,7 @@ function loadMap() {
                 alien.updateDirection = Movement.prototype.updateDirection; // Assign movement methods
                 alien.updateVelocity = Movement.prototype.updateVelocity; // Assign movement methods
                 // set initial direction and velocity
-                alien.speed = tileSize / 4; // Alien speed
+                alien.speed = tileSize / 6; // Alien speed
                 const newDirection = direction[Math.floor(Math.random() * 4)];
                 alien.direction = newDirection;
                 alien.updateVelocity();
@@ -1075,6 +1075,11 @@ function move() {
                 alien.y -= alien.velocityY;
                 // Choose a new random direction
                 const newDirection = direction[Math.floor(Math.random() * 4)];
+                // center alien in tile to prevent sticking
+                alien.x =
+                    Math.round(alien.x / tileSize) * tileSize;
+                alien.y =
+                    Math.round(alien.y / tileSize) * tileSize;
                 alien.updateDirection(newDirection);
                 break; // Exit loop after handling collision
             }
@@ -1090,9 +1095,9 @@ function move() {
         } else if (alien.y + alien.height >= boardHeight) {
             alien.y = 0;
         }
-        // Randomly change direction at intervals
+        // Increase the chance of turning at tile centers
         if (alien.x % tileSize === 0 && alien.y % tileSize === 0) {
-            if (Math.random() < 0.5) {
+            if (Math.random() < 0.3) { // 30% chance to turn at intersections
                 const newDirection = direction[Math.floor(Math.random() * 4)];
                 alien.updateDirection(newDirection);
             }
@@ -1117,7 +1122,7 @@ function move() {
                 alien.updateDirection(dy > 0 ? "D" : "U");
             }
             // Reset alien speed to frightened speed
-            alien.speed = tileSize / 6; // Reduce speed
+            alien.speed = tileSize / 4; // Reduce speed
             alien.updateVelocity();
         }
         if (powerUpActive && collision(pacman, alien)) {
