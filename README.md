@@ -3,16 +3,16 @@
 ## 📚 Table of Contents
 
 1. [Overview](#overview)
-2. [Games](#games)
+2. [Planning](#planning)
+3. [Games](#games)
     - [Game 1: Pac-Man in Space! - Developed my Blaise](#game-1-pac-man-in-space)
     - [Game 2: Space Invaders - Developed by Rhys](#game-2-space-invaders)
     - [Game 3: Mini Crash - Developed by Hans](#game-3-mini-crash)
-3. [Team Collaboration](#team-collaboration)
-4. [Deployment & Setup](#deployment--setup)
-5. [Testing](#testing)
-6. [Project Structure](#project-structure)
-7. [Timeline](#timeline)
-8. [Future Plans](#future-plans)
+4. [Team Collaboration](#team-collaboration)
+5. [Deployment & Setup](#deployment--setup)
+6. [Testing](#testing)
+7. [Future Plans](#future-plans)
+8. [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -32,6 +32,12 @@ Key Objectives:
 3. Create engaging and visually appealing games using a shared theme.
 
 4. Practice real-world project planning, version control, and documentation.
+
+5. Develop skills in HTML, CSS, and JavaScript within a game context.  
+
+6. Ensure cross-device compatibility and responsive design.
+
+7. Test and debug games for a smooth user experience.
 
 ---
 
@@ -374,8 +380,6 @@ Planned updates and enhancements for future versions include:<br>
 
 ### Roles & Responsibilities
 
-### 👥 Team Contributions
-
 | Team Member | Role                      | Responsibilities                                                                                                                               |
 | ----------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Blaise**  | Team Lead                 | Lead for **Pac-Man**, managed overall project coordination, ensured team progress, and contributed to HTML, CSS, and JavaScript for all games. |
@@ -394,6 +398,21 @@ After initial planning, we set up a GitHub Project board to manage tasks, track 
 
 ## Deployment & Setup
 
+The project is hosted on GitHub Pages for easy access and sharing.
+<br>
+If you wish to run the project locally, follow these steps:
+1. Fork or clone the repository from GitHub:
+   ```bash
+   git clone https://github.com/blaisesa/game-project.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd game-project
+   ```
+3. Open the `index.html` file in your preferred web browser to start playing the games.
+
+Enjoy the games!
+
 ---
 
 ## Testing
@@ -406,10 +425,36 @@ Testing was conducted throughout the development process to ensure the game func
 
 Bugs and issues identified during testing were logged in GitHub Issues and addressed in subsequent development sprints.
 
+- **Cross-Browser Testing:** The games were tested on multiple browsers (Chrome, Firefox, Safari) to ensure compatibility and consistent performance.
+- **Responsive Testing:** The games were tested on various devices (desktop, tablet, mobile) to ensure a smooth experience across different screen sizes.
+- **Autoprefixer:** Used to ensure CSS compatibility across different browsers.
+- **HTML & CSS Validation:** The code was validated using the W3C Markup Validation Service to ensure adherence to web standards.
+
+**HTML and CSS Validation results:**
+- no errors found in HTML files.
+- no errors found in CSS files.
+
+| Lobby HTML                                   | Pac-Man HTML                                   | Mini-Crash HTML                               | Space Invaders HTML                           |
+| ---------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
+| ![lobby validation](assets/images/readme/blaise/gameLobbyHTML.png) | ![pacman validation](assets/images/readme/blaise/pacmanHTML.png) | ![minicrash validation](assets/images/readme/blaise/minicrashHTML.png) | ![spaceinvaders validation](assets/images/readme/blaise/spaceinvHTML.png) |
+
+CSS Validation Results:
+![CSS validation](assets/images/readme/blaise/cssValidation.png)
+
+**Lighthouse Reports:**
+| Desktop Report                                      | Mobile Report                                       |
+| --------------------------------------------------- | --------------------------------------------------- |
+| ![desktop report](assets/images/readme/blaise/desktopLighthouse.png) | ![mobile report](assets/images/readme/blaise/mobileLighthouse.png) |
+
 ---
 
 ## Future Plans
 
----
+There are several ways to enhance and expand the project in future iterations:
+1. **Additional Games:** Introduce more mini-games to the collection, each with unique mechanics and themes.
+2. **Multiplayer Functionality:** Implement multiplayer modes for competitive or cooperative gameplay.
+3. **User Accounts & Leaderboards:** Allow players to create accounts, save progress, and compete on global leaderboards.
+4. **Enhanced Graphics & Sound:** Upgrade visual and audio assets for a more immersive experience.
 
-###
+## Acknowledgements
+We would like to extend our gratitude to Code Institute for providing the resources and support necessary to complete this project. Special thanks to our mentors and peers for their valuable feedback and encouragement throughout the development process.
