@@ -22,7 +22,7 @@ purpleAlienImage.src = "assets/images/blaise/aliens/purpleAlien0.webp";
 const PLAYER_WIDTH = 50;
 const PLAYER_HEIGHT = 50;
 
-// bullet constants & state
+// Bullet settings and runtime state (player bullets)
 const BULLET_WIDTH = 8;
 const BULLET_HEIGHT = 16;
 const BULLET_SPEED = 6;
@@ -43,10 +43,68 @@ let gameOver = false;
 let victory = false;
 // score
 let score = 0;
-// initialize highScore; will be loaded from localStorage (if present) in window.onload
+// High score (loaded from localStorage on startup)
 let highScore = 0;
 
-// Centralized game-over handler: shows a retry overlay and stops the game loop
+// high score persistence and overlay creation
+function loadHighScore() {
+    try {
+        const stored = parseInt(
+            localStorage.getItem("spaceinvadersHighScore"),
+            10
+        );
+        if (!Number.isNaN(stored)) highScore = stored;
+    } catch (e) {
+        // ignore localStorage errors
+    }
+}
+
+function saveHighScore() {
+    try {
+        localStorage.setItem("spaceinvadersHighScore", String(highScore));
+    } catch (e) {
+        // ignore localStorage errors
+    }
+}
+
+function updateHighScoreIfNeeded() {
+    if (score > highScore) {
+        highScore = score;
+        saveHighScore();
+        const hsEl = document.getElementById("highscore");
+        if (hsEl) hsEl.innerText = `High Score: ${highScore}`;
+        return true;
+    }
+    return false;
+}
+
+function setFinalScoreDom() {
+    const finalEl = document.getElementById("finalScore");
+    if (finalEl) finalEl.innerText = `Final Score: ${score}`;
+}
+
+function createOverlayElement(id) {
+    let overlay = document.getElementById(id);
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = id;
+        overlay.style.position = "fixed";
+        overlay.style.left = "0";
+        overlay.style.top = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.background = "rgba(0,0,0,0.7)";
+        overlay.style.zIndex = "1000";
+        document.body.appendChild(overlay);
+    }
+    return overlay;
+}
+
+// handleGameOver — called when the player runs out of lives.
+// Shows a retry overlay, updates final/high scores, and halts gameplay.
 function handleGameOver() {
     // set state and stop player updates
     gameOver = true;
@@ -70,24 +128,11 @@ function handleGameOver() {
         document.body.appendChild(overlay);
     }
 
-    // update high score if this run produced a new one
-    if (score > highScore) {
-        highScore = score;
-        try {
-            localStorage.setItem("spaceinvadersHighScore", String(highScore));
-        } catch (e) {
-            // ignore localStorage errors
-        }
-        const pageHsEl =
-            document.getElementById("highscore") ||
-            document.querySelector("#highscore");
-        if (pageHsEl) pageHsEl.innerText = `High Score: ${highScore}`;
-    }
+    // update high score, final score and render a game-over overlay
+    updateHighScoreIfNeeded();
+    setFinalScoreDom();
 
-    // also set the final score element if present in the page
-    const finalEl = document.getElementById("finalScore");
-    if (finalEl) finalEl.innerText = `Final Score: ${score}`;
-
+    overlay = createOverlayElement("gameOverOverlay");
     overlay.innerHTML = `
         <div style="text-align:center;color:#fff;font-family:Arial, sans-serif;">
             <h1 style="margin:0 0 10px 0;">GAME OVER</h1>
@@ -129,24 +174,11 @@ function handleVictory() {
         document.body.appendChild(overlay);
     }
 
-    // update high score if this run produced a new one
-    if (score > highScore) {
-        highScore = score;
-        try {
-            localStorage.setItem("spaceinvadersHighScore", String(highScore));
-        } catch (e) {
-            // ignore localStorage errors
-        }
-        const pageHsEl =
-            document.getElementById("highscore") ||
-            document.querySelector("#highscore");
-        if (pageHsEl) pageHsEl.innerText = `High Score: ${highScore}`;
-    }
+    // update high score, final score and render a victory overlay
+    updateHighScoreIfNeeded();
+    setFinalScoreDom();
 
-    // also set the final score element if present in the page
-    const finalEl = document.getElementById("finalScore");
-    if (finalEl) finalEl.innerText = `Final Score: ${score}`;
-
+    overlay = createOverlayElement("victoryOverlay");
     overlay.innerHTML = `
         <div style="text-align:center;color:#fff;font-family:Arial, sans-serif;">
             <h1 style="margin:0 0 10px 0;">CONGRATULATIONS!</h1>
@@ -182,18 +214,8 @@ window.onload = () => {
     ctx.drawImage(purpleAlienImage, 250, 50, 40, 40);
 
     // Load persisted high score (if any) and update the UI
-    try {
-        const stored = parseInt(
-            localStorage.getItem("spaceinvadersHighScore"),
-            10
-        );
-        if (!Number.isNaN(stored)) highScore = stored;
-    } catch (e) {
-        // localStorage might be unavailable in some embedded contexts; ignore errors
-    }
-    const hsEl =
-        document.getElementById("highscore") ||
-        document.querySelector("#highscore");
+    loadHighScore();
+    const hsEl = document.getElementById("highscore");
     if (hsEl) hsEl.innerText = `High Score: ${highScore}`;
     // initialize aliens and draws them
     createAliens();
@@ -209,7 +231,7 @@ window.onload = () => {
     gameLoop();
 };
 
-// update the lives UI in the page
+// renderLives — update the life icons shown in the UI
 function renderLives() {
     const el = document.getElementById("lives");
     if (!el) return;
@@ -226,7 +248,7 @@ function renderLives() {
     el.innerHTML = html;
 }
 
-// player object
+// player object: position, size and movement speed
 const player = {
     speed: 3,
     width: PLAYER_WIDTH,
@@ -238,14 +260,12 @@ const player = {
 const alienEnemy = {
     width: 40,
     height: 40,
-    x: 0,
-    y: 0,
     speed: 1.5,
 };
 
-// Global alien state
+// Alien formation state
 let pendingDirection = 1; // 1 = moving right, -1 = moving left
-const aliens = []; // will hold individual alien objects {x,y,width,height,image,speed}
+const aliens = []; // array of alien objects: {x,y,width,height,image,speed}
 
 function createAliens(
     rows = 3,
@@ -401,7 +421,7 @@ function updateBullets() {
     }
 }
 
-// enemy bullets update and collision with player
+// updateEnemyBullets — move enemy bullets and handle collisions with player
 function updateEnemyBullets() {
     // move enemy bullets
     for (const b of enemyBullets) {
@@ -498,6 +518,7 @@ function maybeEnemiesShoot() {
     if (shooter) enemyFireFromAlien(shooter);
 }
 
+// drawBullets — render player bullets (or a fallback rectangle if the image isn't ready)
 function drawBullets() {
     for (const i of bullets) {
         // draw bullet image if loaded; fall back to a filled rect if not
@@ -510,6 +531,7 @@ function drawBullets() {
     }
 }
 
+// drawEnemyBullets — render enemy bullets
 function drawEnemyBullets() {
     for (const i of enemyBullets) {
         // draw as red bullets (no asset available currently)
@@ -518,7 +540,7 @@ function drawEnemyBullets() {
     }
 }
 
-// player update interval handle so we can start/stop on game start/over
+// Player update interval: used to start/stop continuous player movement updates
 let playerIntervalId = null;
 function startPlayerUpdates() {
     if (playerIntervalId) clearInterval(playerIntervalId);
