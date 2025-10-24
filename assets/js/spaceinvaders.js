@@ -51,7 +51,7 @@ function handleGameOver() {
     gameOver = true;
     stopPlayerUpdates();
 
-    // create or update overlay
+    // create update overlay
     let overlay = document.getElementById("gameOverOverlay");
     if (!overlay) {
         overlay = document.createElement("div");
@@ -88,6 +88,48 @@ function handleGameOver() {
     }
 }
 
+// victory screen with your final score and play again button
+function handleVictory() {
+    victory = true;
+    stopPlayerUpdates();
+
+    let overlay = document.getElementById("victoryOverlay");
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "victoryOverlay";
+        overlay.style.position = "fixed";
+        overlay.style.left = "0";
+        overlay.style.top = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.background = "rgba(0,0,0,0.7)";
+        overlay.style.zIndex = "1000";
+        document.body.appendChild(overlay);
+    }
+
+    overlay.innerHTML = `
+        <div style="text-align:center;color:#fff;font-family:Arial, sans-serif;">
+            <h1 style="margin:0 0 10px 0;">CONGRATULATIONS!</h1>
+            <p style="margin:0 0 20px 0;font-size:18px;">You killed all the aliens! Earth is saved!<p>
+            <br> 
+            <p>Final Score: ${score}</p>
+            <button id="playAgainBtn" style="padding:10px 18px;font-size:16px;cursor:pointer;">Play Again</button>
+        </div>
+    `;
+
+    const btn = document.getElementById("playAgainBtn");
+    if (btn) {
+        btn.addEventListener("click", () => {
+            const ov = document.getElementById("victoryOverlay");
+            if (ov) ov.remove();
+            startGame();
+        });
+    }
+}
+
 // lives
 const MAX_LIVES = 3;
 let lives = MAX_LIVES;
@@ -109,7 +151,8 @@ window.onload = () => {
     // initialize player position and start game loop after DOM ready
     player.x = CANVAS_WIDTH / 2 - player.width / 2;
     player.y = CANVAS_HEIGHT - player.height - 10;
-    // ensure player updates start so movement works immediately
+
+    //updates start movement
     startPlayerUpdates();
     renderLives();
     gameLoop();
@@ -189,11 +232,12 @@ function drawAliens() {
         ctx.drawImage(i.image, i.x, i.y, i.width, i.height);
     }
 }
+
 // player movement
 const keys = {};
 window.addEventListener("keydown", (e) => {
     keys[e.key] = true;
-    // Fire on Space (use code for reliability across layouts)
+    // Fire on Space key
     if (e.code === "Space") {
         fireBullet();
     }
@@ -296,9 +340,9 @@ function updateBullets() {
                 // update score in the DOM if present
                 const scoreEl = document.querySelector("#score");
                 if (scoreEl) scoreEl.innerText = `Score: ${score}`;
-                // If we removed the last alien, set victory
+                // If we removed the last alien, trigger victory handler
                 if (aliens.length === 0) {
-                    victory = true;
+                    handleVictory();
                 }
                 break; // bullet is gone, move to next bullet
             }
@@ -444,6 +488,8 @@ function startGame() {
     // remove any leftover game over overlay (if present)
     const ov = document.getElementById("gameOverOverlay");
     if (ov) ov.remove();
+    const vo = document.getElementById("victoryOverlay");
+    if (vo) vo.remove();
     // reset state
     bullets.length = 0;
     enemyBullets.length = 0;
