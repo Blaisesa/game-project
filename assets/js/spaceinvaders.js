@@ -318,6 +318,53 @@ window.addEventListener("keyup", (e) => {
     keys[e.key] = false;
 });
 
+// --- Touch / Pointer controls for mobile ---
+// Map the new touch buttons to the same control state used by keyboard handlers.
+function bindTouchControls() {
+    const left = document.getElementById("btn-left");
+    const right = document.getElementById("btn-right");
+    const shoot = document.getElementById("btn-shoot");
+    if (!left && !right && !shoot) return;
+
+    const makeDown = (keyName) => (e) => {
+        e.preventDefault && e.preventDefault();
+        keys[keyName] = true;
+    };
+    const makeUp = (keyName) => (e) => {
+        e.preventDefault && e.preventDefault();
+        keys[keyName] = false;
+    };
+
+    // Left button
+    if (left) {
+        left.addEventListener("pointerdown", makeDown("ArrowLeft"));
+        left.addEventListener("pointerup", makeUp("ArrowLeft"));
+        left.addEventListener("pointercancel", makeUp("ArrowLeft"));
+        left.addEventListener("lostpointercapture", makeUp("ArrowLeft"));
+    }
+
+    // Right button
+    if (right) {
+        right.addEventListener("pointerdown", makeDown("ArrowRight"));
+        right.addEventListener("pointerup", makeUp("ArrowRight"));
+        right.addEventListener("pointercancel", makeUp("ArrowRight"));
+        right.addEventListener("lostpointercapture", makeUp("ArrowRight"));
+    }
+
+    // Shoot button: single action on pointerdown (no continuous fire)
+    if (shoot) {
+        const shootHandler = (e) => {
+            e.preventDefault && e.preventDefault();
+            // fireBullet already checks cooldown and game state
+            fireBullet();
+        };
+        shoot.addEventListener("pointerdown", shootHandler);
+    }
+}
+
+// Bind touch controls after DOM is ready. window.onload already used elsewhere; safe to call here too.
+window.addEventListener("load", bindTouchControls);
+
 function updatePlayer() {
     if (gameOver || victory) return; // no movement after death or victory
     // Moves the player left with arrow keys or 'a' key
