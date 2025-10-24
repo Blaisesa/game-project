@@ -43,6 +43,7 @@ let gameOver = false;
 let victory = false;
 // score
 let score = 0;
+// initialize highScore; will be loaded from localStorage (if present) in window.onload
 let highScore = 0;
 
 // Centralized game-over handler: shows a retry overlay and stops the game loop
@@ -68,6 +69,24 @@ function handleGameOver() {
         overlay.style.zIndex = "1000";
         document.body.appendChild(overlay);
     }
+
+    // update high score if this run produced a new one
+    if (score > highScore) {
+        highScore = score;
+        try {
+            localStorage.setItem("spaceinvadersHighScore", String(highScore));
+        } catch (e) {
+            // ignore localStorage errors
+        }
+        const pageHsEl =
+            document.getElementById("highscore") ||
+            document.querySelector("#highscore");
+        if (pageHsEl) pageHsEl.innerText = `High Score: ${highScore}`;
+    }
+
+    // also set the final score element if present in the page
+    const finalEl = document.getElementById("finalScore");
+    if (finalEl) finalEl.innerText = `Final Score: ${score}`;
 
     overlay.innerHTML = `
         <div style="text-align:center;color:#fff;font-family:Arial, sans-serif;">
@@ -110,6 +129,24 @@ function handleVictory() {
         document.body.appendChild(overlay);
     }
 
+    // update high score if this run produced a new one
+    if (score > highScore) {
+        highScore = score;
+        try {
+            localStorage.setItem("spaceinvadersHighScore", String(highScore));
+        } catch (e) {
+            // ignore localStorage errors
+        }
+        const pageHsEl =
+            document.getElementById("highscore") ||
+            document.querySelector("#highscore");
+        if (pageHsEl) pageHsEl.innerText = `High Score: ${highScore}`;
+    }
+
+    // also set the final score element if present in the page
+    const finalEl = document.getElementById("finalScore");
+    if (finalEl) finalEl.innerText = `Final Score: ${score}`;
+
     overlay.innerHTML = `
         <div style="text-align:center;color:#fff;font-family:Arial, sans-serif;">
             <h1 style="margin:0 0 10px 0;">CONGRATULATIONS!</h1>
@@ -144,6 +181,20 @@ window.onload = () => {
     ctx.drawImage(pinkAlienImage, 200, 50, 40, 40);
     ctx.drawImage(purpleAlienImage, 250, 50, 40, 40);
 
+    // Load persisted high score (if any) and update the UI
+    try {
+        const stored = parseInt(
+            localStorage.getItem("spaceinvadersHighScore"),
+            10
+        );
+        if (!Number.isNaN(stored)) highScore = stored;
+    } catch (e) {
+        // localStorage might be unavailable in some embedded contexts; ignore errors
+    }
+    const hsEl =
+        document.getElementById("highscore") ||
+        document.querySelector("#highscore");
+    if (hsEl) hsEl.innerText = `High Score: ${highScore}`;
     // initialize aliens and draws them
     createAliens();
     drawAliens();
