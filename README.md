@@ -253,6 +253,49 @@ Pac-Man cannot pass through vents, they act as solid obstacles that block Pac-Ma
         }
     }
 
+  <br><br>
+  Mobile touch controls allow players to swipe in any direction to move Pac-Man accordingly. Defining touchstart and touchmove event listeners captures swipe gestures and translates them into movement commands. Ensured a 30px minimum swipe distance to prevent accidental movements.
+
+    // Calculate swipe direction and move pacman accordingly
+    function handleSwipe() {
+    // Calculate differences in touch positions
+    // Delta values represent the distance moved in each direction
+    // Positive deltaX indicates a right swipe, negative indicates left
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    // Minimum swipe distance threshold (pixels)
+    // This prevents accidental small movements such as taps from triggering a direction change
+    const threshold = 30;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        // Determine left or right swipe based on deltaX
+        // If deltaX is positive, it's a right swipe; if negative, it's a left swipe
+        if (deltaX > threshold) {
+            pacman.updateDirection("R"); // Swipe right
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "R";
+        } else if (deltaX < -threshold) {
+            pacman.updateDirection("L"); // Swipe left
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "L";
+        }
+    } else {
+        // Vertical swipe
+        if (deltaY > threshold) {
+            pacman.updateDirection("D"); // Swipe down
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "D";
+        } else if (deltaY < -threshold) {
+            pacman.updateDirection("U"); // Swipe up
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "U";
+        }
+    }
+    }
+
+
 </details>
 
 ---
@@ -455,6 +498,7 @@ There are several ways to enhance and expand the project in future iterations:
 2. **Multiplayer Functionality:** Implement multiplayer modes for competitive or cooperative gameplay.
 3. **User Accounts & Leaderboards:** Allow players to create accounts, save progress, and compete on global leaderboards.
 4. **Enhanced Graphics & Sound:** Upgrade visual and audio assets for a more immersive experience.
+5. **Cross game rewards and easter eggs:** Implement rewards that carry over between games and hidden features for players to discover.
 
 ## Acknowledgements
 We would like to extend our gratitude to Code Institute for providing the resources and support necessary to complete this project. Special thanks to our mentors and peers for their valuable feedback and encouragement throughout the development process.
