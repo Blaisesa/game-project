@@ -301,18 +301,13 @@ Github link here!
 ### Game 3: Mini Crash
 
 Developed & Designed by: Hans<br>
-Github link here!
+[Github link here!](https://github.com/daswinkelmann)<br>
 
-## DETAILS
-
-## Game 3: Mini-Crash
-
-<details>
-<summary> <b>Description</b> </summary>
+<b>Description</b><br>
 Mini-Crash is a fast-paced multiplier game inspired by real-world “crash” titles seen in crypto and casino gaming.  
-Players place a bet, watch the multiplier rise from 1.00x upward — and must decide when to cash out before the crash happens!  
+Players place a bet, watch the multiplier rise from 1.00x upward and must decide when to cash out before the crash happens!  
 The aim is simple: hold your nerve to earn bigger rewards, but don’t wait too long… every second counts.
-</details>
+
 
 ---
 
@@ -402,6 +397,14 @@ After initial planning, we set up a GitHub Project board to manage tasks, track 
 ---
 
 ## Testing
+
+Testing was conducted throughout the development process to ensure the game functions as intended. Key testing methods included:
+
+- **Unit Testing:** Individual functions and components were tested in isolation to verify their behavior.
+- **Integration Testing:** The interaction between different components (e.g., player movement, collision detection) was tested to ensure they work together seamlessly.
+- **User Testing:** Playtesting sessions were held with team members and external users to gather feedback on gameplay, controls, and overall experience.
+
+Bugs and issues identified during testing were logged in GitHub Issues and addressed in subsequent development sprints.
 
 ---
 
