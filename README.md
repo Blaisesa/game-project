@@ -315,33 +315,61 @@ Pac-Man cannot pass through vents, they act as solid obstacles that block Pac-Ma
 
 ---
 
-### Game 2: Space Invaders
+### Game 2: Galactic Space Invaders
 
 Developed & Designed by: Rhys<br>
-Github link here!
 
 <details>
   <summary><strong>Description</strong></summary>
-  
+  Galactic Space Invaders is a game in which the player has to fight off a group of alien invaders in space
+
 </details>
 
 <details>
 <summary><strong>Assets & Tools</strong></summary>
 
+- <b>Languages:</b> HTML, CSS, JavaScript<br>
+- <b>Version Control:</b> Github and Git<br>  
+- <b>IDE:</b> VS Code<br>  
+- <b>Tests:</b> Manual testing and chrome devTools,<br> 
+- <b>Design Tools:</b> Figma (wireframe)
+- <b>AI:</b> Copilot
 </details>
 
 <details>
   <summary><strong>How to Play!</strong></summary>
 
+The player and move left and right with the arrow keys or with "a" and "d" keys and shoot with the spacebar. The player must kill all aliens before the reach the player or shoot the player 3 times. When the player kills all aliens the game is over.
 </details>
 
 <details>
   <summary><strong>In-Game Features</strong></summary>
-
+1. The player character has 3 lives.
+<br>
+2. The player can move left and right, they can also shoot.
+<br>
+3. The player gets 100 pts for each alien they kill.
+<br>
+4. The aliens move left and right, when they hit a wall they move down.
+<br>
+5. The aliens randomly fire at the player.
+<br>
+6. The players score replaces the highscore if the score is higher then the current highscore.
 </details>
 
 <details>
   <summary><strong>Screenshots</strong></summary>
+  Gameplay:
+
+![Gameplay](assets/images/rhys/gamescreenshots/ingameGSI.png)
+
+Win Screen:
+
+![Winscreen](assets/images/rhys/gamescreenshots/winscreenGSI.png)
+
+Gameover screen:
+
+![Gameoverscreen](assets/images/rhys/gamescreenshots/gameoverGSI.png)
 
 </details>
 
