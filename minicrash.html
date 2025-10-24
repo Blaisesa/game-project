@@ -14,6 +14,22 @@
 </head>
 
 <body id="minicrash">
+    <!-- Navigation between games -->
+    <nav>
+        <!-- Hamburger Menu -->
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <!-- Game Titles -->
+        <ul id="nav-links">
+            <li><a href="pacman.html">Pac-Man</a></li>
+            <li><a href="spaceinvaders.html">Space Invaders</a></li>
+            <li><a href="minicrash.html">Mini-Crash</a></li>
+        </ul>
+    </nav>
     <!-- Header -->
     <header id="message-panel">
         <h1>Mini-Crash!</h1>
@@ -24,29 +40,29 @@
     <main id="crash-game">
 
         <!-- Multiplier Display -->
-        <section id="display">
+        <div id="display">
             <div id="mult">x1.00</div>
-        </section>
+        </div>
 
         <!-- Rocket Visual -->
-        <section id="rocket-area">
-            <img id="rocket" src="assets/images/mini-crash/mini-crash-rocket.png" alt="Rocket" />
-        </section>
+        <div id="rocket-area">
+            <img id="rocket" src="assets/images/mini-crash/mini-crash-rocket.png" alt="Rocket">
+        </div>
 
         <!-- Start / Cashout Buttons -->
-        <section id="controls">
+        <div id="controls">
             <button id="start-btn" disabled>START</button>
             <button id="cashout-btn" disabled>CASH OUT</button>
-        </section>
+        </div>
 
         <!-- Bet Selection -->
-        <section id="bet-controls">
+        <div id="bet-controls">
             <span>Bet:</span>
             <button class="bet-btn" data-bet="0.25">0.25c</button>
             <button class="bet-btn" data-bet="0.5">50c</button>
             <button class="bet-btn" data-bet="1">€1</button>
             <button class="bet-btn" data-bet="2">€2</button>
-        </section>
+        </div>
     </main>
 
     <!-- Footer -->
