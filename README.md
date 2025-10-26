@@ -321,11 +321,10 @@ Pac-Man cannot pass through vents, they act as solid obstacles that block Pac-Ma
 
 Developed & Designed by: Rhys<br>
 
-<details>
-  <summary><strong>Description</strong></summary>
+<strong>Description</strong><br>
   Galactic Space Invaders is a game in which the player has to fight off a group of alien invaders in space
 
-</details>
+---
 
 <details>
 <summary><strong>Wireframe</strong></summary>
@@ -334,6 +333,8 @@ Developed & Designed by: Rhys<br>
 ![wireframe](assets/images/rhys/gamescreenshots/gsiwireframe.png)
 
 </details>
+
+---
 
 <details>
 <summary><strong>Assets & Tools</strong></summary>
@@ -346,11 +347,15 @@ Developed & Designed by: Rhys<br>
 - <b>AI:</b> Copilot
 </details>
 
+---
+
 <details>
   <summary><strong>How to Play!</strong></summary>
 
 The player and move left and right with the arrow keys or with "a" and "d" keys and shoot with the spacebar. The player must kill all aliens before the reach the player or shoot the player 3 times. When the player kills all aliens the game is over.
 </details>
+
+---
 
 <details>
   <summary><strong>In-Game Features</strong></summary>
@@ -366,6 +371,8 @@ The player and move left and right with the arrow keys or with "a" and "d" keys 
 <br>
 6. The players score replaces the highscore if the score is higher then the current highscore.
 </details>
+
+---
 
 <details>
   <summary><strong>Screenshots</strong></summary>
