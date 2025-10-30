@@ -29,6 +29,18 @@ rocket = document.getElementById("rocket");
 betButtons = document.querySelectorAll(".bet-btn");
 helpBtn = document.getElementById("help-btn");
 
+// 🔥 Flame Elements
+const flameFrames = [
+    document.getElementById("flame1"),
+    document.getElementById("flame2"),
+    document.getElementById("flame3"),
+];
+let flameTimer = null;
+let currentFlame = 0;
+
+
+
+
 /* -------------------------------
    MINI-CRASH GAME – FUNCTION MAP
    ------------------------------- */
@@ -74,9 +86,26 @@ function startGame() {
     cashoutBtn.disabled = false;
 
     currentMult = 1.0;
-    crashMult = Math.random() * (25 - 1.5) + 1.5; // (2). random crash point
 
-    console.log("crashMult =", crashMult.toFixed(2));
+    // Phase 1 - simple random number probability
+    // crashMult = Math.random() * (25 - 1.5) + 1.5; // (2). random crash point
+    // console.log("crashMult =", crashMult.toFixed(2));
+
+        // Phase 2 - Advanced probability - branching probability
+
+        let chance = Math.random();
+
+        if (chance < 0.8) {
+        crashMult = Math.random() * (5 - 1) + 1; // 80%: 1–5x
+        } else {
+        crashMult = Math.random() * (25 - 5) + 5; // 20%: 5–25x
+        }
+
+        console.log(`Crash Mult = ${crashMult.toFixed(2)}x (chance=${chance.toFixed(2)})`);
+
+         // 🔥 Start rocket flame animation
+    startFlame();
+        // 🎯 Begin multiplier growth loop
     multLoop(); // (3). start multiplier growth
 }
 
@@ -108,6 +137,32 @@ function displayMult() {
 }
 
 function updateRocketPosition() {}
+
+
+// 🔥 Start Flame Flicker (NEW)
+function startFlame() {
+    if (flameTimer) return; // safety: prevent duplicate intervals
+
+    flameTimer = setInterval(() => {
+        // remove all active frames
+        flameFrames.forEach(frame => frame.classList.remove("active"));
+
+        // activate next frame
+        flameFrames[currentFlame].classList.add("active");
+
+        // advance frame index
+        currentFlame = (currentFlame + 1) % flameFrames.length;
+    }, 100); // change frame every 100ms
+}
+
+// 🧊 Stop Flame Flicker
+function stopFlame() {
+    clearInterval(flameTimer);
+    flameTimer = null;
+    // hide all frames
+    flameFrames.forEach(frame => frame.classList.remove("active"));
+}
+
 
 // CASH OUT PHASE (WIN)
 function cashOut() {
@@ -153,12 +208,15 @@ function endRound() {
     startBtn.disabled = true;
     cashoutBtn.disabled = true;
 
+    // 🔥 Stop rocket flame immediately
+    stopFlame();
+    
     // 2. Wait 2 seconds before reset
     setTimeout(() => {
         console.log("Resetting game after delay...");
         resetGame();
-        document.querySelector("#start-btn").innerText = `REPLAY`;
-    }, 2000);
+        document.querySelector("#start-btn").innerText = `START`;
+    }, 1000);
 }
 
 // SUPPORT / UTILITY
@@ -175,7 +233,7 @@ function displayMessage(msg, type) {
     messageDisplay.textContent = msg;
     setTimeout(function () {
         messageDisplay.textContent = "Mini-Crash!";
-    }, 2000);
+    }, 1000);
 }
 
 function showHelp() {}

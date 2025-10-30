@@ -1,9 +1,9 @@
 /* ---------- Mini-Crash Font Reset ---------- */
 #minicrash,
 #minicrash * {
-  font-family: "Inter", "Segoe UI", sans-serif !important;
-  letter-spacing: normal;
-  text-shadow: none;
+    font-family: "Inter", "Segoe UI", sans-serif !important;
+    letter-spacing: normal;
+    text-shadow: none;
 }
 
 /* ---------- 1. Global Reset & Theme ---------- */
@@ -135,127 +135,162 @@
     position: relative;
 }
 
+/* NEW */
+#minicrash #rocket-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
 #minicrash #rocket {
     width: 80px;
     height: auto;
     transition: transform 0.3s ease;
     filter: drop-shadow(0 0 8px rgba(107, 224, 255, 0.5));
+    position: relative; /* ✅ add this */
+    z-index: 2;          /* ✅ keep the rocket above background */
 }
 
 /* ---------- 2. Controls (Start / Cash Out) ---------- */
 #minicrash #controls {
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  width: 100%;
-  max-width: 480px;
-  margin: 1.5rem auto 0;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 480px;
+    margin: 1.5rem auto 0;
+    flex-wrap: wrap;
 }
 
 #minicrash #controls button {
-  flex: 1 1 45%;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  padding: 0.8rem 0;
-  font-weight: 600;
-  font-size: 1rem;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-  transition: background 0.2s ease, transform 0.15s ease;
+    flex: 1 1 45%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.8rem 0;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: background 0.2s ease, transform 0.15s ease;
 }
 
 #minicrash #controls button:hover {
-  background: var(--accent-light);
-  transform: translateY(-2px);
+    background: var(--accent-light);
+    transform: translateY(-2px);
 }
 
 #minicrash #cashout-btn[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 #minicrash #start-btn[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* ---------- Bet Controls (Grid) ---------- */
 #minicrash #bet-controls {
-  margin-top: 1.25rem;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 even columns by default */
-  gap: 0.5rem 0.75rem;
-  width: 100%;
-  max-width: 480px;
-  align-items: center;
-  justify-items: center;
+    margin-top: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 even columns by default */
+    gap: 0.5rem 0.75rem;
+    width: 100%;
+    max-width: 480px;
+    align-items: center;
+    justify-items: center;
 }
 
 /* Make the “Bet:” label span the full row */
 #minicrash #bet-controls > span:first-child {
-  grid-column: 1 / -1;     /* full width row */
-  justify-self: start;     /* left align the label */
-  color: var(--accent-light);
-  font-weight: 500;
-  font-size: 1rem;
-  margin-bottom: 0.25rem;
+    grid-column: 1 / -1; /* full width row */
+    justify-self: start; /* left align the label */
+    color: var(--accent-light);
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
 }
 
 /* Buttons fill their grid cell evenly */
 #minicrash .bet-btn {
-  width: 100%;
-  background: var(--card-color);
-  color: var(--text-color);
-  border: 2px solid var(--accent);
-  border-radius: var(--radius);
-  padding: 0.5rem 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: center;
+    width: 100%;
+    background: var(--card-color);
+    color: var(--text-color);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
 }
 
 /* Hover & active states */
 #minicrash .bet-btn:hover {
-  background: var(--accent);
-  color: #fff;
-  transform: translateY(-1px);
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-1px);
 }
 #minicrash .bet-btn.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent-light);
-  box-shadow: 0 0 8px rgba(59, 199, 255, 0.6);
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent-light);
+    box-shadow: 0 0 8px rgba(59, 199, 255, 0.6);
 }
 
 /* ---------- Responsive: 2x2 on narrow screens ---------- */
 @media (max-width: 480px) {
-  #minicrash #bet-controls {
-    grid-template-columns: repeat(2, 1fr); /* 2 per row */
-  }
+    #minicrash #bet-controls {
+        grid-template-columns: repeat(2, 1fr); /* 2 per row */
+    }
 }
-
 
 /* ---------- Footer ---------- */
 #minicrash footer {
-  margin-top: 2rem;
-  text-align: center;
-  color: var(--text-color);
-  font-size: 0.9rem;
-  opacity: 0.8;
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    opacity: 0.8;
 }
 
 #minicrash footer a {
-  color: var(--accent-light);
-  text-decoration: none;
-  font-weight: 500;
+    color: var(--accent-light);
+    text-decoration: none;
+    font-weight: 500;
 }
 
 #minicrash footer a:hover {
-  color: var(--accent);
-  text-decoration: underline;
+    color: var(--accent);
+    text-decoration: underline;
 }
 
+
+/* ---------- Rocket Flame Flicker ---------- */
+#minicrash #flame {
+    position: absolute;
+    bottom: 5%; /* just below rocket */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 28px;
+    z-index: 1; /* ✅ below the rocket but visible */
+
+}
+
+#minicrash #flame img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.05s linear;
+    image-rendering: pixelated; /* keeps 8-bit crisp */
+}
+
+/* visible frame */
+#minicrash #flame img.active {
+    opacity: 1;
+}
