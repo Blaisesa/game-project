@@ -38,7 +38,7 @@
     <main id="game">
         <!-- Game statistics information -->
         <button id="pausePacman" class="touch">Pause</button>
-        <section id="board-container">
+        <div id="board-container">
             <div id="stats">
                 <!-- Top score -->
                 <p id="highScore">High Score: 0</p>
@@ -48,12 +48,12 @@
             </div>
             <!-- Live session information -->
             <span id="current-level">
-                <p id="level">Level: 1</p>
-                <p id="score">Score: 0</p>
+                <span id="level">Level: 1</span>
+                <span id="score">Score: 0</span>
             </span>
-        </section>
+        </div>
         <!-- Game canvas where the game is rendered -->
-        <section id="game-container">
+        <div id="game-container">
             <div id="pacman_gameOver" class="hidden">
                 <h2>Game Over!</h2>
                 <p id="finalScore">Your final score: 0</p>
@@ -79,23 +79,21 @@
                 <p class="keyboard">Use Arrow Keys or WASD to Move, and <br><br>Space to Pause</p>
                 <p class="touch">Swipe in the direction you want to move!</p>
             </div>
-            </span>
-            </div>
             <div id="powerUpTimerContainer" class="hidden">
                 <div id="timerLine"></div>
             </div>
 
             <canvas id="board"></canvas>
-        </section>
+        </div>
         <!-- Game controls for player input -->
-        <section id="controls">
-            <span id="joystickContainer"><!-- joystick container influenced by Joystick.js -->
+        <div id="controls">
+            <div id="joystickContainer"><!-- joystick container influenced by Joystick.js -->
                 <img id="joystick" src="assets/images/joystick/Central.png" alt="">
                 <!-- linkedIn Profiles open in new tab -->
                 <p>Developed by <a href="https://www.linkedin.com/in/blaise-smyka/" target="_blank"
                         aria-label="Blaise's linked in profile link" rel="noopener">Blaise</a></p>
-            </span>
-        </section>
+            </div>
+        </div>
     </main>
     <script src="assets/js/pacman.js" defer></script>
     <script src="assets/js/joystick.js" defer></script>

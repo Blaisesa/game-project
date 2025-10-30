@@ -3,25 +3,27 @@
 ## 📚 Table of Contents
 
 1. [Overview](#overview)
-2. [Games](#games)
+2. [Planning](#planning)
+3. [Games](#games)
     - [Game 1: Pac-Man in Space! - Developed my Blaise](#game-1-pac-man-in-space)
     - [Game 2: Space Invaders - Developed by Rhys](#game-2-space-invaders)
     - [Game 3: Mini Crash - Developed by Hans](#game-3-mini-crash)
-3. [Team Collaboration](#team-collaboration)
-4. [Deployment & Setup](#deployment--setup)
-5. [Testing](#testing)
-6. [Project Structure](#project-structure)
-7. [Timeline](#timeline)
-8. [Future Plans](#future-plans)
+4. [Team Collaboration](#team-collaboration)
+5. [Deployment & Setup](#deployment--setup)
+6. [Testing](#testing)
+7. [Future Plans](#future-plans)
+8. [Acknowledgements](#acknowledgements)
 
 ---
 
 ## Overview
 
+[![Project Screenshot](assets/images/readme/blaise/preview.png)](https://blaisesa.github.io/game-project/)
+
 About The Project <br>
 This group project is a collection of three retro-inspired arcade games, reimagined with modern features and collaborative design. Each game offering a unique experience. The main goal was to explore game development in a team environment while focusing on functionality, design, and player engagement.
 
-Live Project Link
+[Live Project Link](https://blaisesa.github.io/game-project/)
 
 Key Objectives:
 
@@ -32,6 +34,12 @@ Key Objectives:
 3. Create engaging and visually appealing games using a shared theme.
 
 4. Practice real-world project planning, version control, and documentation.
+
+5. Develop skills in HTML, CSS, and JavaScript within a game context.  
+
+6. Ensure cross-device compatibility and responsive design.
+
+7. Test and debug games for a smooth user experience.
 
 ---
 
@@ -247,6 +255,49 @@ Pac-Man cannot pass through vents, they act as solid obstacles that block Pac-Ma
         }
     }
 
+  <br><br>
+  Mobile touch controls allow players to swipe in any direction to move Pac-Man accordingly. Defining touchstart and touchmove event listeners captures swipe gestures and translates them into movement commands. Ensured a 30px minimum swipe distance to prevent accidental movements.
+
+    // Calculate swipe direction and move pacman accordingly
+    function handleSwipe() {
+    // Calculate differences in touch positions
+    // Delta values represent the distance moved in each direction
+    // Positive deltaX indicates a right swipe, negative indicates left
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    // Minimum swipe distance threshold (pixels)
+    // This prevents accidental small movements such as taps from triggering a direction change
+    const threshold = 30;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        // Determine left or right swipe based on deltaX
+        // If deltaX is positive, it's a right swipe; if negative, it's a left swipe
+        if (deltaX > threshold) {
+            pacman.updateDirection("R"); // Swipe right
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "R";
+        } else if (deltaX < -threshold) {
+            pacman.updateDirection("L"); // Swipe left
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "L";
+        }
+    } else {
+        // Vertical swipe
+        if (deltaY > threshold) {
+            pacman.updateDirection("D"); // Swipe down
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "D";
+        } else if (deltaY < -threshold) {
+            pacman.updateDirection("U"); // Swipe up
+            // Set next direction for smoother movement on mobile
+            pacman.nextDirection = "U";
+        }
+    }
+    }
+
+
 </details>
 
 ---
@@ -258,7 +309,7 @@ Pac-Man cannot pass through vents, they act as solid obstacles that block Pac-Ma
 | -------------------------------------------------------- | -------------------------------------------------- |
 | ![start game](assets/images/readme/blaise/startGame.png) | ![in game](assets/images/readme/blaise/ingame.png) |
 
-| Paused Game                                                | Game Over! 3                                           |
+| Paused Game                                                | Game Over!                                            |
 | ---------------------------------------------------------- | ------------------------------------------------------ |
 | ![paused game](assets/images/readme/blaise/pausedGame.png) | ![game over](assets/images/readme/blaise/gameOver.png) |
 
@@ -266,33 +317,76 @@ Pac-Man cannot pass through vents, they act as solid obstacles that block Pac-Ma
 
 ---
 
-### Game 2: Space Invaders
+### Game 2: Galactic Space Invaders
 
 Developed & Designed by: Rhys<br>
-Github link here!
+
+<strong>Description</strong><br>
+  Galactic Space Invaders is a game in which the player has to fight off a group of alien invaders in space
+
+---
 
 <details>
-  <summary><strong>Description</strong></summary>
-  
+<summary><strong>Wireframe</strong></summary>
+<b>Galactic Space Invaders Wireframe</b>
+
+![wireframe](assets/images/rhys/gamescreenshots/gsiwireframe.png)
+
 </details>
+
+---
 
 <details>
 <summary><strong>Assets & Tools</strong></summary>
 
+- <b>Languages:</b> HTML, CSS, JavaScript<br>
+- <b>Version Control:</b> Github and Git<br>  
+- <b>IDE:</b> VS Code<br>  
+- <b>Tests:</b> Manual testing and chrome devTools,<br> 
+- <b>Design Tools:</b> Figma (wireframe)
+- <b>AI:</b> Copilot
 </details>
+
+---
 
 <details>
   <summary><strong>How to Play!</strong></summary>
 
+The player and move left and right with the arrow keys or with "a" and "d" keys and shoot with the spacebar. The player must kill all aliens before the reach the player or shoot the player 3 times. When the player kills all aliens the game is over.
 </details>
+
+---
 
 <details>
   <summary><strong>In-Game Features</strong></summary>
-
+1. The player character has 3 lives.
+<br>
+2. The player can move left and right, they can also shoot.
+<br>
+3. The player gets 100 pts for each alien they kill.
+<br>
+4. The aliens move left and right, when they hit a wall they move down.
+<br>
+5. The aliens randomly fire at the player.
+<br>
+6. The players score replaces the highscore if the score is higher then the current highscore.
 </details>
+
+---
 
 <details>
   <summary><strong>Screenshots</strong></summary>
+  Gameplay:
+
+![Gameplay](assets/images/rhys/gamescreenshots/ingameGSI.png)
+
+Win Screen:
+
+![Winscreen](assets/images/rhys/gamescreenshots/winscreenGSI.png)
+
+Gameover screen:
+
+![Gameoverscreen](assets/images/rhys/gamescreenshots/gameoverGSI.png)
 
 </details>
 
@@ -301,18 +395,13 @@ Github link here!
 ### Game 3: Mini Crash
 
 Developed & Designed by: Hans<br>
-Github link here!
+[Github link here!](https://github.com/daswinkelmann)<br>
 
-## DETAILS
-
-## Game 3: Mini-Crash
-
-<details>
-<summary> <b>Description</b> </summary>
+<b>Description</b><br>
 Mini-Crash is a fast-paced multiplier game inspired by real-world “crash” titles seen in crypto and casino gaming.  
-Players place a bet, watch the multiplier rise from 1.00x upward — and must decide when to cash out before the crash happens!  
+Players place a bet, watch the multiplier rise from 1.00x upward and must decide when to cash out before the crash happens!  
 The aim is simple: hold your nerve to earn bigger rewards, but don’t wait too long… every second counts.
-</details>
+
 
 ---
 
@@ -379,8 +468,6 @@ Planned updates and enhancements for future versions include:<br>
 
 ### Roles & Responsibilities
 
-### 👥 Team Contributions
-
 | Team Member | Role                      | Responsibilities                                                                                                                               |
 | ----------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Blaise**  | Team Lead                 | Lead for **Pac-Man**, managed overall project coordination, ensured team progress, and contributed to HTML, CSS, and JavaScript for all games. |
@@ -399,14 +486,64 @@ After initial planning, we set up a GitHub Project board to manage tasks, track 
 
 ## Deployment & Setup
 
+The project is hosted on GitHub Pages for easy access and sharing.
+<br>
+If you wish to run the project locally, follow these steps:
+1. Fork or clone the repository from GitHub:
+   ```bash
+   git clone https://github.com/blaisesa/game-project.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd game-project
+   ```
+3. Open the `index.html` file in your preferred web browser to start playing the games.
+
+Enjoy the games!
+
 ---
 
 ## Testing
+
+Testing was conducted throughout the development process to ensure the game functions as intended. Key testing methods included:
+
+- **Unit Testing:** Individual functions and components were tested in isolation to verify their behavior.
+- **Integration Testing:** The interaction between different components (e.g., player movement, collision detection) was tested to ensure they work together seamlessly.
+- **User Testing:** Playtesting sessions were held with team members and external users to gather feedback on gameplay, controls, and overall experience.
+
+Bugs and issues identified during testing were logged in GitHub Issues and addressed in subsequent development sprints.
+
+- **Cross-Browser Testing:** The games were tested on multiple browsers (Chrome, Firefox, Safari) to ensure compatibility and consistent performance.
+- **Responsive Testing:** The games were tested on various devices (desktop, tablet, mobile) to ensure a smooth experience across different screen sizes.
+- **Autoprefixer:** Used to ensure CSS compatibility across different browsers.
+- **HTML & CSS Validation:** The code was validated using the W3C Markup Validation Service to ensure adherence to web standards.
+
+**HTML and CSS Validation results:**
+- no errors found in HTML files.
+- no errors found in CSS files.
+
+| Lobby HTML                                   | Pac-Man HTML                                   | Mini-Crash HTML                               | Space Invaders HTML                           |
+| ---------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
+| ![lobby validation](assets/images/readme/blaise/gameLobbyHTML.png) | ![pacman validation](assets/images/readme/blaise/pacmanHTML.png) | ![minicrash validation](assets/images/readme/blaise/minicrashHTML.png) | ![spaceinvaders validation](assets/images/readme/blaise/spaceinvHTML.png) |
+
+CSS Validation Results:
+![CSS validation](assets/images/readme/blaise/cssValidation.png)
+
+**Lighthouse Reports:**
+| Desktop Report                                      | Mobile Report                                       |
+| --------------------------------------------------- | --------------------------------------------------- |
+| ![desktop report](assets/images/readme/blaise/desktopLighthouse.png) | ![mobile report](assets/images/readme/blaise/mobileLighthouse.png) |
 
 ---
 
 ## Future Plans
 
----
+There are several ways to enhance and expand the project in future iterations:
+1. **Additional Games:** Introduce more mini-games to the collection, each with unique mechanics and themes.
+2. **Multiplayer Functionality:** Implement multiplayer modes for competitive or cooperative gameplay.
+3. **User Accounts & Leaderboards:** Allow players to create accounts, save progress, and compete on global leaderboards.
+4. **Enhanced Graphics & Sound:** Upgrade visual and audio assets for a more immersive experience.
+5. **Cross game rewards and easter eggs:** Implement rewards that carry over between games and hidden features for players to discover.
 
-###
+## Acknowledgements
+We would like to extend our gratitude to Code Institute for providing the resources and support necessary to complete this project. Special thanks to our mentors and peers for their valuable feedback and encouragement throughout the development process.

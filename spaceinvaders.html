@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,41 +9,72 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/spaceinvaders.css">
 </head>
+
 <body id="gamePage">
+    <!-- Navigation between games -->
+    <nav>
+        <!-- Hamburger Menu -->
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <!-- Game Titles -->
+        <ul id="nav-links">
+            <li><a href="pacman.html">Pac-Man</a></li>
+            <li><a href="spaceinvaders.html">Space Invaders</a></li>
+            <li><a href="minicrash.html">Mini-Crash</a></li>
+        </ul>
+    </nav>
     <!-- Game Header -->
     <header>
+        <span><a class="gameBtn" href="pacman.html">Prev Game</a></span>
         <h1>Galactic Space Invaders</h1>
+        <span><a class="gameBtn" href="minicrash.html">Next Game</a></span>
     </header>
     <!-- Main content area for the game -->
     <main id="game">
         <!-- Game statistics information -->
-        <section id="board-container">
+        <div id="board-container">
             <div id="stats">
-                <h2>Game Statistics</h2>
-                <p>Statistic 1</p>
-                <p>Statistic 2</p>
-                <p>Statistic 3</p>
+                <h2 id="highscore">High Score: 0</h2>
+                <p id="lives">Lives: <img src="assets/images/blaise/fullHeart.webp" alt="hearts left in red"><img
+                        src="assets/images/blaise/fullHeart.webp" alt="hearts gone in silver"><img
+                        src="assets/images/blaise/lostHeart.webp" alt=""></p>
+                <p></p>
             </div>
             <div id="current-level">
-                <p>Statistic 1</p>
-                <p>Statistic 2</p>
-                <p>Statistic 3</p>
+                <p id="level">Level: 1</p>
+                <p id="score">Score: 0</p>
+                <p id="finalScore" style="display:none">Final Score: 0</p>
             </div>
-        </section>
+        </div>
         <!-- Game canvas where the game is rendered -->
-        <section id="game-container">
+        <div id="game-container">
             <canvas id="gamecanvas" class="spaceinvaders"></canvas>
-        </section>
+        </div>
         <!-- Game controls for player input -->
-        <section id="controls">
-            <span id="joystickContainer"><!-- joystick container influenced by Joystick.js -->
+        <div id="controls">
+            <div id="joystickContainer"><!-- joystick container influenced by Joystick.js -->
                 <img id="joystick" src="assets/images/joystick/Central.png" alt="">
                 <!-- linkedIn Profiles open in new tab -->
                 <p>Developed by <a href="https://www.linkedin.com/in/rhys-lewsley/" target="_blank"
                         aria-label="Rhys's linked in profile link" rel="noopener">Rhys</a></p>
-            </span>
-        </section>
+            </div>
+
+            <!-- Touch controls: shown on mobile / tablet (hidden on desktop) -->
+            <div id="touch-controls" aria-hidden="false">
+                <button id="btn-left" class="touch-btn" aria-label="Move left">◀</button>
+                <button id="btn-shoot" class="touch-btn shoot-btn" aria-label="Shoot">SHOOT</button>
+                <button id="btn-right" class="touch-btn" aria-label="Move right">▶</button>
+            </div>
+        </div>
         <script type="module" src="assets/js/spaceinvaders.js"></script>
+        <script src="assets/js/joystick.js"></script>
+    </main>
 </body>
+
 </html>
